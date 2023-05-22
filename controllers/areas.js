@@ -1,13 +1,13 @@
-const { request, response } = require('express');
-const { Area } = require('../models');
+const { request, response } = require("express");
+const { Area } = require("../models");
 
-const mostrarAreas = async(req = request, res = response) => {
-    const resp = await Area.findAll();
-    res.json({
-        ok:true,
-        msg:'Se muestran los datos correctamente',
-        resp
-    })
+const mostrarAreas = async (req = request, res = response) => {
+  const resp = await Area.findAll();
+  res.json({
+    ok: true,
+    msg: "Se muestran los datos correctamente",
+    resp,
+  });
 };
 
 const agregarArea = async (req = request, res = response) => {
@@ -20,14 +20,14 @@ const agregarArea = async (req = request, res = response) => {
 
     res.json({
       ok: true,
-      msg: 'Datos ingresados correctamente',
+      msg: "Datos ingresados correctamente",
       resp,
     });
   } catch (error) {
     res.status(400).json({
-        ok:false,
-        msg:`Error: ${error}`
-    })
+      ok: false,
+      msg: `Error: ${error}`,
+    });
   }
 };
 
