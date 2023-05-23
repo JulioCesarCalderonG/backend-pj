@@ -6,7 +6,7 @@ const router = Router();
 
 router.get('',mostrarTipodocumento);
 router.post('',agregarTipodocumento);
-router.put('',modificarTipodocumento);
+router.put('/:id',modificarTipodocumento);
 router.delete('',eliminarTipodocumento);
 
 

@@ -5,7 +5,7 @@ const router = Router();
 
 router.get("",mostrarDependencias);
 router.post("",agregarDependencias);
-router.put("",modificarDependencias);
+router.put("/:id",modificarDependencias);
 router.delete("",eliminarDependencias);
 
 module.exports = router;

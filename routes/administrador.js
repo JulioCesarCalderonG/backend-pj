@@ -7,7 +7,7 @@ const router = Router();
 
 router.get('',mostrarAdministradores);
 router.post('',agregarAdministradores);
-router.put('',modificarAdministradores);
+router.put('/:id',modificarAdministradores);
 router.delete('',eliminarAdministradores);
 
 

@@ -6,7 +6,7 @@ const router = Router();
 
 router.get("",mostrarGeneral);
 router.post("",agregarGeneral);
-router.put("",modificarGeneral);
+router.put("/:id",modificarGeneral);
 router.delete("",eliminarGeneral);
 
 module.exports = router;

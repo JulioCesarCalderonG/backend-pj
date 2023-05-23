@@ -6,7 +6,7 @@ const router = Router();
 
 router.get('',mostrarCargos);
 router.post('',agregarCargo);
-router.put('',modificarCargo);
+router.put('/:id',modificarCargo);
 router.delete('',eliminarCargo);
 
 

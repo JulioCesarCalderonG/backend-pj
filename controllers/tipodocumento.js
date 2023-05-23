@@ -34,7 +34,30 @@ const agregarTipodocumento = async(req=request, res=response)=>{
       }
 };
 
-const modificarTipodocumento = (req=request, res=response)=>{};
+const modificarTipodocumento = async(req=request, res=response)=>{
+  try {
+    const { descripcion, ...data } = req.body;
+    const { id } = req.params;
+    data.descripcion = descripcion.toUpperCase();
+
+    const resp = await Tipodocumento.update(data, {
+      where: {
+        id,
+      },
+    });
+
+    res.json({
+      ok:true,
+      msg:'Personal actualizado con exito',
+      resp
+    });
+  } catch (error) {
+    res.status(400).json({
+      ok:false,
+      msg:`Error:${error}`
+    })
+  }
+};
 
 const eliminarTipodocumento = (req=request, res=response)=>{};
 

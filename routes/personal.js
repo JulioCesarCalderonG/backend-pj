@@ -9,7 +9,7 @@ const router = Router();
 
 router.get("", mostrarPersonales);
 router.post("",agregarPersonal);
-router.put("",modificarPersonal);
+router.put("/:id",modificarPersonal);
 router.delete("",eliminarPersonal);
 
 

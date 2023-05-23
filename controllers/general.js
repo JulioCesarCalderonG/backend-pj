@@ -48,7 +48,48 @@ const agregarGeneral = async (req = request, res = response) => {
   }
 };
 
-const modificarGeneral = (req = request, res = response) => {};
+const modificarGeneral = async (req = request, res = response) => {
+  try {
+    const {
+      idpersonal,
+      idtipodocumento,
+      idcargo,
+      iddependencia,
+      idarea,
+      inicio,
+      fin,
+      documento,
+      ...data
+    } = req.body;
+    const { id } = req.params;
+
+    data.id_personal = idpersonal;
+    data.id_tipo_documento = idtipodocumento;
+    data.id_cargo = idcargo;
+    data.id_dependencia = iddependencia;
+    data.id_area = idarea;
+    data.inicio = inicio.toUpperCase();
+    data.fin = fin.toUpperCase();
+    data.documento = documento.toUpperCase();
+
+    const resp = await General.update(data, {
+      where: {
+        id,
+      },
+    });
+
+    res.json({
+      ok: true,
+      msg: "General actualizado con exito",
+      resp,
+    });
+  } catch (error) {
+    res.status(400).json({
+      ok: false,
+      msg: `Error:${error}`,
+    });
+  }
+};
 
 const eliminarGeneral = (req = request, res = response) => {};
 

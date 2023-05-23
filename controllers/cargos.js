@@ -30,7 +30,30 @@ const agregarCargo = async (req = request, res = response) => {
   }
 };
 
-const modificarCargo = (req = request, res = response) => {};
+const modificarCargo = async (req = request, res = response) => {
+  try {
+    const { descripcion, ...data } = req.body;
+    const { id } = req.params;
+    data.descripcion = descripcion.toUpperCase();
+
+    const resp = await Cargo.update(data, {
+      where: {
+        id,
+      },
+    });
+
+    res.json({
+      ok: true,
+      msg: "Cargo actualizado con exito",
+      resp,
+    });
+  } catch (error) {
+    res.status(400).json({
+      ok: false,
+      msg: `Error:${error}`,
+    });
+  }
+};
 
 const eliminarCargo = (req = request, res = response) => {};
 

@@ -32,7 +32,31 @@ const agregarAdministradores = async (req = request, res = response) => {
   }
 };
 
-const modificarAdministradores = (req = request, res = response) => {};
+const modificarAdministradores = async (req = request, res = response) => {
+  try {
+    const { usuario, password, activo, ...data } = req.body;
+    const { id } = req.params;
+
+    data.usuario = usuario.toUpperCase();
+    data.password = password.toUpperCase();
+    data.activo = activo.toUpperCase();
+
+    const resp = await Administrador.update(data, {
+      where: {
+        id,
+      },
+    });
+
+    res.json({
+      resp
+    });
+  } catch (error) {
+    res.status(400).json({
+      ok: false,
+      msg: `Error:${error}`,
+    });
+  }
+};
 
 const eliminarAdministradores = (req = request, res = response) => {};
 
