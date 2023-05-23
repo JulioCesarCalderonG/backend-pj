@@ -5,7 +5,7 @@ const mostrarPersonales = async (req = request, res = response) => {
   const resp = await Personal.findAll();
   res.json({
     ok: true,
-    msg: "Se muestran los datos correctamente",
+    msg: "Se muestran correctamento los datos",
     resp,
   });
 };
