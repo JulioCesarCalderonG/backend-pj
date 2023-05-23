@@ -7,7 +7,7 @@ const router = Router();
 
 router.get('',mostrarAreas);
 router.post('',agregarArea);
-router.put('',modificarArea);
+router.put('/:id',modificarArea);
 router.delete('',eliminarArea);
 
 
