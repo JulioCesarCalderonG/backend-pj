@@ -59,6 +59,29 @@ const modificarTipodocumento = async(req=request, res=response)=>{
   }
 };
 
+const mostrarIdTipodocumento = async (req = request, res = response) => {
+  try {
+   const { id } = req.params;
+ 
+   const resp = await Tipodocumento.findOne({
+     where:{
+       id
+     }
+   });
+   res.json({
+     ok: true,
+     msg: 'Id se muestran los datos correctamente',
+     resp,
+   });
+  } catch (error) {
+   res.status(400).json({
+     ok:false,
+     msg:`Error:${error}`
+   })
+  }
+ };
+
+
 const eliminarTipodocumento = (req=request, res=response)=>{};
 
 
@@ -66,5 +89,6 @@ module.exports = {
     mostrarTipodocumento,
     agregarTipodocumento,
     modificarTipodocumento,
-    eliminarTipodocumento
+    eliminarTipodocumento,
+    mostrarIdTipodocumento,
 }

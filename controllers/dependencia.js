@@ -54,6 +54,31 @@ const modificarDependencias = async (req = request, res = response) => {
   }
 };
 
+
+const mostrarIdDependencia = async (req = request, res = response) => {
+  try {
+   const { id } = req.params;
+ 
+   const resp = await Dependencia.findOne({
+     where:{
+       id
+     }
+   });
+   res.json({
+     ok: true,
+     msg: 'Id se muestran los datos correctamente',
+     resp,
+   });
+  } catch (error) {
+   res.status(400).json({
+     ok:false,
+     msg:`Error:${error}`
+   })
+  }
+ };
+
+
+
 const eliminarDependencias = (req = request, res = response) => {};
 
 module.exports = {
@@ -61,4 +86,5 @@ module.exports = {
   agregarDependencias,
   modificarDependencias,
   eliminarDependencias,
+  mostrarIdDependencia,
 };

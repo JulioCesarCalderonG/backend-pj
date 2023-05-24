@@ -55,6 +55,28 @@ const modificarCargo = async (req = request, res = response) => {
   }
 };
 
+const mostrarIdCargo = async (req = request, res = response) => {
+  try {
+   const { id } = req.params;
+ 
+   const resp = await Cargo.findOne({
+     where:{
+       id
+     }
+   });
+   res.json({
+     ok: true,
+     msg: 'Id se muestran los datos correctamente',
+     resp,
+   });
+  } catch (error) {
+   res.status(400).json({
+     ok:false,
+     msg:`Error:${error}`
+   })
+  }
+ };
+
 const eliminarCargo = (req = request, res = response) => {};
 
 module.exports = {
@@ -62,4 +84,5 @@ module.exports = {
   agregarCargo,
   modificarCargo,
   eliminarCargo,
+  mostrarIdCargo
 };

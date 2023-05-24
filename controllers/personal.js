@@ -61,6 +61,28 @@ const modificarPersonal = async (req = request, res = response) => {
   }
 };
 
+const mostrarIdPersonal = async (req = request, res = response) => {
+  try {
+   const { id } = req.params;
+ 
+   const resp = await Personal.findOne({
+     where:{
+       id
+     }
+   });
+   res.json({
+     ok: true,
+     msg: 'Id se muestran los datos correctamente',
+     resp,
+   });
+  } catch (error) {
+   res.status(400).json({
+     ok:false,
+     msg:`Error:${error}`
+   })
+  }
+ };
+
 const eliminarPersonal = (req = request, res = response) => {};
 
 module.exports = {
@@ -68,4 +90,5 @@ module.exports = {
   agregarPersonal,
   modificarPersonal,
   eliminarPersonal,
+  mostrarIdPersonal,
 };

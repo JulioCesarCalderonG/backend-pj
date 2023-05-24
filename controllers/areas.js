@@ -1,6 +1,7 @@
 const { request, response } = require('express');
 const { Area } = require('../models');
 
+
 const mostrarAreas = async (req = request, res = response) => {
   const resp = await Area.findAll();
   res.json({
@@ -57,6 +58,28 @@ const modificarArea = async (req = request, res = response) => {
   }
 };
 
+const mostrarIdArea = async (req = request, res = response) => {
+ try {
+  const { id } = req.params;
+
+  const resp = await Area.findOne({
+    where:{
+      id
+    }
+  });
+  res.json({
+    ok: true,
+    msg: 'Id se muestran los datos correctamente',
+    resp,
+  });
+ } catch (error) {
+  res.status(400).json({
+    ok:false,
+    msg:`Error:${error}`
+  })
+ }
+};
+
 const eliminarArea = (req = request, res = response) => {};
 
 module.exports = {
@@ -64,4 +87,5 @@ module.exports = {
   agregarArea,
   modificarArea,
   eliminarArea,
+  mostrarIdArea,
 };

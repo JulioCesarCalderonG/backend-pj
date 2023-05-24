@@ -1,8 +1,26 @@
 const { request, response } = require("express");
-const { General } = require("../models");
+const { General, Cargo, Area, Dependencia, Tipodocumento, Personal } = require("../models");
 
 const mostrarGeneral = async (req = request, res = response) => {
-  const resp = await General.findAll();
+  const resp = await General.findAll({
+    include:[
+      {
+        model:Cargo
+      },
+      {
+        model:Area
+      },
+      {
+        model:Dependencia
+      },
+      {
+        model:Tipodocumento
+      },
+      {
+        model:Personal
+      }
+    ]
+  });
   res.json({
     ok: true,
     msg: "Se muestran los datos correctamente",
@@ -91,6 +109,28 @@ const modificarGeneral = async (req = request, res = response) => {
   }
 };
 
+const mostrarIdGeneral = async (req = request, res = response) => {
+  try {
+   const { id } = req.params;
+ 
+   const resp = await General.findOne({
+     where:{
+       id
+     }
+   });
+   res.json({
+     ok: true,
+     msg: 'Id se muestran los datos correctamente',
+     resp,
+   });
+  } catch (error) {
+   res.status(400).json({
+     ok:false,
+     msg:`Error:${error}`
+   })
+  }
+ };
+
 const eliminarGeneral = (req = request, res = response) => {};
 
 module.exports = {
@@ -98,4 +138,5 @@ module.exports = {
   agregarGeneral,
   modificarGeneral,
   eliminarGeneral,
+  mostrarIdGeneral,
 };

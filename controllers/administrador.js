@@ -58,6 +58,29 @@ const modificarAdministradores = async (req = request, res = response) => {
   }
 };
 
+
+const mostrarIdAdministrador = async (req = request, res = response) => {
+  try {
+   const { id } = req.params;
+ 
+   const resp = await Administrador.findOne({
+     where:{
+       id
+     }
+   });
+   res.json({
+     ok: true,
+     msg: 'Id se muestran los datos correctamente',
+     resp,
+   });
+  } catch (error) {
+   res.status(400).json({
+     ok:false,
+     msg:`Error:${error}`
+   })
+  }
+ };
+
 const eliminarAdministradores = (req = request, res = response) => {};
 
 module.exports = {
@@ -65,4 +88,5 @@ module.exports = {
   agregarAdministradores,
   modificarAdministradores,
   eliminarAdministradores,
+  mostrarIdAdministrador,
 };
