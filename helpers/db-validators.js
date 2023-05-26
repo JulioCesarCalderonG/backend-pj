@@ -13,7 +13,7 @@ const validarDescripcionDependencia = async (descripcion = "") => {
       descripcion: `${descripcion.toUpperCase()}`,
     },
   });
-  if (!existeDependencia) {
+  if (existeDependencia) {
     throw new Error(
       `La Dependencia ${descripcion} ya está registrado en la BD`
     );
@@ -26,7 +26,7 @@ const validarNombreArea = async (nombre = "") => {
       nombre: `${nombre.toUpperCase()}`,
     },
   });
-  if (!existeArea) {
+  if (existeArea) {
     throw new Error(`El nombre ${nombre} ya está registrado en la BD`);
   }
 };
@@ -37,7 +37,7 @@ const validarSiglaArea = async (sigla = "") => {
       sigla: `${sigla.toUpperCase()}`,
     },
   });
-  if (!existeArea) {
+  if (existeArea) {
     throw new Error(`La sigla ${sigla} ya está registrado en la BD`);
   }
 };
@@ -48,7 +48,7 @@ const validarDescripcionCargo = async (descripcion = "") => {
       descripcion: `${descripcion.toUpperCase()}`,
     },
   });
-  if (!existeCargo) {
+  if (existeCargo) {
     throw new Error(`El Cargo ${descripcion} ya está registrado en la BD`);
   }
 };
@@ -59,7 +59,7 @@ const validarDescripcionTipodocumento = async (descripcion = "") => {
       descripcion: `${descripcion.toUpperCase()}`,
     },
   });
-  if (!existeTipodocumento) {
+  if (existeTipodocumento) {
     throw new Error(
       `El Tipo documento ${descripcion} ya está registrado en la BD`
     );
@@ -72,7 +72,7 @@ const validarNombrePersonal = async (nombre = "") => {
       nombre: `${nombre.toUpperCase()}`,
     },
   });
-  if (!existePersonal) {
+  if (existePersonal) {
     throw new Error(`El nombre ${nombre} ya está registrado en la BD`);
   }
 };
@@ -83,7 +83,7 @@ const validarApellidoPersonal = async (apellido = "") => {
       apellido: `${apellido.toUpperCase()}`,
     },
   });
-  if (!existePersonal) {
+  if (existePersonal) {
     throw new Error(`El apellido ${apellido} ya está registrado en la BD`);
   }
 };
@@ -94,7 +94,7 @@ const validarEscalafonPersonal = async (escalafon = "") => {
       escalafon: `${escalafon.toUpperCase()}`,
     },
   });
-  if (!existePersonal) {
+  if (existePersonal) {
     throw new Error(`El escalafon ${escalafon} ya está registrado en la BD`);
   }
 };
@@ -105,7 +105,7 @@ const validarUsuarioAdministrador = async (usuario = "") => {
         usuario: `${usuario.toUpperCase()}`,
       },
     });
-    if (!existeAdministrador) {
+    if (existeAdministrador) {
       throw new Error(`El usuario ${usuario} ya está registrado en la BD`);
     }
   };
