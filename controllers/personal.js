@@ -15,8 +15,8 @@ const agregarPersonal = async (req = request, res = response) => {
     const { nombre, apellido, escalafon, fechainicio, ...data } = req.body;
     data.nombre = nombre.toUpperCase();
     data.apellido = apellido.toUpperCase();
-    data.escalafon = escalafon.toUpperCase();
-    data.fecha_inicio = fechainicio.toUpperCase();
+    data.escalafon = escalafon;
+    data.fecha_inicio = fechainicio;
 
     const resp = await Personal.create(data);
 
