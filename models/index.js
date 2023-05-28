@@ -9,6 +9,7 @@ const Administrador = require("./administrador");
 const General = require("./general");
 const Organo = require("./organo");
 const Sede = require("./sede");
+
 module.exports = {
   Server,
   Personal,

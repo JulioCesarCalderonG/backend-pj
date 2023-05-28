@@ -16,10 +16,21 @@ const mostrarSedes = async(req = request, res = response) => {
     });
   }
 };
-const mostrarSede = (req = request, res = response) => {
+
+
+const mostrarIdSede = async(req = request, res = response) => {
   try {
+    const { id } = req.params;
+
+    const resp = await Sede.findOne({
+      where: {
+        id,
+      },
+    });
     res.json({
       ok: true,
+      msg: "Id se muestran los datos correctamente",
+      resp,
     });
   } catch (error) {
     res.status(400).json({
@@ -28,6 +39,7 @@ const mostrarSede = (req = request, res = response) => {
     });
   }
 };
+
 
 const agregarSede = async(req = request, res = response) => {
   try {
@@ -49,6 +61,7 @@ const agregarSede = async(req = request, res = response) => {
   }
 };
 
+
 const modificarSede = (req = request, res = response) => {
   try {
     res.json({
@@ -61,6 +74,7 @@ const modificarSede = (req = request, res = response) => {
     });
   }
 };
+
 
 const eliminarSede = (req = request, res = response) => {
   try {
@@ -75,9 +89,10 @@ const eliminarSede = (req = request, res = response) => {
   }
 };
 
+
 module.exports = {
   mostrarSedes,
-  mostrarSede,
+  mostrarIdSede,
   agregarSede,
   modificarSede,
   eliminarSede,

@@ -1,6 +1,5 @@
 const { Model, DataTypes } = require("sequelize");
 const sequelize = require('../database/database');
-const General = require("./general");
 
 
 class Area extends Model{}

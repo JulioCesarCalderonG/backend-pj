@@ -13,6 +13,29 @@ const mostrarTipodocumento = async(req=request, res=response)=>{
 };
 
 
+const mostrarIdTipodocumento = async (req = request, res = response) => {
+  try {
+   const { id } = req.params;
+ 
+   const resp = await Tipodocumento.findOne({
+     where:{
+       id
+     }
+   });
+   res.json({
+     ok: true,
+     msg: 'Id se muestran los datos correctamente',
+     resp,
+   });
+  } catch (error) {
+   res.status(400).json({
+     ok:false,
+     msg:`Error:${error}`
+   })
+  }
+ };
+
+
 const agregarTipodocumento = async(req=request, res=response)=>{
     try {
         const { descripcion, ...data } = req.body;
@@ -33,6 +56,7 @@ const agregarTipodocumento = async(req=request, res=response)=>{
         });
       }
 };
+
 
 const modificarTipodocumento = async(req=request, res=response)=>{
   try {
@@ -59,30 +83,19 @@ const modificarTipodocumento = async(req=request, res=response)=>{
   }
 };
 
-const mostrarIdTipodocumento = async (req = request, res = response) => {
+
+const eliminarTipodocumento = (req=request, res=response)=>{
   try {
-   const { id } = req.params;
- 
-   const resp = await Tipodocumento.findOne({
-     where:{
-       id
-     }
-   });
-   res.json({
-     ok: true,
-     msg: 'Id se muestran los datos correctamente',
-     resp,
-   });
+    res.json({
+      ok: true,
+    });
   } catch (error) {
-   res.status(400).json({
-     ok:false,
-     msg:`Error:${error}`
-   })
+    res.status(400).json({
+      ok: false,
+      msg: `Error: ${error}`,
+    });
   }
- };
-
-
-const eliminarTipodocumento = (req=request, res=response)=>{};
+};
 
 
 module.exports = {

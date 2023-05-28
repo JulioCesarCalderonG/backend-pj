@@ -9,9 +9,7 @@ const router = Router();
 
 
 router.get("",mostrarAreas);
-
 router.get("/:id",mostrarIdArea);
-
 router.post("",[
     check('nombre').custom(validarNombreArea),
     check('sigla').custom(validarSiglaArea),
@@ -19,8 +17,6 @@ router.post("",[
 ],agregarArea);
 
 router.put("/:id",modificarArea);
-
 router.delete("",eliminarArea);
-
 
 module.exports = router;

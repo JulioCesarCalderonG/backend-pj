@@ -111,6 +111,33 @@ const validarNombreSede = async (nombre = '') => {
   }
 };
 
+const validarNombreOrgano = async (nombre = '') => {
+  const existeSede = await Sede.findOne({
+    where: {
+      nombre: `${nombre.toUpperCase()}`,
+    },
+  });
+  if (existeSede) {
+    throw new Error(
+      `El organo ${nombre} ya está registrado en la BD`
+    );
+  }
+};
+
+const validarNombreUnidadOrganica = async (nombre = '') => {
+  const existeSede = await Sede.findOne({
+    where: {
+      nombre: `${nombre.toUpperCase()}`,
+    },
+  });
+  if (existeSede) {
+    throw new Error(
+      `La Unidad Organica ${nombre} ya está registrado en la BD`
+    );
+  }
+};
+
+
 module.exports = {
   validarNombreArea,
   validarSiglaArea,
@@ -121,5 +148,7 @@ module.exports = {
   validarEscalafonPersonal,
   validarUsuarioAdministrador,
   validarNombreArea,
-  validarNombreSede
+  validarNombreSede,
+  validarNombreOrgano,
+  validarNombreUnidadOrganica
 };

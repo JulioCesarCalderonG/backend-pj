@@ -10,6 +10,30 @@ const mostrarPersonales = async (req = request, res = response) => {
   });
 };
 
+
+const mostrarIdPersonal = async (req = request, res = response) => {
+  try {
+   const { id } = req.params;
+ 
+   const resp = await Personal.findOne({
+     where:{
+       id
+     }
+   });
+   res.json({
+     ok: true,
+     msg: 'Id se muestran los datos correctamente',
+     resp,
+   });
+  } catch (error) {
+   res.status(400).json({
+     ok:false,
+     msg:`Error:${error}`
+   })
+  }
+ };
+
+
 const agregarPersonal = async (req = request, res = response) => {
   try {
     const { nombre, apellido, escalafon, fechainicio, ...data } = req.body;
@@ -32,6 +56,7 @@ const agregarPersonal = async (req = request, res = response) => {
     });
   }
 };
+
 
 const modificarPersonal = async (req = request, res = response) => {
   try {
@@ -61,34 +86,24 @@ const modificarPersonal = async (req = request, res = response) => {
   }
 };
 
-const mostrarIdPersonal = async (req = request, res = response) => {
-  try {
-   const { id } = req.params;
- 
-   const resp = await Personal.findOne({
-     where:{
-       id
-     }
-   });
-   res.json({
-     ok: true,
-     msg: 'Id se muestran los datos correctamente',
-     resp,
-   });
-  } catch (error) {
-   res.status(400).json({
-     ok:false,
-     msg:`Error:${error}`
-   })
-  }
- };
 
-const eliminarPersonal = (req = request, res = response) => {};
+const eliminarPersonal = (req = request, res = response) => {
+  try {
+    res.json({
+      ok: true,
+    });
+  } catch (error) {
+    res.status(400).json({
+      ok: false,
+      msg: `Error: ${error}`,
+    });
+  }
+};
 
 module.exports = {
   mostrarPersonales,
+  mostrarIdPersonal,
   agregarPersonal,
   modificarPersonal,
   eliminarPersonal,
-  mostrarIdPersonal,
 };

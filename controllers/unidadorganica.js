@@ -1,35 +1,33 @@
 const { request, response } = require("express");
-const { Area, UnidadOrganica } = require("../models");
+const { UnidadOrganica, Organo } = require("../models");
 
-
-const mostrarAreas = async (req = request, res = response) => {
+const mostrarUnidadOrganicas = async (req = request, res = response) => {
   try {
-    const resp = await Area.findAll({
-      include:[
+    const resp = await UnidadOrganica.findAll({
+      include: [
         {
-          model: UnidadOrganica,
+          model: Organo,
         },
       ],
     });
     res.json({
       ok: true,
-      msg: "Se muestran las areas con exito",
+      msg: "Se muestran las unidades organicas con exito",
       resp,
-    })
+    });
   } catch (error) {
     res.status(400).json({
-      ok:false,
+      ok: false,
       msg: `Error: ${error}`,
     });
   }
 };
 
 
-const mostrarIdArea = async (req = request, res = response) => {
+const mostrarIdUnidadOrganica = async (req = request, res = response) => {
   try {
     const { id } = req.params;
-
-    const resp = await Area.findOne({
+    const resp = await UnidadOrganica.findOne({
       where: {
         id,
       },
@@ -48,13 +46,13 @@ const mostrarIdArea = async (req = request, res = response) => {
 };
 
 
-const agregarArea = async (req = request, res = response) => {
+const agregarUnidadOrganica = async (req = request, res = response) => {
   try {
     const { nombre, sigla, ...data } = req.body;
     data.nombre = nombre.toUpperCase();
     data.sigla = sigla.toUpperCase();
 
-    const resp = await Area.create(data);
+    const resp = await UnidadOrganica.create(data);
     res.json({
       ok: true,
       msg: "Datos ingresados correctamente",
@@ -69,7 +67,7 @@ const agregarArea = async (req = request, res = response) => {
 };
 
 
-const modificarArea = async (req = request, res = response) => {
+const modificarUnidadOrganica = async (req = request, res = response) => {
   try {
     res.json({
       ok: true,
@@ -83,7 +81,7 @@ const modificarArea = async (req = request, res = response) => {
 };
 
 
-const eliminarArea = async (req = request, res = response) => {
+const eliminarUnidadOrganica = async (req = request, res = response) => {
   try {
     res.json({
       ok: true,
@@ -98,9 +96,9 @@ const eliminarArea = async (req = request, res = response) => {
 
 
 module.exports = {
-  mostrarAreas,
-  mostrarIdArea,
-  agregarArea,
-  modificarArea,
-  eliminarArea,
+  mostrarUnidadOrganicas,
+  mostrarIdUnidadOrganica,
+  agregarUnidadOrganica,
+  modificarUnidadOrganica,
+  eliminarUnidadOrganica,
 };

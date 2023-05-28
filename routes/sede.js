@@ -1,5 +1,5 @@
 const { Router } = require("express");
-const { mostrarSedes, mostrarSede, agregarSede, modificarSede, eliminarSede } = require("../controllers/sedes");
+const { mostrarSedes, agregarSede, modificarSede, eliminarSede, mostrarIdSede } = require("../controllers/sedes");
 const { validarCampos } = require("../middlewares");
 const { check } = require("express-validator");
 const { validarNombreSede } = require("../helpers");
@@ -11,7 +11,7 @@ const router = Router();
 
 
 router.get('',mostrarSedes);
-router.get('/:id',mostrarSede);
+router.get('/:id',mostrarIdSede);
 router.post('',[
     check('nombre').custom(validarNombreSede),
     validarCampos

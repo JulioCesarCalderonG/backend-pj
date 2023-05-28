@@ -1,13 +1,17 @@
 const { Router } = require("express");
-const { mostrarOrganos, mostrarOrgano, agregarOrgano, modificarOrgano, eliminarOrgano } = require("../controllers/organos");
+const { mostrarOrganos, agregarOrgano, modificarOrgano, eliminarOrgano, mostrarIdOrgano } = require("../controllers/organos");
+const { check } = require("express-validator");
+const { validarNombreOrgano } = require("../helpers");
 
 
 
 const router = Router();
 
 router.get('',mostrarOrganos);
-router.get('/:id',mostrarOrgano);
-router.post('',agregarOrgano);
+router.get('/:id',mostrarIdOrgano);
+router.post('',[
+    check('nombre').custom(validarNombreOrgano)
+],agregarOrgano);
 router.put('/:id',modificarOrgano);
 router.delete('/:id',eliminarOrgano);
 

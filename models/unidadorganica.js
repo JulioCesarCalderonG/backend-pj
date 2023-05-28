@@ -1,6 +1,6 @@
 const { Model, DataTypes } = require("sequelize");
 const sequelize = require('../database/database');
-const General = require("./general");
+const Area = require("./area");
 
 
 class UnidadOrganica extends Model{}
@@ -25,4 +25,14 @@ UnidadOrganica.init({
     tableName:'unidad_organica'
 });
 
-module.exports = UnidadOrganica
+UnidadOrganica.hasMany(Area,{
+    as:'FK_AreaUOrganica',
+    foreignKey:'id_unidad_organica'
+});
+
+Area.belongsTo(UnidadOrganica,{
+    sourcekey:'id',
+    foreignKey:'id_unidad_organica'
+})
+
+module.exports = UnidadOrganica;

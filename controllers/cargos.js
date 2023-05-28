@@ -10,6 +10,28 @@ const mostrarCargos = async (req = request, res = response) => {
   });
 };
 
+const mostrarIdCargo = async (req = request, res = response) => {
+  try {
+    const { id } = req.params;
+
+    const resp = await Cargo.findOne({
+      where: {
+        id,
+      },
+    });
+    res.json({
+      ok: true,
+      msg: "Id se muestran los datos correctamente",
+      resp,
+    });
+  } catch (error) {
+    res.status(400).json({
+      ok: false,
+      msg: `Error:${error}`,
+    });
+  }
+};
+
 const agregarCargo = async (req = request, res = response) => {
   try {
     const { descripcion, ...data } = req.body;
@@ -55,34 +77,23 @@ const modificarCargo = async (req = request, res = response) => {
   }
 };
 
-const mostrarIdCargo = async (req = request, res = response) => {
+const eliminarCargo = (req = request, res = response) => {
   try {
-   const { id } = req.params;
- 
-   const resp = await Cargo.findOne({
-     where:{
-       id
-     }
-   });
-   res.json({
-     ok: true,
-     msg: 'Id se muestran los datos correctamente',
-     resp,
-   });
+    res.json({
+      ok: true,
+    });
   } catch (error) {
-   res.status(400).json({
-     ok:false,
-     msg:`Error:${error}`
-   })
+    res.status(400).json({
+      ok: false,
+      msg: `Error: ${error}`,
+    });
   }
- };
-
-const eliminarCargo = (req = request, res = response) => {};
+};
 
 module.exports = {
   mostrarCargos,
+  mostrarIdCargo,
   agregarCargo,
   modificarCargo,
   eliminarCargo,
-  mostrarIdCargo
 };
