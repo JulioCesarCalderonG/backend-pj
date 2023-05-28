@@ -22,7 +22,9 @@ class Server {
             dependencia: '/api/dependencia',
             tipodocumento: '/api/tipodocumento',
             administrador: '/api/administrador',
-            general: '/api/general'
+            general: '/api/general',
+            sede:'/api/sede',
+            organo:'/api/organo'
     };
     //Connect to socket
     this.httpServer = new http.Server(this.app);
@@ -86,6 +88,8 @@ class Server {
     this.app.use(this.paths.tipodocumento, require('../routes/tipodocumento'));
     this.app.use(this.paths.administrador, require('../routes/administrador'));
     this.app.use(this.paths.general, require('../routes/general'));
+    this.app.use(this.paths.sede, require('../routes/sede'));
+    this.app.use(this.paths.organo, require('../routes/organos'));
   }
   listen() {
     this.httpServer.listen(this.port, () => {

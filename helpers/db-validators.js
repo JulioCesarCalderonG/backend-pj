@@ -5,22 +5,10 @@ const {
   Tipodocumento,
   Personal,
   Administrador,
-} = require("../models");
+  Sede,
+} = require('../models');
 
-const validarDescripcionDependencia = async (descripcion = "") => {
-  const existeDependencia = await Dependencia.findOne({
-    where: {
-      descripcion: `${descripcion.toUpperCase()}`,
-    },
-  });
-  if (existeDependencia) {
-    throw new Error(
-      `La Dependencia ${descripcion} ya está registrado en la BD`
-    );
-  }
-};
-
-const validarNombreArea = async (nombre = "") => {
+const validarNombreArea = async (nombre = '') => {
   const existeArea = await Area.findOne({
     where: {
       nombre: `${nombre.toUpperCase()}`,
@@ -31,7 +19,7 @@ const validarNombreArea = async (nombre = "") => {
   }
 };
 
-const validarSiglaArea = async (sigla = "") => {
+const validarSiglaArea = async (sigla = '') => {
   const existeArea = await Area.findOne({
     where: {
       sigla: `${sigla.toUpperCase()}`,
@@ -42,7 +30,7 @@ const validarSiglaArea = async (sigla = "") => {
   }
 };
 
-const validarDescripcionCargo = async (descripcion = "") => {
+const validarDescripcionCargo = async (descripcion = '') => {
   const existeCargo = await Cargo.findOne({
     where: {
       descripcion: `${descripcion.toUpperCase()}`,
@@ -53,7 +41,7 @@ const validarDescripcionCargo = async (descripcion = "") => {
   }
 };
 
-const validarDescripcionTipodocumento = async (descripcion = "") => {
+const validarDescripcionTipodocumento = async (descripcion = '') => {
   const existeTipodocumento = await Tipodocumento.findOne({
     where: {
       descripcion: `${descripcion.toUpperCase()}`,
@@ -66,7 +54,7 @@ const validarDescripcionTipodocumento = async (descripcion = "") => {
   }
 };
 
-const validarNombrePersonal = async (nombre = "") => {
+const validarNombrePersonal = async (nombre = '') => {
   const existePersonal = await Personal.findOne({
     where: {
       nombre: `${nombre.toUpperCase()}`,
@@ -77,7 +65,7 @@ const validarNombrePersonal = async (nombre = "") => {
   }
 };
 
-const validarApellidoPersonal = async (apellido = "") => {
+const validarApellidoPersonal = async (apellido = '') => {
   const existePersonal = await Personal.findOne({
     where: {
       apellido: `${apellido.toUpperCase()}`,
@@ -88,7 +76,7 @@ const validarApellidoPersonal = async (apellido = "") => {
   }
 };
 
-const validarEscalafonPersonal = async (escalafon = "") => {
+const validarEscalafonPersonal = async (escalafon = '') => {
   const existePersonal = await Personal.findOne({
     where: {
       escalafon: `${escalafon.toUpperCase()}`,
@@ -99,19 +87,31 @@ const validarEscalafonPersonal = async (escalafon = "") => {
   }
 };
 
-const validarUsuarioAdministrador = async (usuario = "") => {
-    const existeAdministrador = await Administrador.findOne({
-      where: {
-        usuario: `${usuario.toUpperCase()}`,
-      },
-    });
-    if (existeAdministrador) {
-      throw new Error(`El usuario ${usuario} ya está registrado en la BD`);
-    }
-  };
+const validarUsuarioAdministrador = async (usuario = '') => {
+  const existeAdministrador = await Administrador.findOne({
+    where: {
+      usuario: `${usuario.toUpperCase()}`,
+    },
+  });
+  if (existeAdministrador) {
+    throw new Error(`El usuario ${usuario} ya está registrado en la BD`);
+  }
+};
+
+const validarNombreSede = async (nombre = '') => {
+  const existeSede = await Sede.findOne({
+    where: {
+      nombre: `${nombre.toUpperCase()}`,
+    },
+  });
+  if (existeSede) {
+    throw new Error(
+      `La Sede ${nombre} ya está registrado en la BD`
+    );
+  }
+};
 
 module.exports = {
-  validarDescripcionDependencia,
   validarNombreArea,
   validarSiglaArea,
   validarDescripcionCargo,
@@ -120,4 +120,6 @@ module.exports = {
   validarApellidoPersonal,
   validarEscalafonPersonal,
   validarUsuarioAdministrador,
+  validarNombreArea,
+  validarNombreSede
 };

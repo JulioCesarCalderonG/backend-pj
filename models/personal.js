@@ -18,6 +18,10 @@ Personal.init({
     },
     fecha_inicio:{
         type:DataTypes.CHAR
+    },
+    estado:{
+        type:DataTypes.TINYINT,
+        defaultValue:1
     }
 },{
     timestamps:false,

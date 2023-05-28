@@ -5,19 +5,16 @@ const sequelize = require('../database/database');
 class General extends Model{}
 
 General.init({
+    codigo_documento:{
+        type:DataTypes.CHAR
+    },
+    dependencia:{
+        type:DataTypes.CHAR
+    },
     id_personal:{
         type:DataTypes.INTEGER
     },
-    id_tipo_documento:{
-        type:DataTypes.INTEGER
-    },
     id_cargo:{
-        type:DataTypes.INTEGER
-    },
-    id_dependencia:{
-        type:DataTypes.INTEGER
-    },
-    id_area:{
         type:DataTypes.INTEGER
     },
     inicio:{

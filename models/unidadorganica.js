@@ -3,11 +3,17 @@ const sequelize = require('../database/database');
 const General = require("./general");
 
 
-class Cargo extends Model{}
+class UnidadOrganica extends Model{}
 
-Cargo.init({
-    descripcion:{
+UnidadOrganica.init({
+    nombre:{
         type:DataTypes.STRING
+    },
+    sigla:{
+        type:DataTypes.CHAR
+    },
+    id_organo:{
+        type:DataTypes.INTEGER
     },
     estado:{
         type:DataTypes.TINYINT,
@@ -16,18 +22,7 @@ Cargo.init({
 },{
     sequelize,
     timestamps:false,
-    tableName:'cargo'
+    tableName:'unidad_organica'
 });
 
-Cargo.hasMany(General,{
-    as:'FK_GeneralCargo',
-    foreignKey:'id_cargo'
-});
-
-General.belongsTo(Cargo,{
-    sourcekey:'id',
-    foreignKey:'id_cargo'
-})
-
-module.exports = Cargo
-
+module.exports = UnidadOrganica

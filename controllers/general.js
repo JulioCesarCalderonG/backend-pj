@@ -31,24 +31,30 @@ const mostrarGeneral = async (req = request, res = response) => {
 const agregarGeneral = async (req = request, res = response) => {
   try {
     const {
-      idpersonal,
-      idtipodocumento,
-      idcargo,
-      iddependencia,
-      idarea,
-      inicio,
-      fin,
-      documento,
+      numero_documento,
+      ano,
+      id_tipo_documento,
+      id_area,
       ...data
     } = req.body;
 
-    data.id_personal = idpersonal;
+    const respDocumento = await Tipodocumento.findOne({
+      where:{
+        id:id_tipo_documento
+      }
+    });
+    const respArea = await Area.findOne({
+      where:{
+        id:id_area
+      }
+    })
+    const codigo_documento = `${respDocumento.descripcion} N° ${numero_documento}-${ano}-${respArea.sigla}-CSJU/PJ`
+
+    /* data.id_personal = idpersonal;
     data.id_tipo_documento = idtipodocumento;
     data.id_cargo = idcargo;
     data.id_dependencia = iddependencia;
     data.id_area = idarea;
-    data.inicio = inicio.toUpperCase();
-    data.fin = fin.toUpperCase();
     data.documento = documento.toUpperCase();
 
     const resp = await General.create(data);
@@ -57,7 +63,13 @@ const agregarGeneral = async (req = request, res = response) => {
       ok: true,
       msg: "Datos ingresados correctamente",
       resp,
-    });
+    }); */
+    res.json({
+      data,
+      codigo_documento,
+      respDocumento,
+      respArea
+    })
   } catch (error) {
     res.status(400).json({
       ok: false,

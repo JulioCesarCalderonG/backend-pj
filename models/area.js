@@ -11,21 +11,17 @@ Area.init({
     },
     sigla:{
         type:DataTypes.CHAR
+    },
+    id_unidad_organica:{
+        type:DataTypes.INTEGER
+    },
+    estado:{
+        type:DataTypes.TINYINT,
+        defaultValue:1
     }
 },{
     sequelize,
     timestamps:false,
     tableName:'area'
 });
-
-Area.hasMany(General,{
-    as:'FK_GeneralArea',
-    foreignKey:'id_area'
-});
-
-General.belongsTo(Area,{
-    sourcekey:'id',
-    foreignKey:'id_area'
-})
-
 module.exports = Area;

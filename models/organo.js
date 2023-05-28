@@ -2,11 +2,19 @@ const { Model, DataTypes } = require("sequelize");
 const sequelize = require('../database/database');
 
 
-class Tipodocumento extends Model{}
+class Organo extends Model{};
 
-Tipodocumento.init({
-    descripcion:{
+
+
+Organo.init({
+    nombre:{
         type:DataTypes.STRING
+    },
+    sigla:{
+        type:DataTypes.CHAR
+    },
+    id_sede:{
+        type:DataTypes.INTEGER
     },
     estado:{
         type:DataTypes.TINYINT,
@@ -14,8 +22,8 @@ Tipodocumento.init({
     }
 },{
     sequelize,
-    timestamps:false,
-    tableName:'tipo_documento'
-})
+    tableName:'organo',
+    timestamps:false
+});
 
-module.exports = Tipodocumento
+module.exports = Organo;
