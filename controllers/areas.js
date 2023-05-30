@@ -82,6 +82,7 @@ const modificarArea = async (req = request, res = response) => {
       }
     } );
 
+    
     res.json({
       ok: true,
       ms:'Se actulizo los datos con exito',

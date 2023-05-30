@@ -62,15 +62,28 @@ const agregarSede = async(req = request, res = response) => {
 };
 
 
-const modificarSede = (req = request, res = response) => {
+const modificarSede = async (req = request, res = response) => {
   try {
+    const {id} = req.params;
+    const {nombre, ...data} = req.body;
+    data.nombre= nombre.toUpperCase();
+
+    const resp = await Sede.update(data,{
+      where:{
+        id
+      }
+    } );
+
     res.json({
       ok: true,
+      ms:'Se actulizo los datos con exito',
+      resp
     });
+
   } catch (error) {
     res.status(400).json({
       ok: false,
-      msg: `Error:${error}`,
+      msg: `Error: ${error}`,
     });
   }
 };

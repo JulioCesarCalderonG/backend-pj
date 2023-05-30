@@ -68,8 +68,21 @@ const agregarOrgano = async (req = request, res = response) => {
 
 const modificarOrgano = async (req = request, res = response) => {
   try {
+    const {id} = req.params;
+    const {nombre, sigla, ...data} = req.body;
+    data.nombre= nombre.toUpperCase();
+    data.sigla = sigla.toUpperCase();
+
+    const resp = await Organo.update(data,{
+      where:{
+        id
+      }
+    } );
+
     res.json({
       ok: true,
+      ms:'Se actulizo los datos con exito',
+      resp
     });
   } catch (error) {
     res.status(400).json({

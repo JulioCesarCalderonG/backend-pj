@@ -1,29 +1,30 @@
-const { request, response } = require('express');
+const { request, response } = require("express");
 const {
   General,
   Cargo,
   Area,
-  Dependencia,
+  dependencia,
   Tipodocumento,
   Personal,
   Organo,
   UnidadOrganica,
-} = require('../models');
-const { obtenerDependencia } = require('../helpers/obtener-depedencia');
+} = require("../models");
+const { obtenerDependencia } = require("../helpers/obtener-depedencia");
 
 const mostrarGeneral = async (req = request, res = response) => {
   const resp = await General.findAll({
-    include:[
+    include: [
       {
-        model:Personal
-      },{
-        model:Cargo
-      }
-    ]
+        model: Personal,
+      },
+      {
+        model: Cargo,
+      },
+    ],
   });
   res.json({
     ok: true,
-    msg: 'Se muestran los datos correctamente',
+    msg: "Se muestran los datos correctamente",
     resp,
   });
 };
@@ -42,7 +43,7 @@ const agregarGeneral = async (req = request, res = response) => {
       hasta,
       ...data
     } = req.body;
-    let codigo = '';
+    let codigo = "";
     const tipodoc = await Tipodocumento.findOne({
       where: {
         id: tipo_documento,
@@ -50,8 +51,8 @@ const agregarGeneral = async (req = request, res = response) => {
     });
     const depen = await obtenerDependencia(tipo_dependencia, dependencia);
     if (
-      tipodoc.descripcion === 'BASE DE DATOS' ||
-      tipodoc.descripcion === 'SIGA'
+      tipodoc.descripcion === "BASE DE DATOS" ||
+      tipodoc.descripcion === "SIGA"
     ) {
       codigo = tipodoc.descripcion;
       const datos = {
@@ -60,20 +61,20 @@ const agregarGeneral = async (req = request, res = response) => {
         id_cargo: data.id_cargo,
         inicio: desde,
         dependencia: depen,
-        fin: hasta === '' ? 'ACTUALIDAD' : hasta,
+        fin: hasta === "" ? "ACTUALIDAD" : hasta,
       };
       const general = await General.create(datos);
       return res.json({
         ok: true,
-        msg: 'Datos ingresados con exitoso',
+        msg: "Datos ingresados con exitoso",
         resp: general,
       });
     }
-    if (tipodoc.descripcion === 'CONTRATO ADMINISTRATIVO') {
-      if (numero === '' || ano === '') {
+    if (tipodoc.descripcion === "CONTRATO ADMINISTRATIVO") {
+      if (numero === "" || ano === "") {
         return res.status(400).json({
           ok: false,
-          msg: 'Completa bien los datos',
+          msg: "Completa bien los datos",
         });
       }
       codigo = `CONTRATO ADMINISTRATIVO N° ${numero}-${ano}`;
@@ -83,20 +84,19 @@ const agregarGeneral = async (req = request, res = response) => {
         id_cargo: data.id_cargo,
         inicio: desde,
         dependencia: depen,
-        fin: hasta === '' ? 'ACTUALIDAD' : hasta,
+        fin: hasta === "" ? "ACTUALIDAD" : hasta,
       };
       const general = await General.create(datos);
       return res.json({
         ok: true,
-        msg: 'Datos ingresados con exitos',
+        msg: "Datos ingresados con exitos",
         resp: general,
       });
-    }
-    else{
-      if (tipo_sigla !== '0') {
-        if (autoriza !== '0') {
+    } else {
+      if (tipo_sigla !== "0") {
+        if (autoriza !== "0") {
           switch (tipo_sigla) {
-            case '1':
+            case "1":
               const organo = await Organo.findOne({
                 where: {
                   id: autoriza,
@@ -104,7 +104,7 @@ const agregarGeneral = async (req = request, res = response) => {
               });
               codigo = `${tipodoc.descripcion} N° ${numero}-${ano}-${organo.sigla}-CSJUC/PJ`;
               break;
-            case '2':
+            case "2":
               const unidad = await UnidadOrganica.findOne({
                 where: {
                   id: autoriza,
@@ -117,7 +117,7 @@ const agregarGeneral = async (req = request, res = response) => {
               });
               codigo = `${tipodoc.descripcion} N° ${numero}-${ano}-${unidad.sigla}-${unidad.Organo.sigla}-CSJUC/PJ`;
               break;
-            case '3':
+            case "3":
               const area = await Area.findOne({
                 where: {
                   id: autoriza,
@@ -144,26 +144,25 @@ const agregarGeneral = async (req = request, res = response) => {
             id_cargo: data.id_cargo,
             inicio: desde,
             dependencia: depen,
-            fin: hasta === '' ? 'ACTUALIDAD' : hasta,
+            fin: hasta === "" ? "ACTUALIDAD" : hasta,
           };
           const general = await General.create(datos);
           return res.json({
             ok: true,
-            msg: 'Datos ingresados con exito',
+            msg: "Datos ingresados con exito",
             resp: general,
           });
         } else {
           return res.status(400).json({
             ok: false,
-            msg: 'Selecciona bien los datos',
+            msg: "Selecciona bien los datos",
           });
         }
       }
       return res.status(400).json({
         ok: false,
-        msg: 'Selecciona bien los datos',
+        msg: "Selecciona bien los datos",
       });
-      
     }
   } catch (error) {
     res.status(400).json({
@@ -175,10 +174,35 @@ const agregarGeneral = async (req = request, res = response) => {
 
 const modificarGeneral = async (req = request, res = response) => {
   try {
+    const { id } = req.params;
+    const {
+      tipo_sigla,
+      autoriza,
+      tipo_dependencia,
+      dependencia,
+      tipo_documento,
+      ano,
+      numero,
+      desde,
+      hasta,
+      ...data
+    } = req.body;
+
+    const resp = await General.update(data, {
+      where: {
+        id,
+      },
+    });
+
+    res.json({
+      ok: true,
+      ms: "Se actulizo los datos con exito",
+      resp,
+    });
   } catch (error) {
     res.status(400).json({
       ok: false,
-      msg: `Error:${error}`,
+      msg: `Error: ${error}`,
     });
   }
 };
@@ -194,7 +218,7 @@ const mostrarIdGeneral = async (req = request, res = response) => {
     });
     res.json({
       ok: true,
-      msg: 'Id se muestran los datos correctamente',
+      msg: "Id se muestran los datos correctamente",
       resp,
     });
   } catch (error) {

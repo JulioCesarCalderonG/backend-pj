@@ -66,7 +66,7 @@ const modificarCargo = async (req = request, res = response) => {
 
     res.json({
       ok: true,
-      msg: "Cargo actualizado con exito",
+      msg: "Se actualizao los datos con exito",
       resp,
     });
   } catch (error) {
