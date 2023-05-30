@@ -1,5 +1,4 @@
 const {
-  Dependencia,
   Area,
   Cargo,
   Tipodocumento,
