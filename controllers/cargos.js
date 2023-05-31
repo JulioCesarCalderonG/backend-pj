@@ -2,13 +2,26 @@ const { request, response } = require("express");
 const { Cargo } = require("../models");
 
 const mostrarCargos = async (req = request, res = response) => {
-  const resp = await Cargo.findAll();
+  try {
+    const {estado} = req.query;
+    const resp = await Cargo.findAll({
+      where:{
+        estado
+      }
+    });
   res.json({
     ok: true,
     msg: "Se muestran los datos correctamente",
     resp,
   });
+  } catch (error) {
+    res.status(400).json({
+      ok:false,
+      msg:`Error: ${error}`,
+    });
+  }
 };
+
 
 const mostrarIdCargo = async (req = request, res = response) => {
   try {
@@ -77,10 +90,23 @@ const modificarCargo = async (req = request, res = response) => {
   }
 };
 
-const eliminarCargo = (req = request, res = response) => {
+const eliminarCargo = async (req = request, res = response) => {
   try {
+    const { id } = req.params;
+    const { estado } = req.query;
+    const data = {
+      estado,
+    };
+    const resp = await Cargo.update(data, {
+      where: {
+        id,
+      },
+    });
     res.json({
       ok: true,
+      msg:
+      estado === '1'? "Se habilito el cargo con exito":"Se deshabilito el cargo con exito",
+      resp,
     });
   } catch (error) {
     res.status(400).json({

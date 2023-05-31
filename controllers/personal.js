@@ -2,12 +2,24 @@ const { request, response } = require("express");
 const { Personal } = require("../models");
 
 const mostrarPersonales = async (req = request, res = response) => {
-  const resp = await Personal.findAll();
+  try {
+    const {estado} = req.query;
+    const resp = await Personal.findAll({
+      where:{
+        estado
+      }
+    });
   res.json({
     ok: true,
     msg: "Se muestran correctamento los datos",
     resp,
   });
+  } catch (error) {
+    res.status(400).json({
+      ok:false,
+      msg:`Error: ${error}`,
+    });
+  }
 };
 
 
@@ -86,10 +98,23 @@ const modificarPersonal = async (req = request, res = response) => {
 };
 
 
-const eliminarPersonal = (req = request, res = response) => {
+const eliminarPersonal = async (req = request, res = response) => {
   try {
+    const {id} = req.params;
+    const {estado} = req.query;
+    const {data}={
+      estado,
+    };
+    const resp = await Personal.update(data,{
+      where:{
+        id,
+      },
+    });
     res.json({
       ok: true,
+      msg:
+      (estado === '1')?"Se habilito el personal con exito":"Se deshabilito el personal con exito",
+      resp,
     });
   } catch (error) {
     res.status(400).json({

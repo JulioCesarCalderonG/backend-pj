@@ -3,7 +3,11 @@ const { Organo, Sede } = require("../models");
 
 const mostrarOrganos = async (req = request, res = response) => {
   try {
+    const {estado} = req.query;
     const resp = await Organo.findAll({
+      where:{
+        estado
+      },
       include: [
         {
           model: Sede,
@@ -23,6 +27,8 @@ const mostrarOrganos = async (req = request, res = response) => {
     });
   }
 };
+
+
 const mostrarIdOrgano = async (req = request, res = response) => {
   try {
     const { id } = req.params;
@@ -45,7 +51,6 @@ const mostrarIdOrgano = async (req = request, res = response) => {
   }
 };
 
-
 const agregarOrgano = async (req = request, res = response) => {
   try {
     const { nombre, sigla, ...data } = req.body;
@@ -65,24 +70,22 @@ const agregarOrgano = async (req = request, res = response) => {
   }
 };
 
-
 const modificarOrgano = async (req = request, res = response) => {
   try {
-    const {id} = req.params;
-    const {nombre, sigla, ...data} = req.body;
-    data.nombre= nombre.toUpperCase();
+    const { id } = req.params;
+    const { nombre, sigla, ...data } = req.body;
+    data.nombre = nombre.toUpperCase();
     data.sigla = sigla.toUpperCase();
 
-    const resp = await Organo.update(data,{
-      where:{
-        id
-      }
-    } );
-
+    const resp = await Organo.update(data, {
+      where: {
+        id,
+      },
+    });
     res.json({
       ok: true,
-      ms:'Se actulizo los datos con exito',
-      resp
+      ms: "Se actulizo los datos con exito",
+      resp,
     });
   } catch (error) {
     res.status(400).json({
@@ -91,12 +94,23 @@ const modificarOrgano = async (req = request, res = response) => {
     });
   }
 };
-
 
 const eliminarOrgano = async (req = request, res = response) => {
   try {
+    const {id} = req.params;
+    const {estado} = req.query;
+    const data = {
+      estado
+    };
+    const resp = await Organo.update(data, {
+      where: {
+        id,
+      },
+    });
     res.json({
       ok: true,
+      msg: (estado === '1')?'Se habilito el organo con exito':'Se deshabilito el organo con exito',
+      resp,
     });
   } catch (error) {
     res.status(400).json({
@@ -105,7 +119,6 @@ const eliminarOrgano = async (req = request, res = response) => {
     });
   }
 };
-
 
 module.exports = {
   mostrarOrganos,

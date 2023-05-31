@@ -18,7 +18,7 @@ router.post("",[
 
 router.put("/:id",modificarCargo);
 
-router.delete("",eliminarCargo);
+router.delete("/:id",eliminarCargo);
 
 
 

@@ -18,7 +18,7 @@ router.post("",[
 
 router.put("/:id",modificarTipodocumento);
 
-router.delete("",eliminarTipodocumento);
+router.delete("/:id",eliminarTipodocumento);
 
 
 

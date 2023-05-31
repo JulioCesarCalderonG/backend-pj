@@ -3,7 +3,12 @@ const { Sede } = require('../models');
 
 const mostrarSedes = async(req = request, res = response) => {
   try {
-    const resp = await Sede.findAll();
+    const {estado} = req. query;
+    const resp = await Sede.findAll({
+      where:{
+        estado,
+      }
+    });
     res.json({
       ok: true,
       msg:'Se muestran los datos con exitos',
@@ -89,10 +94,22 @@ const modificarSede = async (req = request, res = response) => {
 };
 
 
-const eliminarSede = (req = request, res = response) => {
+const eliminarSede = async (req = request, res = response) => {
   try {
+    const {id} = req.params;
+    const {estado} =req.query;
+    const data = {
+      estado,
+    }
+    const resp = await Sede.update(data,{
+      where:{
+        id,
+      },
+    });
     res.json({
       ok: true,
+      msg:(estado ==='1')?"Se habilito la sede con exito":"Se deshabilito la sede con exito",
+      resp,
     });
   } catch (error) {
     res.status(400).json({

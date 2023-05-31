@@ -20,7 +20,7 @@ router.post("",[
 
 router.put("/:id",modificarPersonal);
 
-router.delete("",eliminarPersonal);
+router.delete("/:id",eliminarPersonal);
 
 
 module.exports = router;

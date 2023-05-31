@@ -18,7 +18,6 @@ router.post("",[
 
 router.put("/:id",modificarAdministradores);
 
-router.delete("",eliminarAdministradores);
-
+router.delete("/:id",eliminarAdministradores);
 
 module.exports = router;
