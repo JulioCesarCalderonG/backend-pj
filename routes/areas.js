@@ -17,6 +17,6 @@ router.post("",[
 ],agregarArea);
 
 router.put("/:id",modificarArea);
-router.delete("",eliminarArea);
+router.delete("/:id",eliminarArea);
 
 module.exports = router;

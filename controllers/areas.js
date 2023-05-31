@@ -4,7 +4,11 @@ const { Area, UnidadOrganica } = require("../models");
 
 const mostrarAreas = async (req = request, res = response) => {
   try {
+    const {estado} = req.query;
     const resp = await Area.findAll({
+      where:{
+        estado
+      },
       include:[
         {
           model: UnidadOrganica,
@@ -99,8 +103,21 @@ const modificarArea = async (req = request, res = response) => {
 
 const eliminarArea = async (req = request, res = response) => {
   try {
+    const {id} = req.params;
+    const {estado} = req.query;
+    const data = {
+      estado
+    }
+    const resp = await Area.update(data,{
+      where:{
+        id
+      }
+    })
+    
     res.json({
       ok: true,
+      msg: (estado==='1')?'Se habilito el area con exito':'Se deshabilito area con exito',
+      resp
     });
   } catch (error) {
     res.status(400).json({
