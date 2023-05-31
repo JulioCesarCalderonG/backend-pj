@@ -12,10 +12,9 @@ const mostrarAdministradores = async (req = request, res = response) => {
 
 const agregarAdministradores = async (req = request, res = response) => {
   try {
-    const { usuario, password, activo, ...data } = req.body;
+    const { usuario, password, ...data } = req.body;
     data.usuario = usuario.toUpperCase();
     data.password = password.toUpperCase();
-    data.activo = activo.toUpperCase();
 
     const resp = await Administrador.create(data);
 
@@ -34,12 +33,11 @@ const agregarAdministradores = async (req = request, res = response) => {
 
 const modificarAdministradores = async (req = request, res = response) => {
   try {
-    const { usuario, password, activo, ...data } = req.body;
+    const { usuario, password, ...data } = req.body;
     const { id } = req.params;
 
     data.usuario = usuario.toUpperCase();
     data.password = password.toUpperCase();
-    data.activo = activo.toUpperCase();
 
     const resp = await Administrador.update(data, {
       where: {
