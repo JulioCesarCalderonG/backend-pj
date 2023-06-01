@@ -102,13 +102,13 @@ const eliminarPersonal = async (req = request, res = response) => {
   try {
     const {id} = req.params;
     const {estado} = req.query;
-    const {data}={
+    const data={
       estado,
     };
     const resp = await Personal.update(data,{
       where:{
-        id,
-      },
+        id
+      }
     });
     res.json({
       ok: true,
