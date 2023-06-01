@@ -3,7 +3,11 @@ const { UnidadOrganica, Organo } = require("../models");
 
 const mostrarUnidadOrganicas = async (req = request, res = response) => {
   try {
+    const {estado} = req.query;
     const resp = await UnidadOrganica.findAll({
+      where:{
+        estado,
+      },
       include: [
         {
           model: Organo,
@@ -96,8 +100,20 @@ const modificarUnidadOrganica = async (req = request, res = response) => {
 
 const eliminarUnidadOrganica = async (req = request, res = response) => {
   try {
+    const {id} = req.params;
+    const {estado} = req.query;
+    const data = {
+      estado
+    }
+    const resp = await UnidadOrganica.update(data,{
+      where:{
+        id
+      }
+    })
     res.json({
       ok: true,
+      msg: (estado === '1')?"Se habilito unidad organica con exito":"Se deshabilito unidad organica con exito",
+      resp,
     });
   } catch (error) {
     res.status(400).json({
