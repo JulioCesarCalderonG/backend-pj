@@ -10,25 +10,119 @@ const {
   UnidadOrganica,
 } = require("../models");
 const { obtenerDependencia } = require("../helpers/obtener-depedencia");
-
+const { Op } = require("sequelize");
 const mostrarGeneral = async (req = request, res = response) => {
-  const resp = await General.findAll({
-    include: [
-      {
-        model: Personal,
-      },
-      {
-        model: Cargo,
-      },
-    ],
-  });
-  res.json({
-    ok: true,
-    msg: "Se muestran los datos correctamente",
-    resp,
-  });
+  const {tipofiltro,dato} = req.query;
+  if (tipofiltro==='' && dato === '') {
+    const resp = await General.findAll({
+      include: [
+        {
+          model: Personal,
+        },
+        {
+          model: Cargo,
+        },
+      ],
+    });
+    return res.json({
+      ok: true,
+      msg: "Se muestran los datos correctamente",
+      resp,
+    });
+    }
+    
+    switch (tipofiltro) {
+      case '1':
+        const resps = await General.findAll({
+          where:{
+            [Op.or]: [
+              {
+                codigo_documento: {
+                  [Op.startsWith]: `%${dato}%`,
+                },
+              },
+            ],
+          },
+          include: [
+            {
+              model: Personal,
+              
+            },
+            {
+              model: Cargo,
+            },
+          ],
+        });
+        return res.json({
+          ok: true,
+          msg: "Se muestran los datos correctamente",
+          resp:resps,
+        });
+      case '2':
+        const reps = await General.findAll({
+          where:{
+            [Op.or]: [
+              {
+                dependencia: {
+                  [Op.startsWith]: `%${dato}%`,
+                },
+              },
+            ],
+          },
+          include: [
+            {
+              model: Personal,
+              
+            },
+            {
+              model: Cargo,
+            },
+          ],
+        });
+        return res.json({
+          ok: true,
+          msg: "Se muestran los datos correctamente",
+          resp:reps
+        });
+      case '3':
+        const resp = await General.findAll({
+          include: [
+            {
+              model: Personal,
+              where:{
+                [Op.or]: [
+                  {
+                    nombre: {
+                      [Op.startsWith]: `%${dato}%`,
+                    },
+                  },
+                  {
+                    apellido: {
+                      [Op.startsWith]: `%${dato}%`,
+                    },
+                  }
+                ],
+              }
+            },
+            {
+              model: Cargo,
+            },
+          ],
+        });
+        return res.json({
+          ok: true,
+          msg: "Se muestran los datos correctamente",
+          resp,
+        });
+      default:
+        return res.json({
+          ok: true,
+          msg: "Se muestran los datos correctamente",
+          resp:null
+        });
+    
+  }
 };
-
 const agregarGeneral = async (req = request, res = response) => {
   try {
     const {
