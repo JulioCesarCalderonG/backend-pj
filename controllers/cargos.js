@@ -1,5 +1,5 @@
 const { request, response } = require("express");
-const { Cargo } = require("../models");
+const { Cargo, TipoPersonal } = require("../models");
 
 const mostrarCargos = async (req = request, res = response) => {
   try {
@@ -7,7 +7,12 @@ const mostrarCargos = async (req = request, res = response) => {
     const resp = await Cargo.findAll({
       where:{
         estado
-      }
+      },
+      include:[
+        {
+          model:TipoPersonal
+        }
+      ]
     });
   res.json({
     ok: true,
@@ -35,6 +40,28 @@ const mostrarIdCargo = async (req = request, res = response) => {
     res.json({
       ok: true,
       msg: "Id se muestran los datos correctamente",
+      resp,
+    });
+  } catch (error) {
+    res.status(400).json({
+      ok: false,
+      msg: `Error:${error}`,
+    });
+  }
+};
+
+const mostrarTipoPersonalId = async (req = request, res = response) => {
+  try {
+    const { id } = req.params;
+
+    const resp = await Cargo.findAll({
+      where: {
+        id_tipo_personal:id,
+      },
+    });
+    res.json({
+      ok: true,
+      msg: "Se muestran los datos con exito",
       resp,
     });
   } catch (error) {
@@ -119,6 +146,7 @@ const eliminarCargo = async (req = request, res = response) => {
 module.exports = {
   mostrarCargos,
   mostrarIdCargo,
+  mostrarTipoPersonalId,
   agregarCargo,
   modificarCargo,
   eliminarCargo,

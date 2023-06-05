@@ -9,6 +9,9 @@ Cargo.init({
     descripcion:{
         type:DataTypes.STRING
     },
+    id_tipo_personal:{
+        type:DataTypes.INTEGER
+    },
     estado:{
         type:DataTypes.TINYINT,
         defaultValue:1

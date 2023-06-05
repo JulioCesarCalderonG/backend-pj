@@ -11,6 +11,7 @@ const {
 } = require("../models");
 const { obtenerDependencia } = require("../helpers/obtener-depedencia");
 const { Op } = require("sequelize");
+const { subirArchivo } = require("../helpers");
 const mostrarGeneral = async (req = request, res = response) => {
   const {tipofiltro,dato} = req.query;
   if (tipofiltro==='' && dato === '') {
@@ -138,6 +139,8 @@ const agregarGeneral = async (req = request, res = response) => {
       ...data
     } = req.body;
     let codigo = "";
+    const file = req.files;
+    const documento = await subirArchivo(file,['pdf'],'record-laboral');
     const tipodoc = await Tipodocumento.findOne({
       where: {
         id: tipo_documento,
@@ -156,6 +159,7 @@ const agregarGeneral = async (req = request, res = response) => {
         inicio: desde,
         dependencia: depen,
         fin: hasta === "" ? "ACTUALIDAD" : hasta,
+        documento
       };
       const general = await General.create(datos);
       return res.json({
@@ -179,6 +183,7 @@ const agregarGeneral = async (req = request, res = response) => {
         inicio: desde,
         dependencia: depen,
         fin: hasta === "" ? "ACTUALIDAD" : hasta,
+        documento
       };
       const general = await General.create(datos);
       return res.json({
@@ -239,6 +244,7 @@ const agregarGeneral = async (req = request, res = response) => {
             inicio: desde,
             dependencia: depen,
             fin: hasta === "" ? "ACTUALIDAD" : hasta,
+            documento
           };
           const general = await General.create(datos);
           return res.json({

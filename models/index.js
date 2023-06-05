@@ -9,7 +9,7 @@ const Administrador = require("./administrador");
 const General = require("./general");
 const Organo = require("./organo");
 const Sede = require("./sede");
-
+const TipoPersonal = require('./tipo_personal')
 module.exports = {
   Server,
   Personal,
@@ -20,5 +20,6 @@ module.exports = {
   Administrador,
   General,
   Organo,
-  Sede
+  Sede,
+  TipoPersonal
 };

@@ -25,7 +25,10 @@ class Server {
             general: '/api/general',
             sede:'/api/sede',
             organo:'/api/organo',
-            unidadorganica:'/api/unidadorganica'
+            unidadorganica:'/api/unidadorganica',
+            tipopersonal:'/api/tipopersonal',
+            uploadgeneral:'/api/uploadgeneral',
+            reporte:'/api/reporte'
     };
     //Connect to socket
     this.httpServer = new http.Server(this.app);
@@ -92,6 +95,9 @@ class Server {
     this.app.use(this.paths.sede, require('../routes/sede'));
     this.app.use(this.paths.organo, require('../routes/organos'));
     this.app.use(this.paths.unidadorganica, require('../routes/unidadorganicas'));
+    this.app.use(this.paths.tipopersonal, require('../routes/tipo_personal'));
+    this.app.use(this.paths.uploadgeneral, require('../routes/upload-general'));
+    this.app.use(this.paths.reporte, require('../routes/reporte'));
   }
   listen() {
     this.httpServer.listen(this.port, () => {
