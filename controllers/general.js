@@ -158,7 +158,7 @@ const agregarGeneral = async (req = request, res = response) => {
         id_cargo: data.id_cargo,
         inicio: desde,
         dependencia: depen,
-        fin: hasta === "" ? "ACTUALIDAD" : hasta,
+        fin: hasta === "" ? "2030-12-30" : hasta,
         documento
       };
       const general = await General.create(datos);
@@ -182,7 +182,7 @@ const agregarGeneral = async (req = request, res = response) => {
         id_cargo: data.id_cargo,
         inicio: desde,
         dependencia: depen,
-        fin: hasta === "" ? "ACTUALIDAD" : hasta,
+        fin: hasta === "" ? "2030-12-30" : hasta,
         documento
       };
       const general = await General.create(datos);
@@ -243,7 +243,7 @@ const agregarGeneral = async (req = request, res = response) => {
             id_cargo: data.id_cargo,
             inicio: desde,
             dependencia: depen,
-            fin: hasta === "" ? "ACTUALIDAD" : hasta,
+            fin: hasta === "" ? "2030-12-30" : hasta,
             documento
           };
           const general = await General.create(datos);

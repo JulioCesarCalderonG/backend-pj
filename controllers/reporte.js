@@ -2,18 +2,18 @@ const { request, response } = require("express");
 const fs = require('fs');
 const path= require('path');
 const pdf = require('pdf-creator-node');
-const data = require('../api/data');
-const { Organo, Personal, Cargo, General } = require("../models");
+const { Organo, Personal, Cargo, General, UnidadOrganica, Area } = require("../models");
 const { Op } = require("sequelize");
 const postRecordLaboral =async(req=request,res=response)=>{
     try {
-        const {tipofiltro,tipodependencia,dependencia,buscar, fechainicio, fechafin} = req.body;
+        const {tipofiltro,tipodependencia,dependencia,personal, fechainicio, fechafin} = req.body;
 
 
         
         const html = fs.readFileSync(path.join(__dirname,'../pdf/html/relacionpersonal.html'),'utf-8');
         const filename = Math.random()+'_doc'+'.pdf';
         let array = [];
+        
         const options = {
             format: "A3",
             orientation: "landscape",
@@ -44,8 +44,11 @@ const postRecordLaboral =async(req=request,res=response)=>{
                     const resp = await General.findAll({
                         where:{
                             [Op.and]:[
-                                
                                 {
+                                    dependencia:organo.nombre,
+                                },
+                                {
+                                    
                                     inicio:{
                                         [Op.gte]:fechainicio
                                     }
@@ -65,45 +68,150 @@ const postRecordLaboral =async(req=request,res=response)=>{
                             }
                         ]
                     });
-                    console.log(resp);
+                    resp.forEach(d => {
+                        let i = 1;
+                        const prod = {
+                            id: `${i}`,
+                            documento: d.codigo_documento,
+                            personal:`${d.Personal.nombre} ${d.Personal.apellido}`,
+                            dependencia: d.dependencia,
+                            cargo: `${d.Cargo.descripcion}`,
+                            desde: d.inicio,
+                            hasta: d.fin,
+                        }
+                        i++;
+                        array.push(prod);
+                    });
                     break;
                 case '2':
-                    
+                    const unidad = await UnidadOrganica.findOne({
+                        where:{
+                            id:dependencia   
+                        }
+                    })
+                    const resp2 = await General.findAll({
+                        where:{
+                            [Op.and]:[
+                                {
+                                    dependencia:unidad.nombre,
+                                },
+                                {
+                                    
+                                    inicio:{
+                                        [Op.gte]:fechainicio
+                                    }
+                                },{
+                                    fin:{
+                                        [Op.lte]:fechafin
+                                    }
+                                }
+                            ]
+                        },
+                        include:[
+                            {
+                                model:Personal
+                            },
+                            {
+                                model:Cargo
+                            }
+                        ]
+                    });
+                    console.log(resp2);
+                    resp2.forEach(d => {
+                        const i = 1;
+                        const prod = {
+                            id: i++,
+                            documento: d.codigo_documento,
+                            personal:``,
+                            dependencia: d.dependencia,
+                            cargo: '',
+                            desde: d.inicio,
+                            hasta: d.fin,
+                        }
+                        array.push(prod);
+                    });
                     break;
                 case '3':
-                    
+                    const area = await Area.findOne({
+                        where:{
+                            id:dependencia   
+                        }
+                    })
+                    const resp3 = await General.findAll({
+                        where:{
+                            [Op.and]:[
+                                {
+                                    dependencia:area.nombre,
+                                },
+                                {
+                                    
+                                    inicio:{
+                                        [Op.gte]:fechainicio
+                                    }
+                                },{
+                                    fin:{
+                                        [Op.lte]:fechafin
+                                    }
+                                }
+                            ]
+                        },
+                        include:[
+                            {
+                                model:Personal
+                            },
+                            {
+                                model:Cargo
+                            }
+                        ]
+                    });
+                    console.log(resp3);
+                    resp3.forEach(d => {
+                        const i = 1;
+                        const prod = {
+                            id: i++,
+                            documento: d.codigo_documento,
+                            personal:``,
+                            dependencia: d.dependencia,
+                            cargo: '',
+                            desde: d.inicio,
+                            hasta: d.fin,
+                        }
+                        array.push(prod);
+                    });
                     break;
                 default:
                     break;
             }
         }else{
-
+            const resp = await General.findAll({
+                where:{
+                    id_personal:personal
+                },
+                include:[
+                    {
+                        model:Personal
+                    },
+                    {
+                        model:Cargo
+                    }
+                ]
+            });
         }
 
-        data.forEach(d => {
-            const prod = {
-                name: d.name,
-                description: d.description,
-                unit: d.unit,
-                quantity: d.quantity,
-                price: d.price,
-                total: d.quantity * d.price,
-                imgurl: d.imgurl
-            }
-            array.push(prod);
-        });
+        
 
-        let subtotal = 0;
+        /* let subtotal = 0;
         array.forEach(i => {
             subtotal += i.total
         });
         const tax = (subtotal * 20) / 100;
-        const grandtotal = subtotal - tax;
+        const grandtotal = subtotal - tax; */
+        console.log(array);
         const obj = {
             prodlist: array,
-            subtotal: subtotal,
-            tax: tax,
-            gtotal: grandtotal
+            subtotal: '',
+            tax: '',
+            gtotal: ''
         }
         const document = {
             html: html,
@@ -120,7 +228,8 @@ const postRecordLaboral =async(req=request,res=response)=>{
             });
 
             res.json({
-                ok:true
+                ok:true,
+                array
             })
     } catch (error) {
         res.status(400).json({

@@ -29,36 +29,37 @@
       </tr>
   </table> 
       
-      <table class="table" width="95%">
+      <table class="table" width="95%" border="1" cellspacing="0">
           <thead>
             <tr>
-              <th scope="col">Photo</th>
-              <th scope="col">Description</th>
-              <th scope="col">Unit</th>
-              <th scope="col">Quantity</th>
-              <th scope="col">Price</th>
-              <th scope="col">Total</th>
+              <th scope="col">N°</th>
+              <th scope="col">Documento que autoriza</th>
+              <th scope="col">Apellidos y Nombres</th>
+              <th scope="col">Depedencia</th>
+              <th scope="col">Cargo</th>
+              <th scope="col">Desde</th>
+              <th scope="col">Hasta</th>
             </tr>
           </thead>
           <tbody>
             {{#each products.prodlist}}
             <tr>
-              <td width="10%">
-                <img height="70" width="70" src="{{this.imgurl}}" alt="">
-              </td>
-              <th scope="row" width="50%">
-                <h5 style="font-weight: 700;color:chocolate">{{this.name}}</h5>
-                <p>{{this.description}}</p>
+              <th scope="row" width="3%">
+                <p>{{this.id}}</p>
               </th>
-              <td width="10%">{{this.unit}}</td>
-              <td width="10%">{{this.quantity}}</td>
-              <td width="10%">${{this.price}}</td>
-              <td width="10%">${{this.total}}</td>
+              <th scope="row" width="27%">
+                <p>{{this.documento}}</p>
+              </th>
+              <th scope="row" width="20%">{{this.personal}}</th>
+              <th scope="row" width="20%">{{this.dependencia}}</th>
+              <th scope="row" width="10%">{{this.cargo}}</th>
+              <th scope="row" width="10%">{{this.desde}}</th>
+              <th scope="row" width="10%">{{this.hasta}}</th>
             </tr>
             {{/each}}
           </tbody>
         </table>
-        <table width="95%" border="0" cellspacing="0" cellpadding="0">
+        <!-- <table width="95%" border="0" cellspacing="0" cellpadding="0">
           <tr>
             <td width="90%"  align="right" style="font-size: 25px;font-weight: 700;color:darkred; background-color: #f6f6f6;">Sub Total</td>
             <td width="10%" align="right" style="background-color: lightgreen;"><h2 style="font-size: 25px;font-weight: 700;color:#fff;">${{products.subtotal}}</h2></td>
@@ -79,6 +80,6 @@
           <tr>
             <td width="100%"  align="left" style="font-size: 25px;font-weight: 700;color:#000; background-color: #f6f6f6;">A finance charge of 1.5% will be made on unpaid balances after 30 days.</td>
           </tr>
-        </table>
+        </table> -->
 </body>
 </html>
