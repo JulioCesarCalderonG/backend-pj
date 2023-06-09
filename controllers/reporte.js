@@ -1,7 +1,7 @@
-const { request, response } = require('express');
-const fs = require('fs');
-const path = require('path');
-const pdf = require('pdf-creator-node');
+const { request, response } = require("express");
+const fs = require("fs");
+const path = require("path");
+const pdf = require("pdf-creator-node");
 const {
   Organo,
   Personal,
@@ -10,8 +10,11 @@ const {
   UnidadOrganica,
   Area,
   Sede,
-} = require('../models');
-const { Op } = require('sequelize');
+} = require("../models");
+const { Op } = require("sequelize");
+const Licencia = require("../models/licencia");
+const DetalleLicencia = require("../models/detalle-licencia");
+const TipoLicencia = require("../models/tipo-licencia");
 const postRecordLaboral = async (req = request, res = response) => {
   try {
     const {
@@ -22,35 +25,35 @@ const postRecordLaboral = async (req = request, res = response) => {
       fechainicio,
       fechafin,
     } = req.body;
-    const fechafinal = fechafin === '' ? '2030-12-30' : fechafin;
+    const fechafinal = fechafin === "" ? "2030-12-30" : fechafin;
 
     let array = [];
     let data = [];
-    let nombredepedencia = '';
-    let sede = '';
+    let nombredepedencia = "";
+    let sede = "";
     const options = {
-      format: 'A3',
-      orientation: 'landscape',
-      border: '10mm',
+      format: "A3",
+      orientation: "landscape",
+      border: "10mm",
       header: {
-        height: '0mm',
+        height: "0mm",
         contents: '<div style="text-align: center;">Author: Shyam Hajare</div>',
       },
       footer: {
-        height: '28mm',
+        height: "28mm",
         contents: {
-          first: 'Cover page',
-          2: 'Second page', // Any page number is working. 1-based index
+          first: "Cover page",
+          2: "Second page", // Any page number is working. 1-based index
           default:
             '<span style="color: #444;">{{page}}</span>/<span>{{pages}}</span>', // fallback value
-          last: 'Last Page',
+          last: "Last Page",
         },
       },
     };
 
-    if (tipofiltro === '1') {
+    if (tipofiltro === "1") {
       switch (tipodependencia) {
-        case '1':
+        case "1":
           const organo = await Organo.findOne({
             where: {
               id: dependencia,
@@ -92,7 +95,7 @@ const postRecordLaboral = async (req = request, res = response) => {
           nombredepedencia = organo.nombre;
           sede = organo.Sede.nombre;
           break;
-        case '2':
+        case "2":
           const unidad = await UnidadOrganica.findOne({
             where: {
               id: dependencia,
@@ -139,7 +142,7 @@ const postRecordLaboral = async (req = request, res = response) => {
           nombredepedencia = unidad.nombre;
           sede = unidad.Organo.Sede.nombre;
           break;
-        case '3':
+        case "3":
           const area = await Area.findOne({
             where: {
               id: dependencia,
@@ -196,10 +199,10 @@ const postRecordLaboral = async (req = request, res = response) => {
       }
     } else {
       const html = fs.readFileSync(
-        path.join(__dirname, '../pdf/html/recordlaboral.html'),
-        'utf-8'
+        path.join(__dirname, "../pdf/html/recordlaboral.html"),
+        "utf-8"
       );
-      const filename = Math.random() + '_doc' + '.pdf';
+      const filename = Math.random() + "_doc" + ".pdf";
       const person = await Personal.findOne({
         where: {
           id: personal,
@@ -220,13 +223,13 @@ const postRecordLaboral = async (req = request, res = response) => {
       });
       if (resp.length === 0) {
         const prod = {
-          id: '',
-          documento: '',
-          personal: '',
-          dependencia: '',
-          cargo: '',
-          desde: '',
-          hasta: '',
+          id: "",
+          documento: "",
+          personal: "",
+          dependencia: "",
+          cargo: "",
+          desde: "",
+          hasta: "",
         };
         array.push(prod);
       } else {
@@ -239,7 +242,7 @@ const postRecordLaboral = async (req = request, res = response) => {
             dependencia: d.dependencia,
             cargo: `${d.Cargo.descripcion}`,
             desde: d.inicio,
-            hasta: d.fin === '2030-12-30' ? 'ACTUALIDAD' : d.fin,
+            hasta: d.fin === "2030-12-30" ? "ACTUALIDAD" : d.fin,
           };
           i++;
           array.push(prod);
@@ -256,31 +259,31 @@ const postRecordLaboral = async (req = request, res = response) => {
         data: {
           products: obj,
         },
-        path: './pdf/reportes/' + filename,
+        path: "./pdf/reportes/" + filename,
       };
       const archivo = await pdf.create(document, options);
-      const nom = archivo.filename.split('\\');
+      const nom = archivo.filename.split("\\");
       const nombre = nom[nom.length - 1];
       return res.json({
         ok: true,
-        msg: 'Se creo documento',
+        msg: "Se creo documento",
         nombre,
       });
     }
     const html = fs.readFileSync(
-      path.join(__dirname, '../pdf/html/relacionpersonal.html'),
-      'utf-8'
+      path.join(__dirname, "../pdf/html/relacionpersonal.html"),
+      "utf-8"
     );
-    const filename = Math.random() + '_doc' + '.pdf';
+    const filename = Math.random() + "_doc" + ".pdf";
     if (data.length === 0) {
       const prod = {
-        id: '',
-        documento: '',
-        personal: '',
-        dependencia: '',
-        cargo: '',
-        desde: '',
-        hasta: '',
+        id: "",
+        documento: "",
+        personal: "",
+        dependencia: "",
+        cargo: "",
+        desde: "",
+        hasta: "",
       };
       array.push(prod);
     } else {
@@ -293,7 +296,7 @@ const postRecordLaboral = async (req = request, res = response) => {
           dependencia: d.dependencia,
           cargo: `${d.Cargo.descripcion}`,
           desde: d.inicio,
-          hasta: d.fin === '2030-12-30' ? 'ACTUALIDAD' : d.fin,
+          hasta: d.fin === "2030-12-30" ? "ACTUALIDAD" : d.fin,
         };
         i++;
         array.push(prod);
@@ -302,27 +305,27 @@ const postRecordLaboral = async (req = request, res = response) => {
     const obj = {
       prodlist: array,
       tipopersonal:
-        tipodependencia === '1'
-          ? 'MAGISTRADOS Y PERSONAL JURISDICCIONAL'
-          : 'FUNCIONARIOS Y PERSONAL ADMINISTRATIVO',
+        tipodependencia === "1"
+          ? "MAGISTRADOS Y PERSONAL JURISDICCIONAL"
+          : "FUNCIONARIOS Y PERSONAL ADMINISTRATIVO",
       dependencia: nombredepedencia,
       sede: sede,
       inicio: fechainicio,
-      fin: fechafin === '' ? 'LA ACTUALIDAD' : fechafin,
+      fin: fechafin === "" ? "LA ACTUALIDAD" : fechafin,
     };
     const document = {
       html: html,
       data: {
         products: obj,
       },
-      path: './pdf/reportes/' + filename,
+      path: "./pdf/reportes/" + filename,
     };
     const archivo = await pdf.create(document, options);
-    const nom = archivo.filename.split('\\');
+    const nom = archivo.filename.split("\\");
     const nombre = nom[nom.length - 1];
     return res.json({
       ok: true,
-      msg: 'Se creo documento',
+      msg: "Se creo documento",
       nombre,
     });
   } catch (error) {
@@ -332,11 +335,233 @@ const postRecordLaboral = async (req = request, res = response) => {
     });
   }
 };
+const postRecordLaboralPersona = async (req = request, res = response) => {
+  try {
+    const { id } = req.params;
+    let array = [];
+    const options = {
+      format: "A3",
+      orientation: "landscape",
+      border: "10mm",
+      header: {
+        height: "0mm",
+        contents: '<div style="text-align: center;">Author: Shyam Hajare</div>',
+      },
+      footer: {
+        height: "28mm",
+        contents: {
+          first: "Cover page",
+          2: "Second page", // Any page number is working. 1-based index
+          default:
+            '<span style="color: #444;">{{page}}</span>/<span>{{pages}}</span>', // fallback value
+          last: "Last Page",
+        },
+      },
+    };
 
+    const html = fs.readFileSync(
+      path.join(__dirname, "../pdf/html/recordlaboral.html"),
+      "utf-8"
+    );
+    const filename = Math.random() + "_doc" + ".pdf";
+    const person = await Personal.findOne({
+      where: {
+        id,
+      },
+    });
+    const depen = await General.findOne({
+      where:{
+        id_personal: id,
+        fin:'2030-12-30'
+      }
+    })
+    const resp = await General.findAll({
+      where: {
+        id_personal: id,
+      },
+      include: [
+        {
+          model: Personal,
+        },
+        {
+          model: Cargo,
+        },
+      ],
+    });
+    if (resp.length === 0) {
+      const prod = {
+        id: "",
+        documento: "",
+        personal: "",
+        dependencia: "",
+        cargo: "",
+        desde: "",
+        hasta: "",
+      };
+      array.push(prod);
+    } else {
+      for (let i = 0; i < resp.length; i++) {
+        const prod = {
+          id: `${i+1}`,
+          documento: resp[i].codigo_documento,
+          dependencia: resp[i].dependencia,
+          cargo: `${resp[i].Cargo.descripcion}`,
+          desde: resp[i].inicio,
+          hasta: resp[i].fin === "2030-12-30" ? "ACTUALIDAD" : resp[i].fin,
+        };
+        array.push(prod);
+        
+      }
+    }
+    const obj = {
+      prodlist: array,
+      personal: `${person.nombre} ${person.apellido}`,
+      escalafon: person.escalafon,
+      inicio: person.fecha_inicio,
+      dependencia:depen.dependencia
+    };
+    const document = {
+      html: html,
+      data: {
+        products: obj,
+      },
+      path: "./pdf/reportes/" + filename,
+    };
+    const archivo = await pdf.create(document, options);
+    const nom = archivo.filename.split("\\");
+    const nombre = nom[nom.length - 1];
+
+    return res.json({
+      ok: true,
+      msg: "Se creo documento",
+      nombre,
+    });
+  } catch (error) {
+    res.status(400).json({
+      ok: false,
+      msg: `Error: ${error}`,
+    });
+  }
+};
+const postLicenciaPersona = async (req = request, res = response) => {
+  try {
+    const { id } = req.params;
+    let array = [];
+    const options = {
+      format: "A4",
+      orientation: "portrait",
+      border: "10mm",
+      header: {
+        height: "0mm",
+        contents: '<div style="text-align: center;">Author: Shyam Hajare</div>',
+      },
+      footer: {
+        height: "28mm",
+        contents: {
+          first: "Cover page",
+          2: "Second page", // Any page number is working. 1-based index
+          default:
+            '<span style="color: #444;">{{page}}</span>/<span>{{pages}}</span>', // fallback value
+          last: "Last Page",
+        },
+      },
+    };
+
+    const html = fs.readFileSync(
+      path.join(__dirname, "../pdf/html/licenciapersonal.html"),
+      "utf-8"
+    );
+    const filename = Math.random() + "_doc" + ".pdf";
+    const person = await Personal.findOne({
+      where: {
+        id,
+      },
+    });
+    const depen = await General.findOne({
+      where:{
+        id_personal: id,
+        fin:'2030-12-30'
+      }
+    });
+    
+    const resp = await Licencia.findAll({
+      where: {
+        id_personal: id
+      },
+      include: [
+        {
+          model: Personal,
+        },
+        {
+          model: DetalleLicencia,
+          include:[
+            {
+              model:TipoLicencia
+            }
+          ]
+        },
+      ],
+    });
+    if (resp.length === 0) {
+      const prod = {
+        id: "",
+        documento: "",
+        personal: "",
+        dependencia: "",
+        cargo: "",
+        desde: "",
+        hasta: "",
+      };
+      array.push(prod);
+    } else {
+      for (let i = 0; i < resp.length; i++) {
+        const prod = {
+          id: `${i+1}`,
+          documento: resp[i].codigo_documento,
+          tipolicencia: resp[i].DetalleLicencium.TipoLicencium.nombre,
+          detallelicencia: `${resp[i].DetalleLicencium.nombre}`,
+          dias:resp[i].dias,
+          desde: resp[i].inicio,
+          hasta: resp[i].fin,
+        };
+        array.push(prod);
+        
+      }
+    }
+     const obj = {
+      prodlist: array,
+      personal: `${person.nombre} ${person.apellido}`,
+      escalafon: person.escalafon,
+      inicio: person.fecha_inicio,
+      dependencia:depen.dependencia
+    }; 
+    const document = {
+      html: html,
+      data: {
+        products: obj,
+      },
+      path: "./pdf/reportes/" + filename,
+    };
+    const archivo = await pdf.create(document, options);
+    const nom = archivo.filename.split("\\");
+    const nombre = nom[nom.length - 1];
+
+    return res.json({
+      ok: true,
+      msg: "Se creo documento",
+      nombre
+    });
+  } catch (error) {
+    res.status(400).json({
+      ok: false,
+      msg: `Error: ${error}`,
+    });
+  }
+};
 const mostrarReporteRecordLaboral = async (req = request, res = response) => {
   try {
     const { nombre } = req.params;
-    const pathImagen = path.join(__dirname, '../pdf', 'reportes', nombre);
+    const pathImagen = path.join(__dirname, "../pdf", "reportes", nombre);
     return res.sendFile(pathImagen);
   } catch (error) {
     res.status(400).json({
@@ -345,8 +570,23 @@ const mostrarReporteRecordLaboral = async (req = request, res = response) => {
     });
   }
 };
-
+const mostrarLicenciaLaboral = async (req = request, res = response) => {
+  try {
+    const { nombre } = req.params;
+    const pathImagen = path.join(__dirname, "../pdf", "reportes", nombre);
+    return res.sendFile(pathImagen);
+  } catch (error) {
+    res.status(400).json({
+      ok: false,
+      msg: `${error}`,
+    });
+  }
+};
 module.exports = {
   postRecordLaboral,
+  postRecordLaboralPersona,
+  postLicenciaPersona,
+  postLicenciaPersona,
   mostrarReporteRecordLaboral,
+  mostrarLicenciaLaboral
 };
