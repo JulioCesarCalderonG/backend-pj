@@ -24,5 +24,8 @@ module.exports = {
   General,
   Organo,
   Sede,
-  TipoPersonal
+  TipoPersonal,
+  TipoLicencia,
+  DetalleLicencia,
+  Licencia
 };

@@ -5,7 +5,9 @@ const {
   Personal,
   Administrador,
   Sede,
+  DetalleLicencia,
 } = require('../models');
+const TipoLicencia = require('../models/tipo-licencia');
 
 const validarNombreArea = async (nombre = '') => {
   const existeArea = await Area.findOne({
@@ -136,6 +138,31 @@ const validarNombreUnidadOrganica = async (nombre = '') => {
   }
 };
 
+const validarNombreTipoLicencia = async (nombre = '') => {
+  const existeTipoLicencia = await TipoLicencia.findOne({
+    where: {
+      nombre: `${nombre.toUpperCase()}`,
+    },
+  });
+  if (existeTipoLicencia) {
+    throw new Error(
+      `El Tipo Licencia ${nombre} ya está registrado en la BD`
+    );
+  }
+};
+
+const validarNombreDetalleLicencia = async (nombre = '') =>{
+  const existeDetalleLicencia = await DetalleLicencia.findOne({
+    where:{
+      nombre: `${nombre.toUpperCase()}`,
+    },
+  });
+  if (existeDetalleLicencia) {
+    throw new Error(
+      `El Detalle Licencia ${nombre} ya está registrado en la BD`
+    );
+  }
+}
 
 module.exports = {
   validarNombreArea,
@@ -149,5 +176,7 @@ module.exports = {
   validarNombreArea,
   validarNombreSede,
   validarNombreOrgano,
-  validarNombreUnidadOrganica
+  validarNombreUnidadOrganica,
+  validarNombreTipoLicencia,
+  validarNombreDetalleLicencia
 };

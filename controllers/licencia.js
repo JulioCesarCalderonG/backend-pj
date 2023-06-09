@@ -40,6 +40,13 @@ const mostrarLicenciasPersonal = async(req=request,res=response)=>{
         })
     }
 }
+
+
+const mostrarLicencias = (req=request, res=response)=>{
+
+}
+
+
 const guardarLicencias = async(req=request,res=response)=>{
     try {
         const file = req.files;
@@ -86,7 +93,41 @@ const guardarLicencias = async(req=request,res=response)=>{
 }
 
 
+const modificarLicencias = (req=request, resp=response)=>{
+
+}
+
+const mostrarIdLicencias = async(req=request, res=response)=>{
+try {
+    const {id} = req.params;
+    const resp = await Licencia.findOne({
+        where:{
+            id,
+        },
+    });
+    res.json({
+        ok:true,
+        msg:"Se muestra los datos correctamente",
+        resp,
+    })
+} catch (error) {
+    res.status(400).json({
+        ok:false,
+        msg:`Error:${error}`,
+    });
+}
+};
+
+const eliminarLicencias = (req=request, res=response)=>{
+
+}
+
+
 module.exports = {
     mostrarLicenciasPersonal,
-    guardarLicencias
+    guardarLicencias,
+    mostrarLicencias,
+    modificarLicencias,
+    mostrarIdLicencias,
+    eliminarLicencias
 }

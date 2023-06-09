@@ -16,7 +16,7 @@ const mostrarTipodocumento = async (req = request, res = response) => {
     });
   } catch (error) {
     res.status(400).json({
-      ok: fals,
+      ok: false,
       msg: `Error: ${error}`,
     });
   }
