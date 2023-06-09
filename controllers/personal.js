@@ -48,10 +48,11 @@ const mostrarIdPersonal = async (req = request, res = response) => {
 
 const agregarPersonal = async (req = request, res = response) => {
   try {
-    const { nombre, apellido, escalafon, ...data } = req.body;
+    const { nombre, apellido, escalafon,fechainicio, ...data } = req.body;
     data.nombre = nombre.toUpperCase();
     data.apellido = apellido.toUpperCase();
     data.escalafon = escalafon;
+    data.fecha_inicio = fechainicio.toUpperCase();
 
     const resp = await Personal.create(data);
 

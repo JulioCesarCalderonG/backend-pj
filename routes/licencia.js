@@ -5,14 +5,14 @@ const { validarCampos, validarArchivoSubir } = require("../middlewares");
 
 const router = Router();
 router.get('',mostrarLicencias);
-router.get('',mostrarIdLicencias);
+router.get('/:id',mostrarIdLicencias);
 router.get('/personal/:id',mostrarLicenciasPersonal);
 router.post('',[
     validarArchivoSubir,
     validarCampos
 ],guardarLicencias);
-router.put('',modificarLicencias);
-router.delete('',eliminarLicencias);
+router.put('/:id',modificarLicencias);
+router.delete('/:id',eliminarLicencias);
 
 
 module.exports = router;

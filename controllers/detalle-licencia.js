@@ -111,7 +111,30 @@ try {
 }
 }
 
-const eliminarDetalleLicencia = ()=>{}
+const eliminarDetalleLicencia = async(req=request, res=response)=>{
+try {
+    const {id}= req.params;
+    const {estado} = req.query;
+    const data = {
+        estado,
+    };
+    const resp = await DetalleLicencia.update(data, {
+        where:{
+            id,
+        },
+    });
+    res.json({
+        ok:true,
+        msg: (estado === '1')?'Se habilito el detalle licencia con extio':'Se deshabilito el detalle licencia con exito',
+        resp,
+    });
+} catch (error) {
+    res.status(400).json({
+        ok:false,
+        msg:`Error: ${error}`,
+    });
+}
+};
 
 module.exports = {
     mostrarDetalleLicenciaTipo,

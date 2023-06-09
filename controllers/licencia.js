@@ -42,9 +42,7 @@ const mostrarLicenciasPersonal = async(req=request,res=response)=>{
 }
 
 
-const mostrarLicencias = (req=request, res=response)=>{
-
-}
+const mostrarLicencias = async (req=request, res=response)=>{}
 
 
 const guardarLicencias = async(req=request,res=response)=>{
@@ -93,8 +91,26 @@ const guardarLicencias = async(req=request,res=response)=>{
 }
 
 
-const modificarLicencias = (req=request, resp=response)=>{
-
+const modificarLicencias = async (req=request, res=response)=>{
+try {
+    const {id} = req.params;
+    const {tipo_documento,area,numero,ano,inicio, fin, ...data} = req.body;
+    const resp = await Licencia.update(data, {
+        where:{
+            id,
+        }
+    });
+    res.json({
+        ok:true,
+        msg: "Se actualizo los datos con exito",
+        resp,
+    })
+} catch (error) {
+    res.status(400).json({
+        ok:false,
+        msg:`Error: ${error}`,
+    })
+}
 }
 
 const mostrarIdLicencias = async(req=request, res=response)=>{
