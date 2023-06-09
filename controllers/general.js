@@ -124,6 +124,33 @@ const mostrarGeneral = async (req = request, res = response) => {
     
   }
 };
+const mostrarGeneralPersonal = async (req = request, res = response) => {
+ 
+  const {id}=req.params;
+ 
+    const resp = await General.findAll({
+      where:{
+        id_personal:id
+      },
+      order:[
+        ['inicio','ASC']
+      ],
+      include: [
+        {
+          model: Personal,
+        },
+        {
+          model: Cargo,
+        },
+      ]
+    });
+    return res.json({
+      ok: true,
+      msg: "Se muestran los datos correctamente",
+      resp,
+    });
+    
+};
 const agregarGeneral = async (req = request, res = response) => {
   try {
     const {
@@ -333,6 +360,7 @@ const eliminarGeneral = (req = request, res = response) => {};
 
 module.exports = {
   mostrarGeneral,
+  mostrarGeneralPersonal,
   agregarGeneral,
   modificarGeneral,
   eliminarGeneral,

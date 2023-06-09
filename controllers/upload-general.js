@@ -2,6 +2,7 @@ const { request, response } = require("express");
 const { General } = require("../models");
 const path = require("path");
 const fs = require("fs");
+const Licencia = require("../models/licencia");
 
 
 const mostrarPdfRecordLaboral =async(req=request,res=response)=>{
@@ -30,7 +31,34 @@ const mostrarPdfRecordLaboral =async(req=request,res=response)=>{
           }); 
     }
 }
+const mostrarPdfLicencia =async(req=request,res=response)=>{
+  try {
+  const { nombre } = req.params;
+  const resp = await Licencia.findOne({
+    where: {
+      documento:nombre
+    },
+  });
+  if (!resp) {
+    const pathImagenDefault = path.join(__dirname, "../assets/no-image.jpg");
+    return res.sendFile(pathImagenDefault);
+  }
+  
+  if (resp.documento) {
+    const pathImagen = path.join(__dirname,"../uploads","licencias",resp.documento);
+    return res.sendFile(pathImagen);
+  }
+    const pathImagenDefault = path.join(__dirname, "../assets/no-image.jpg");
+    return res.sendFile(pathImagenDefault); 
+  } catch (error) {
+      res.status(400).json({
+          ok: false,
+          msg: `${error}`,
+        }); 
+  }
+}
 
 module.exports = {
-    mostrarPdfRecordLaboral
+    mostrarPdfRecordLaboral,
+    mostrarPdfLicencia
 }

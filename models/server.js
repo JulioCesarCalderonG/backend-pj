@@ -27,6 +27,9 @@ class Server {
             organo:'/api/organo',
             unidadorganica:'/api/unidadorganica',
             tipopersonal:'/api/tipopersonal',
+            tipolicencia:'/api/tipolicencia',
+            detallelicencia:'/api/detallelicencia',
+            licencia:'/api/licencia',
             uploadgeneral:'/api/uploadgeneral',
             reporte:'/api/reporte'
     };
@@ -96,6 +99,9 @@ class Server {
     this.app.use(this.paths.organo, require('../routes/organos'));
     this.app.use(this.paths.unidadorganica, require('../routes/unidadorganicas'));
     this.app.use(this.paths.tipopersonal, require('../routes/tipo_personal'));
+    this.app.use(this.paths.tipolicencia, require('../routes/tipo-licencia'));
+    this.app.use(this.paths.detallelicencia, require('../routes/detalle-licencia'));
+    this.app.use(this.paths.licencia, require('../routes/licencia'));
     this.app.use(this.paths.uploadgeneral, require('../routes/upload-general'));
     this.app.use(this.paths.reporte, require('../routes/reporte'));
   }
