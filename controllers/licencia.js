@@ -67,6 +67,7 @@ const guardarLicencias = async(req=request,res=response)=>{
         const file = req.files;
         const {tipo_documento,area,numero,ano,inicio, fin,...data}=req.body;
         let codigodoc='';
+        console.log(tipo_documento,area);
         if (tipo_documento==='1') {
             switch (area) {
                 case '1':
@@ -80,7 +81,22 @@ const guardarLicencias = async(req=request,res=response)=>{
             }
         }
         if (tipo_documento==='2') {
-            codigodoc = `RESOLUCIONES ADMINISTRATIVAS N° ${numero}-${ano}-CRH-UAF-GAD-CSJUC/PJ`
+            switch (area) {
+                case '1':
+                        codigodoc = `R.A N° ${numero}-${ano}-P-CSJUC/PJ`;
+                    break;
+                case '2':
+                        codigodoc = `R.A N° ${numero}-${ano}-CRH-UAF-GAD-CSJUC/PJ`;
+                    break;
+                case '3':
+                        codigodoc = `R.A N° ${numero}-${ano}-CRH-UAF-GAD-CSJUC/PJ`;
+                    break;
+                case '4':
+                        codigodoc = `R.A N° ${numero}-${ano}-OA-CSJUC/PJ`;
+                    break;
+                default:
+                    break;
+            }
         }
         data.codigo_documento = codigodoc;
         data.inicio=inicio;
