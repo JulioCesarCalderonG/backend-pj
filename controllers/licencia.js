@@ -27,11 +27,28 @@ const mostrarLicenciasPersonal = async(req=request,res=response)=>{
                     ]
                 }
             ]
-        })
+        });
+        let array=[];
+        if (resp.length >0) {
+            for (let i = 0; i < resp.length; i++) {
+                const data = {
+                  id:i+1,
+                  codigo_documento:resp[i].codigo_documento,
+                  id_personal:resp[i].id_personal,
+                  id_detalle_licencia:resp[i].id_detalle_licencia,
+                  dias:resp[i].dias,
+                  inicio:resp[i].inicio,
+                  fin:resp[i].fin,
+                  documento:resp[i].documento,
+                  DetalleLicencium:resp[i].DetalleLicencium
+                }
+                array.push(data)
+            }
+          }
         res.json({
             ok:true,
             msg:'Se muestran los datos con exito',
-            resp
+            resp:array
         })
     } catch (error) {
         res.status(400).json({

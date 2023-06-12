@@ -16,10 +16,26 @@ const mostrarVacacionalPersonal =async(req=request,res=response)=>{
                 ['inicio','ASC']
             ]
         })
+        let array=[];
+        if (resp.length >0) {
+            for (let i = 0; i < resp.length; i++) {
+                const data = {
+                  id:i+1,
+                  codigo_documento:resp[i].codigo_documento,
+                  periodo:resp[i].periodo,
+                  inicio:resp[i].inicio,
+                  termino:resp[i].termino,
+                  dias:resp[i].dias,
+                  id_personal:resp[i].id_personal,
+                  documento:resp[i].documento,
+                }
+                array.push(data)
+            }
+          }
         res.json({
             ok:true,
             msg:'Se muestran los datos con exito',
-            resp
+            resp:array
         })
     } catch (error) {
         res.status(400).json({

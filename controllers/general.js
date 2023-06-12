@@ -144,10 +144,28 @@ const mostrarGeneralPersonal = async (req = request, res = response) => {
         },
       ]
     });
+    let array=[];
+    if (resp.length >0) {
+      for (let i = 0; i < resp.length; i++) {
+          const data = {
+            id:i+1,
+            codigo_documento:resp[i].codigo_documento,
+            dependencia:resp[i].dependencia,
+            id_personal:resp[i].id_personal,
+            id_cargo:resp[i].id_cargo,
+            inicio:resp[i].inicio,
+            fin:resp[i].fin,
+            documento:resp[i].documento,
+            Personal:resp[i].Personal,
+            Cargo:resp[i].Cargo
+          }
+          array.push(data)
+      }
+    }
     return res.json({
       ok: true,
       msg: "Se muestran los datos correctamente",
-      resp,
+      resp:array
     });
     
 };
