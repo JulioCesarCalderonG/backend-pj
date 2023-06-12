@@ -348,7 +348,7 @@ const postRecordLaboralPersona = async (req = request, res = response) => {
         contents: '<div style="text-align: center;">Author: Shyam Hajare</div>',
       },
       footer: {
-        height: "28mm",
+        height: "5mm",
         contents: {
           first: "Cover page",
           2: "Second page", // Any page number is working. 1-based index
@@ -373,7 +373,12 @@ const postRecordLaboralPersona = async (req = request, res = response) => {
       where:{
         id_personal: id,
         fin:'2030-12-30'
-      }
+      },
+      include:[
+        {
+          model:Cargo
+        }
+      ]
     })
     const resp = await General.findAll({
       where: {
@@ -418,7 +423,8 @@ const postRecordLaboralPersona = async (req = request, res = response) => {
       personal: `${person.nombre} ${person.apellido}`,
       escalafon: person.escalafon,
       inicio: person.fecha_inicio,
-      dependencia:(depen)?depen.dependencia:''
+      dependencia:(depen)?depen.dependencia:'',
+      cargo:(depen)?depen.Cargo.descripcion:''
     };
     const document = {
       html: html,
