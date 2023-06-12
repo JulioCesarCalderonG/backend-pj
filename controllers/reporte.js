@@ -418,7 +418,7 @@ const postRecordLaboralPersona = async (req = request, res = response) => {
       personal: `${person.nombre} ${person.apellido}`,
       escalafon: person.escalafon,
       inicio: person.fecha_inicio,
-      dependencia:depen.dependencia
+      dependencia:(depen)?depen.dependencia:''
     };
     const document = {
       html: html,
