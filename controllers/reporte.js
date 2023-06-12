@@ -481,7 +481,12 @@ const postLicenciaPersona = async (req = request, res = response) => {
       where:{
         id_personal: id,
         fin:'2030-12-30'
-      }
+      },
+      include:[
+        {
+          model:Cargo
+        }
+      ]
     });
     
     const resp = await Licencia.findAll({
@@ -533,7 +538,8 @@ const postLicenciaPersona = async (req = request, res = response) => {
       personal: `${person.nombre} ${person.apellido}`,
       escalafon: person.escalafon,
       inicio: person.fecha_inicio,
-      dependencia:depen.dependencia
+      dependencia:depen.dependencia,
+      cargo:depen.Cargo.descripcion
     }; 
     const document = {
       html: html,
