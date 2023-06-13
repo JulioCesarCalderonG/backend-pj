@@ -1,54 +1,82 @@
 const { request, response } = require("express");
 const { Personal } = require("../models");
+const { Op } = require("sequelize");
 
 const mostrarPersonales = async (req = request, res = response) => {
   try {
-    const {estado} = req.query;
+    const { estado, buscar } = req.query;
+    if (buscar === "") {
+      const resp = await Personal.findAll({
+        where: {
+          estado,
+        },
+      });
+      return res.json({
+        ok: true,
+        msg: "Se muestran correctamento los datos",
+        resp,
+      });
+    }
     const resp = await Personal.findAll({
-      where:{
-        estado
-      }
+      where: {
+        estado,
+        [Op.or]:[
+          {
+            nombre:{
+              [Op.startsWith]:`%${buscar}%`
+            }            
+          },
+          {
+            apellido:{
+              [Op.startsWith]:`%${buscar}%`
+            }
+          },
+          {
+            escalafon:{
+              [Op.startsWith]:`%${buscar}%`
+            }
+          }
+        ]
+      },
     });
-  res.json({
-    ok: true,
-    msg: "Se muestran correctamento los datos",
-    resp,
-  });
+    res.json({
+      ok: true,
+      msg: "Se muestran correctamento los datos",
+      resp,
+    });
   } catch (error) {
     res.status(400).json({
-      ok:false,
-      msg:`Error: ${error}`,
+      ok: false,
+      msg: `Error: ${error}`,
     });
   }
 };
 
-
 const mostrarIdPersonal = async (req = request, res = response) => {
   try {
-   const { id } = req.params;
- 
-   const resp = await Personal.findOne({
-     where:{
-       id
-     }
-   });
-   res.json({
-     ok: true,
-     msg: 'Id se muestran los datos correctamente',
-     resp,
-   });
-  } catch (error) {
-   res.status(400).json({
-     ok:false,
-     msg:`Error:${error}`
-   })
-  }
- };
+    const { id } = req.params;
 
+    const resp = await Personal.findOne({
+      where: {
+        id,
+      },
+    });
+    res.json({
+      ok: true,
+      msg: "Id se muestran los datos correctamente",
+      resp,
+    });
+  } catch (error) {
+    res.status(400).json({
+      ok: false,
+      msg: `Error:${error}`,
+    });
+  }
+};
 
 const agregarPersonal = async (req = request, res = response) => {
   try {
-    const { nombre, apellido, escalafon,fechainicio, ...data } = req.body;
+    const { nombre, apellido, escalafon, fechainicio, ...data } = req.body;
     data.nombre = nombre.toUpperCase();
     data.apellido = apellido.toUpperCase();
     data.escalafon = escalafon;
@@ -69,7 +97,6 @@ const agregarPersonal = async (req = request, res = response) => {
   }
 };
 
-
 const modificarPersonal = async (req = request, res = response) => {
   try {
     const { nombre, apellido, escalafon, fechainicio, ...data } = req.body;
@@ -86,35 +113,36 @@ const modificarPersonal = async (req = request, res = response) => {
     });
 
     res.json({
-      ok:true,
-      msg:'Personal actualizado con exito',
-      resp
+      ok: true,
+      msg: "Personal actualizado con exito",
+      resp,
     });
   } catch (error) {
     res.status(400).json({
-      ok:false,
-      msg:`Error:${error}`
-    })
+      ok: false,
+      msg: `Error:${error}`,
+    });
   }
 };
 
-
 const eliminarPersonal = async (req = request, res = response) => {
   try {
-    const {id} = req.params;
-    const {estado} = req.query;
-    const data={
+    const { id } = req.params;
+    const { estado } = req.query;
+    const data = {
       estado,
     };
-    const resp = await Personal.update(data,{
-      where:{
-        id
-      }
+    const resp = await Personal.update(data, {
+      where: {
+        id,
+      },
     });
     res.json({
       ok: true,
       msg:
-      (estado === '1')?"Se habilito el personal con exito":"Se deshabilito el personal con exito",
+        estado === "1"
+          ? "Se habilito el personal con exito"
+          : "Se deshabilito el personal con exito",
       resp,
     });
   } catch (error) {

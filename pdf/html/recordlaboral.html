@@ -59,6 +59,23 @@
               <th scope="row" width="10%">{{this.hasta}}</th>
             </tr>
             {{/each}}
+            <tr style="height: 10px!important;">
+              <th colspan="6" style="background-color: #ccc!important;">ENCARGO DE FUNCIONES - ORGANO DE EMRGENCIA</th>
+            </tr>
+            {{#each products.prodlist2}}
+            <tr>
+              <th scope="row" width="3%">
+                <p>{{this.id}}</p>
+              </th>
+              <th scope="row" width="27%">
+                <p>{{this.documento}}</p>
+              </th>
+              <th scope="row" width="20%">{{this.dependencia}}</th>
+              <th scope="row" width="10%">{{this.cargo}}</th>
+              <th scope="row" width="10%">{{this.desde}}</th>
+              <th scope="row" width="10%">{{this.hasta}}</th>
+            </tr>
+            {{/each}}
           </tbody>
         </table>
         <!-- <table width="95%" border="0" cellspacing="0" cellpadding="0">

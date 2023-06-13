@@ -183,6 +183,7 @@ const agregarGeneral = async (req = request, res = response) => {
       hasta,
       ...data
     } = req.body;
+    
     let codigo = "";
     const file = req.files;
     const documento = await subirArchivo(file,['pdf'],'record-laboral');
@@ -204,7 +205,8 @@ const agregarGeneral = async (req = request, res = response) => {
         inicio: desde,
         dependencia: depen,
         fin: hasta === "" ? "2030-12-30" : hasta,
-        documento
+        documento,
+        periodo:data.periodo
       };
       const general = await General.create(datos);
       return res.json({
@@ -228,7 +230,8 @@ const agregarGeneral = async (req = request, res = response) => {
         inicio: desde,
         dependencia: depen,
         fin: hasta === "" ? "2030-12-30" : hasta,
-        documento
+        documento,
+        periodo:data.periodo
       };
       const general = await General.create(datos);
       return res.json({
@@ -289,7 +292,8 @@ const agregarGeneral = async (req = request, res = response) => {
             inicio: desde,
             dependencia: depen,
             fin: hasta === "" ? "2030-12-30" : hasta,
-            documento
+            documento,
+            periodo:data.periodo
           };
           const general = await General.create(datos);
           return res.json({

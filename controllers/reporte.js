@@ -339,6 +339,7 @@ const postRecordLaboralPersona = async (req = request, res = response) => {
   try {
     const { id } = req.params;
     let array = [];
+    let array2=[];
     const options = {
       format: "A3",
       orientation: "landscape",
@@ -380,7 +381,28 @@ const postRecordLaboralPersona = async (req = request, res = response) => {
     const resp = await General.findAll({
       where: {
         id_personal: id,
+        periodo:1
       },
+      order:[
+        ['inicio','ASC']
+      ],
+      include: [
+        {
+          model: Personal,
+        },
+        {
+          model: Cargo,
+        },
+      ],
+    });
+    const resp2 = await General.findAll({
+      where: {
+        id_personal: id,
+        periodo:2
+      },
+      order:[
+        ['inicio','ASC']
+      ],
       include: [
         {
           model: Personal,
@@ -401,7 +423,7 @@ const postRecordLaboralPersona = async (req = request, res = response) => {
         hasta: "",
       };
       array.push(prod);
-    } else {
+    }else {
       for (let i = 0; i < resp.length; i++) {
         const prod = {
           id: `${i+1}`,
@@ -415,8 +437,35 @@ const postRecordLaboralPersona = async (req = request, res = response) => {
         
       }
     }
+
+    if (resp2.length===0) {
+      const prod = {
+        id: "",
+        documento: "",
+        personal: "",
+        dependencia: "",
+        cargo: "",
+        desde: "",
+        hasta: "",
+      };
+      array2.push(prod);
+    }else{
+      for (let i = 0; i < resp2.length; i++) {
+        const prod = {
+          id: `${i+1}`,
+          documento: resp2[i].codigo_documento,
+          dependencia: resp2[i].dependencia,
+          cargo: `${resp2[i].Cargo.descripcion}`,
+          desde: resp2[i].inicio,
+          hasta: resp2[i].fin === "2030-12-30" ? "ACTUALIDAD" : resp2[i].fin,
+        };
+        array2.push(prod);
+        
+      }
+    }
     const obj = {
       prodlist: array,
+      prodlist2:array2,
       personal: `${person.nombre} ${person.apellido}`,
       escalafon: person.escalafon,
       inicio: person.fecha_inicio,

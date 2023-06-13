@@ -25,6 +25,9 @@ General.init({
     },
     documento:{
         type:DataTypes.STRING
+    },
+    periodo:{
+        type:DataTypes.TINYINT
     }
 },{
     sequelize,
