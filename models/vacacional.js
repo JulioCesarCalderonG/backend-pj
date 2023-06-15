@@ -25,6 +25,18 @@ Vacacional.init({
     },
     documento:{
         type:DataTypes.STRING
+    },
+    tipo_documento:{
+        type:DataTypes.INTEGER
+    },
+    area:{
+        type:DataTypes.INTEGER
+    },
+    numero:{
+        type:DataTypes.CHAR
+    },
+    ano:{
+        type:DataTypes.CHAR
     }
 },{
     sequelize,
