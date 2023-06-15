@@ -1,39 +1,61 @@
-const { Model, DataTypes } = require("sequelize");
+const { Model, DataTypes } = require('sequelize');
 const sequelize = require('../database/database');
 
+class General extends Model {}
 
-class General extends Model{}
-
-General.init({
-    codigo_documento:{
-        type:DataTypes.CHAR
+General.init(
+  {
+    codigo_documento: {
+      type: DataTypes.CHAR,
     },
-    dependencia:{
-        type:DataTypes.CHAR
+    dependencia: {
+      type: DataTypes.CHAR,
     },
-    id_personal:{
+    id_personal: {
+      type: DataTypes.INTEGER,
+    },
+    id_cargo: {
+      type: DataTypes.INTEGER,
+    },
+    inicio: {
+      type: DataTypes.STRING,
+    },
+    fin: {
+      type: DataTypes.STRING,
+    },
+    documento: {
+      type: DataTypes.STRING,
+    },
+    periodo: {
+      type: DataTypes.TINYINT,
+    },
+    tipo_documento:{
         type:DataTypes.INTEGER
     },
-    id_cargo:{
+    tipo_dependencia:{
         type:DataTypes.INTEGER
     },
-    inicio:{
-        type:DataTypes.STRING
+    tipo_sigla:{
+        type:DataTypes.INTEGER
     },
-    fin:{
-        type:DataTypes.STRING
+    numero:{
+        type:DataTypes.CHAR
     },
-    documento:{
-        type:DataTypes.STRING
+    ano:{
+        type:DataTypes.CHAR
     },
-    periodo:{
-        type:DataTypes.TINYINT
-    }
-},{
+    id_dependencia:{
+        type:DataTypes.INTEGER
+    },
+    id_area: {
+        type:DataTypes.INTEGER
+    },
+  },
+  {
     sequelize,
-    timestamps:false,
-    tableName:'general'
-});
-
+    timestamps: false,
+    tableName: 'general',
+  }
+);
 
 module.exports = General;

@@ -18,7 +18,7 @@ router.post("",[
 
 router.put("/:id",modificarGeneral);
 
-router.delete("",eliminarGeneral);
+router.delete("/:id",eliminarGeneral);
 
 module.exports = router;
 
