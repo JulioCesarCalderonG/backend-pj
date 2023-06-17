@@ -1,5 +1,5 @@
 const { Router } = require("express");
-const { mostrarVacacionalPersonal, guardarVacacional, mostrarVacacional, mostrarIdVacacional, modificarVacacional, editarVacacional, eliminarVacacional } = require("../controllers/vacacional");
+const { mostrarVacacionalPersonal, guardarVacacional, mostrarVacacional, mostrarIdVacacional, editarVacacional, eliminarVacacional } = require("../controllers/vacacional");
 const { validarCampos, validarArchivoSubir } = require("../middlewares");
 
 

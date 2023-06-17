@@ -1,7 +1,6 @@
 const { request, response } = require('express');
 const { subirArchivo } = require('../helpers');
 const Licencia = require('../models/licencia');
-const { Personal } = require('../models');
 const DetalleLicencia = require('../models/detalle-licencia');
 const TipoLicencia = require('../models/tipo-licencia');
 
@@ -252,11 +251,13 @@ const eliminarLicencias = async (req = request, res = response) => {
   }
 };
 
+
+
 module.exports = {
   mostrarLicenciasPersonal,
   guardarLicencias,
   mostrarLicencias,
   modificarLicencias,
   mostrarIdLicencias,
-  eliminarLicencias,
+  eliminarLicencias
 };

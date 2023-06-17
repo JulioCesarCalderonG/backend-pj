@@ -198,15 +198,16 @@ const mostrarIdVacacional = async (req = request, res = response) => {
   }
 };
 
-const mostrarVacacional = () => {};
+const mostrarVacacional = async (req = request, res=response) => {};
+
 
 const eliminarVacacional = async (req = request, res = response) => {
   try {
-    const { id } = res.params;
+    const { id } = req.params;
     const resp = await Vacacional.destroy({
       where: {
-        id,
-      },
+        id
+      }
     });
     res.json({
       ok: true,

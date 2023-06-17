@@ -1,5 +1,5 @@
 const { Router } = require("express");
-const { mostrarPdfRecordLaboral, mostrarPdfLicencia, mostrarPdfVacacional, putPdfVacacional } = require("../controllers/upload-general");
+const { mostrarPdfRecordLaboral, mostrarPdfLicencia, mostrarPdfVacacional, putPdfVacacional, putPdfLaboral, putPdfLicencia } = require("../controllers/upload-general");
 const { validarCampos, validarArchivoSubir } = require("../middlewares");
 
 
@@ -13,5 +13,13 @@ router.put('/vacacional/:id',[
     validarArchivoSubir,
     validarCampos
 ],putPdfVacacional);
+router.put('/recordlaboral/:id',[
+    validarCampos,
+    validarArchivoSubir
+], putPdfLaboral);
+router.put('/licencia/:id', [
+    validarCampos,
+    validarArchivoSubir
+],putPdfLicencia);
 
 module.exports = router;
