@@ -126,7 +126,7 @@ const putPdfLicencia = async(req=request, res=response) =>{
     if (resp.documento) {
       const pathDocumento = path.join(__dirname,'../uploads', 'licencias', resp.documento);
       if (fs.existsSync(pathDocumento)) {
-        file.unlinkSync(pathDocumento);
+        fs.unlinkSync(pathDocumento);
       }
     }
     const documento = await subirArchivo(file, ['pdf'], "licencias");
@@ -140,7 +140,7 @@ const putPdfLicencia = async(req=request, res=response) =>{
     res.json({
       ok:true,
       msg: "Se actualizo el archivo con extio",
-      resp: actualizar,
+      resp: actualizar
     })
   } catch (error) {
     res.status(400).json({
