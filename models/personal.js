@@ -2,6 +2,7 @@ const { Model, DataTypes } = require("sequelize");
 const sequelize = require('../database/database');
 const General = require("./general");
 const Licencia = require("./licencia");
+const Merito = require("./merito");
 
 
 class Personal extends Model{}
@@ -50,6 +51,18 @@ Licencia.belongsTo(Personal,{
     sourcekey:'id',
     foreignKey:'id_personal'
 })
+
+/* Relacion merito personal */
+Personal.hasMany(Merito,{
+    as:'FK_MeritoPersonal',
+    foreignKey:'id_personal'
+});
+
+Merito.belongsTo(Personal,{
+    sourceKey:'id',
+    foreignKey:'id_personal'
+})
+
 
 module.exports = Personal;
 

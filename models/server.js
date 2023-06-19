@@ -16,6 +16,7 @@ class Server {
       /* auth: '/api/auth',
             usuario: '/api/usuario',
             uploads: '/api/uploads' */
+            auth: '/api/auth',
             personal: '/api/personal',
             area: '/api/area',
             cargo: '/api/cargo',
@@ -31,6 +32,9 @@ class Server {
             detallelicencia:'/api/detallelicencia',
             licencia:'/api/licencia',
             vacacional:'/api/vacacional',
+            estado:'/api/estado',
+            sancion:'/api/sancion',
+            merito:'/api/merito',
             uploadgeneral:'/api/uploadgeneral',
             reporte:'/api/reporte'
     };
@@ -89,6 +93,7 @@ class Server {
     /* this.app.use(this.paths.auth, require('../routes/auth'));
     this.app.use(this.paths.usuario, require('../routes/usuarios'));
     this.app.use(this.paths.uploads, require('../routes/uploads')); */
+    this.app.use(this.paths.auth, require('../routes/auth'));
     this.app.use(this.paths.personal, require('../routes/personal'));
     this.app.use(this.paths.area, require('../routes/areas'));
     this.app.use(this.paths.cargo, require('../routes/cargos'));
@@ -104,6 +109,9 @@ class Server {
     this.app.use(this.paths.detallelicencia, require('../routes/detalle-licencia'));
     this.app.use(this.paths.licencia, require('../routes/licencia'));
     this.app.use(this.paths.vacacional, require('../routes/vacacional'));
+    this.app.use(this.paths.estado, require('../routes/estados'));
+    this.app.use(this.paths.sancion, require('../routes/sanciones'));
+    this.app.use(this.paths.merito, require('../routes/meritos'));
     this.app.use(this.paths.uploadgeneral, require('../routes/upload-general'));
     this.app.use(this.paths.reporte, require('../routes/reporte'));
   }

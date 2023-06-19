@@ -14,6 +14,9 @@ const TipoLicencia = require('./tipo-licencia');
 const DetalleLicencia = require('./detalle-licencia');
 const Licencia = require('./licencia');
 const Vacacional = require('./vacacional');
+const Sancion = require('./sancion');
+const Estado = require('./estado');
+const Merito = require('./merito');
 module.exports = {
   Server,
   Personal,
@@ -29,5 +32,8 @@ module.exports = {
   TipoLicencia,
   DetalleLicencia,
   Licencia,
-  Vacacional
+  Vacacional,
+  Sancion,
+  Estado,
+  Merito
 };

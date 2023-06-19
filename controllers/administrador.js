@@ -24,12 +24,8 @@ const mostrarAdministradores = async (req = request, res = response) => {
 
 const agregarAdministradores = async (req = request, res = response) => {
   try {
-    const { usuario, password, ...data } = req.body;
-    data.usuario = usuario.toUpperCase();
-    data.password = password.toUpperCase();
-
+    const data = req.body;
     const resp = await Administrador.create(data);
-
     res.json({
       ok: true,
       msg: "Datos ingresados correctamente",
@@ -45,12 +41,8 @@ const agregarAdministradores = async (req = request, res = response) => {
 
 const modificarAdministradores = async (req = request, res = response) => {
   try {
-    const { usuario, password, ...data } = req.body;
+    const data = req.body;
     const { id } = req.params;
-
-    data.usuario = usuario.toUpperCase();
-    data.password = password.toUpperCase();
-
     const resp = await Administrador.update(data, {
       where: {
         id,

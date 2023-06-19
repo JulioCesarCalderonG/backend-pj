@@ -10,6 +10,9 @@ const {
   UnidadOrganica,
   Area,
   Sede,
+  Merito,
+  Sancion,
+  Estado,
 } = require("../models");
 const { Op } = require("sequelize");
 const Licencia = require("../models/licencia");
@@ -378,6 +381,7 @@ const postRecordLaboralPersona = async (req = request, res = response) => {
         }
       ]
     })
+    let idcount=0;
     const resp = await General.findAll({
       where: {
         id_personal: id,
@@ -433,6 +437,7 @@ const postRecordLaboralPersona = async (req = request, res = response) => {
           desde: resp[i].inicio,
           hasta: resp[i].fin === "2030-12-30" ? "ACTUALIDAD" : resp[i].fin,
         };
+        idcount=i+1;
         array.push(prod);
         
       }
@@ -452,13 +457,14 @@ const postRecordLaboralPersona = async (req = request, res = response) => {
     }else{
       for (let i = 0; i < resp2.length; i++) {
         const prod = {
-          id: `${i+1}`,
+          id: `${idcount+1}`,
           documento: resp2[i].codigo_documento,
           dependencia: resp2[i].dependencia,
           cargo: `${resp2[i].Cargo.descripcion}`,
           desde: resp2[i].inicio,
           hasta: resp2[i].fin === "2030-12-30" ? "ACTUALIDAD" : resp2[i].fin,
         };
+        idcount=idcount+1;
         array2.push(prod);
         
       }
@@ -613,6 +619,153 @@ const postLicenciaPersona = async (req = request, res = response) => {
     });
   }
 };
+const postMeritoPersona = async (req = request, res = response) => {
+  try {
+    const { id } = req.params;
+    let array = [];
+    const options = {
+      format: "A3",
+      orientation: "landscape",
+      border: "10mm",
+      header: {
+        height: "0mm",
+        contents: '<div style="text-align: center;">Author: Shyam Hajare</div>',
+      },
+      footer: {
+        height: "5mm",
+        contents: {
+           
+            default: '<span style="color: #444;">{{page}}</span>/<span>{{pages}}</span>', // fallback value
+        }
+    }
+    };
+
+    const html = fs.readFileSync(
+      path.join(__dirname, "../pdf/html/meritopersonal.html"),
+      "utf-8"
+    );
+    const filename = Math.random() + "_doc" + ".pdf";
+    const person = await Personal.findOne({
+      where: {
+        id,
+      },
+    });
+    const depen = await General.findOne({
+      where:{
+        id_personal: id,
+        fin:'2030-12-30'
+      },
+      include:[
+        {
+          model:Cargo
+        }
+      ]
+    });
+    const countAmonestacion = await Merito.count({
+      where:{
+        id_personal:id,
+        id_sancion:1
+      }
+    });
+    const countSuspencion = await Merito.count({
+      where:{
+        id_personal:id,
+        id_sancion:2
+      }
+    });
+    const countMultas = await Merito.count({
+      where:{
+        id_personal:id,
+        id_sancion:3
+      }
+    });
+    const countDestitucion = await Merito.count({
+      where:{
+        id_personal:id,
+        id_sancion:4
+      }
+    });
+    const countTotal = await Merito.count({
+      where:{
+        id_personal:id
+      }
+    });
+    const resp = await Merito.findAll({
+      where: {
+        id_personal: id
+      },
+      include: [
+        {
+          model: Sancion,
+        },
+        {
+          model:Estado
+        }
+        
+      ],
+    });
+    if (resp.length === 0) {
+      const prod = {
+        id: "",
+        documento: "",
+        instancia: "",
+        sancion: "",
+        fecha: "",
+        estado: "",
+        observacion: "",
+      };
+      array.push(prod);
+    } else {
+      for (let i = 0; i < resp.length; i++) {
+        const prod = {
+          id: `${i+1}`,
+          documento: resp[i].codigo_documento,
+          instancia: resp[i].instancia,
+          sancion:resp[i].Sancion.titulo,
+          fecha:resp[i].fecha,
+          estado: resp[i].Estado.descripcion,
+          observacion: resp[i].observacion,
+        };
+        array.push(prod);
+        
+      }
+    }
+     const obj = {
+      prodlist: array,
+      personal: `${person.nombre} ${person.apellido}`,
+      escalafon: person.escalafon,
+      inicio: person.fecha_inicio,
+      dependencia:(depen)?depen.dependencia:'',
+      cargo:(depen)?depen.Cargo.descripcion:'',
+      amonestacion:(countAmonestacion)?countAmonestacion:0,
+      suspencion:(countSuspencion)?countSuspencion:0,
+      multas:(countMultas)?countMultas:0,
+      destitucion:(countDestitucion)?countDestitucion:0,
+      total:(countTotal)?countTotal:0
+    }; 
+    const document = {
+      html: html,
+      data: {
+        products: obj,
+      },
+      path: "./pdf/reportes/" + filename,
+    };
+    const archivo = await pdf.create(document, options);
+    const nom = archivo.filename.split("\\");
+    const nombre = nom[nom.length - 1];
+
+    return res.json({
+      ok: true,
+      msg: "Se creo documento",
+      nombre
+    });
+  } catch (error) {
+    res.status(400).json({
+      ok: false,
+      msg: `Error: ${error}`,
+    });
+  }
+};
 const mostrarReporteRecordLaboral = async (req = request, res = response) => {
   try {
     const { nombre } = req.params;
@@ -637,11 +790,25 @@ const mostrarLicenciaLaboral = async (req = request, res = response) => {
     });
   }
 };
+const mostrarMerito = async (req = request, res = response) => {
+  try {
+    const { nombre } = req.params;
+    const pathImagen = path.join(__dirname, "../pdf", "reportes", nombre);
+    return res.sendFile(pathImagen);
+  } catch (error) {
+    res.status(400).json({
+      ok: false,
+      msg: `${error}`,
+    });
+  }
+};
 module.exports = {
   postRecordLaboral,
   postRecordLaboralPersona,
   postLicenciaPersona,
   postLicenciaPersona,
   mostrarReporteRecordLaboral,
-  mostrarLicenciaLaboral
+  mostrarLicenciaLaboral,
+  postMeritoPersona,
+  mostrarMerito
 };
