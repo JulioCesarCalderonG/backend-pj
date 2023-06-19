@@ -279,7 +279,7 @@ const agregarGeneral = async (req = request, res = response) => {
       const general = await General.create(datos);
       return res.json({
         ok: true,
-        msg: 'Datos editados con exito',
+        msg: 'Se creo el Record laboral con exito',
         resp: general,
       });
     }
