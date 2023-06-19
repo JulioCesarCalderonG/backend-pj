@@ -18,7 +18,7 @@ router.put('/recordlaboral/:id',[
     validarCampos,
     validarArchivoSubir
 ], putPdfLaboral);
-router.put('/licencia/:id', [
+router.put('/licencias/:id', [
     validarCampos,
     validarArchivoSubir
 ],putPdfLicencia);
