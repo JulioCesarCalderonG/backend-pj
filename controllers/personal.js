@@ -15,10 +15,25 @@ const mostrarPersonales = async (req = request, res = response) => {
           ['apellido','ASC']
         ]
       });
+      let array=[];
+      if (resp.length>0) {
+        for (let i = 0; i < resp.length; i++) {
+          const obj={
+            ids:i+1,
+            id:resp[i].id,
+            nombre:resp[i].nombre,
+            apellido:resp[i].apellido,
+            escalafon:resp[i].escalafon,
+            fecha_inicio:resp[i].fecha_inicio,
+            estado:resp[i].estado
+          }          
+          array.push(obj)
+        }
+      }
       return res.json({
         ok: true,
         msg: "Se muestran correctamento los datos",
-        resp,
+        resp:array
       });
     }
     const resp = await Personal.findAll({
@@ -43,11 +58,26 @@ const mostrarPersonales = async (req = request, res = response) => {
         ]
       },
     });
-    res.json({
-      ok: true,
-      msg: "Se muestran correctamento los datos",
-      resp,
-    });
+    let array=[];
+      if (resp.length>0) {
+        for (let i = 0; i < resp.length; i++) {
+          const obj={
+            ids:i+1,
+            id:resp[i].id,
+            nombre:resp[i].nombre,
+            apellido:resp[i].apellido,
+            escalafon:resp[i].escalafon,
+            fecha_inicio:resp[i].fecha_inicio,
+            estado:resp[i].estado
+          }          
+          array.push(obj)
+        }
+      }
+      res.json({
+        ok: true,
+        msg: "Se muestran correctamento los datos",
+        resp:array
+      });
   } catch (error) {
     res.status(400).json({
       ok: false,
