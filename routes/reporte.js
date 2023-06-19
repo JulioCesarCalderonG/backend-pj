@@ -1,16 +1,25 @@
-const { Router } = require("express");
-const { postRecordLaboral, mostrarReporteRecordLaboral, postRecordLaboralPersona, postLicenciaPersona, mostrarLicenciaLaboral, postMeritoPersona, mostrarMerito } = require("../controllers/reporte");
-
-
+const { Router } = require('express');
+const {
+  postRecordLaboral,
+  mostrarReporteRecordLaboral,
+  postRecordLaboralPersona,
+  postLicenciaPersona,
+  mostrarLicenciaLaboral,
+  postMeritoPersona,
+  mostrarMerito,
+  postVacacionalPersona,
+  mostrarVacacional,
+} = require('../controllers/reporte');
 
 const router = Router();
 
-
-router.post('/recordlaboral',postRecordLaboral);
-router.post('/recordlaboral/personal/:id',postRecordLaboralPersona);
-router.post('/licencia/personal/:id',postLicenciaPersona);
-router.post('/merito/personal/:id',postMeritoPersona);
-router.get('/recordlaboral/:nombre',mostrarReporteRecordLaboral);
-router.get('/licencia/:nombre',mostrarLicenciaLaboral);
-router.get('/merito/:nombre',mostrarMerito);
+router.post('/recordlaboral', postRecordLaboral);
+router.post('/recordlaboral/personal/:id', postRecordLaboralPersona);
+router.post('/licencia/personal/:id', postLicenciaPersona);
+router.post('/merito/personal/:id', postMeritoPersona);
+router.post('/vacacional/personal/:id', postVacacionalPersona);
+router.get('/recordlaboral/:nombre', mostrarReporteRecordLaboral);
+router.get('/licencia/:nombre', mostrarLicenciaLaboral);
+router.get('/merito/:nombre', mostrarMerito);
+router.get('/vacacional/:nombre', mostrarVacacional);
 module.exports = router;

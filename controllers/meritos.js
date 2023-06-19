@@ -99,13 +99,13 @@ const guardarMerito =async(req=request,res=response)=>{
         let codigo_documento='';
         switch (tipo_documento) {
             case '1':
-                 codigo_documento = `MEMORANDUM ${cod_documento}`
+                 codigo_documento = `MEMORANDUM ${cod_documento.toUpperCase()}`
                 break;
             case '2':
-                 codigo_documento = `OFICIO ${cod_documento}`
+                 codigo_documento = `OFICIO ${cod_documento.toUpperCase()}`
                 break;
             case '3':
-                 codigo_documento = `RESOLUCION ${cod_documento}`
+                 codigo_documento = `RESOLUCION ${cod_documento.toUpperCase()}`
                 break;
             default:
                 break;
@@ -143,13 +143,13 @@ const actualizarMerito =async(req=request,res=response)=>{
         let codigo_documento='';
         switch (tipo_documento) {
             case '1':
-                 codigo_documento = `MEMORANDUM ${cod_documento}`
+                 codigo_documento = `MEMORANDUM ${cod_documento.toUpperCase()}`
                 break;
             case '2':
-                 codigo_documento = `OFICIO ${cod_documento}`
+                 codigo_documento = `OFICIO ${cod_documento.toUpperCase()}`
                 break;
             case '3':
-                 codigo_documento = `RESOLUCION ${cod_documento}`
+                 codigo_documento = `RESOLUCION ${cod_documento.toUpperCase()}`
                 break;
             default:
                 break;

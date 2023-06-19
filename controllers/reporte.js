@@ -13,6 +13,7 @@ const {
   Merito,
   Sancion,
   Estado,
+  Vacacional,
 } = require("../models");
 const { Op } = require("sequelize");
 const Licencia = require("../models/licencia");
@@ -290,20 +291,18 @@ const postRecordLaboral = async (req = request, res = response) => {
       };
       array.push(prod);
     } else {
-      data.forEach((d) => {
-        let i = 1;
+      for (let i = 0; i < resp.length; i++) {
         const prod = {
-          id: `${i}`,
-          documento: d.codigo_documento,
-          personal: `${d.Personal.nombre} ${d.Personal.apellido}`,
-          dependencia: d.dependencia,
-          cargo: `${d.Cargo.descripcion}`,
-          desde: d.inicio,
-          hasta: d.fin === "2030-12-30" ? "ACTUALIDAD" : d.fin,
+          id: `${i+1}`,
+          documento: resp[i].codigo_documento,
+          dependencia: resp[i].dependencia,
+          cargo: `${resp[i].Cargo.descripcion}`,
+          desde: resp[i].inicio,
+          hasta: resp[i].fin === "2030-12-30" ? "ACTUALIDAD" : resp[i].fin,
         };
-        i++;
         array.push(prod);
-      });
+        
+      }
     }
     const obj = {
       prodlist: array,
@@ -619,6 +618,125 @@ const postLicenciaPersona = async (req = request, res = response) => {
     });
   }
 };
+const postVacacionalPersona = async (req = request, res = response) => {
+  try {
+    const { id } = req.params;
+    let array = [];
+    const options = {
+      format: "A4",
+      orientation: "portrait",
+      border: "10mm",
+      header: {
+        height: "0mm",
+        contents: '<div style="text-align: center;">Author: Shyam Hajare</div>',
+      },
+      footer: {
+        height: "10mm",
+        contents: {
+           
+            default: '<span style="color: #444;">{{page}}</span>/<span>{{pages}}</span>', // fallback value
+        }
+    }
+    };
+
+    const html = fs.readFileSync(
+      path.join(__dirname, "../pdf/html/vacacionalpersonal.html"),
+      "utf-8"
+    );
+    const filename = Math.random() + "_doc" + ".pdf";
+    const person = await Personal.findOne({
+      where: {
+        id,
+      },
+    });
+    const depen = await General.findOne({
+      where:{
+        id_personal: id,
+        fin:'2030-12-30'
+      },
+      include:[
+        {
+          model:Cargo
+        }
+      ]
+    });
+
+    const count = await Vacacional.count({
+      where:{
+        id_personal:id
+      },
+      distinct:true,
+      col:'periodo'
+    });
+    
+    const resp = await Vacacional.findAll({
+      where: {
+        id_personal: id
+      },
+      order:[
+        ['periodo','ASC'],
+        ['inicio','ASC']
+      ]
+    });
+    let efectivo=0;
+    if (resp.length === 0) {
+      const prod = {
+        id: "",
+        documento: "",
+        perido: "",
+        inicio: "",
+        termino: "",
+        ejercicio: "",
+      };
+      array.push(prod);
+    } else {
+      for (let i = 0; i < resp.length; i++) {
+        const prod = {
+          id: `${i+1}`,
+          documento: resp[i].codigo_documento,
+          periodo: resp[i].periodo,
+          inicio: resp[i].inicio,
+          termino: resp[i].termino,
+          ejercicio: resp[i].dias,
+        };
+        efectivo=efectivo+Number(resp[i].dias);
+        array.push(prod);
+      }
+    }
+     const obj = {
+      prodlist: array,
+      personal: `${person.nombre} ${person.apellido}`,
+      escalafon: person.escalafon,
+      inicio: person.fecha_inicio,
+      dependencia:(depen)?depen.dependencia:'',
+      cargo:(depen)?depen.Cargo.descripcion:'',
+      total:(count)?count*30:0,
+      efectivo,
+      resta:(count*30)-efectivo
+    }; 
+    const document = {
+      html: html,
+      data: {
+        products: obj,
+      },
+      path: "./pdf/reportes/" + filename,
+    };
+    const archivo = await pdf.create(document, options);
+    const nom = archivo.filename.split("\\");
+    const nombre = nom[nom.length - 1];
+
+    return res.json({
+      ok: true,
+      msg: "Se creo documento",
+      nombre
+    });
+  } catch (error) {
+    res.status(400).json({
+      ok: false,
+      msg: `Error: ${error}`,
+    });
+  }
+};
 const postMeritoPersona = async (req = request, res = response) => {
   try {
     const { id } = req.params;
@@ -766,6 +884,7 @@ const postMeritoPersona = async (req = request, res = response) => {
     });
   }
 };
+
 const mostrarReporteRecordLaboral = async (req = request, res = response) => {
   try {
     const { nombre } = req.params;
@@ -802,13 +921,27 @@ const mostrarMerito = async (req = request, res = response) => {
     });
   }
 };
+const mostrarVacacional = async (req = request, res = response) => {
+  try {
+    const { nombre } = req.params;
+    const pathImagen = path.join(__dirname, "../pdf", "reportes", nombre);
+    return res.sendFile(pathImagen);
+  } catch (error) {
+    res.status(400).json({
+      ok: false,
+      msg: `${error}`,
+    });
+  }
+};
 module.exports = {
   postRecordLaboral,
   postRecordLaboralPersona,
   postLicenciaPersona,
   postLicenciaPersona,
+  postVacacionalPersona,
   mostrarReporteRecordLaboral,
   mostrarLicenciaLaboral,
   postMeritoPersona,
-  mostrarMerito
+  mostrarMerito,
+  mostrarVacacional
 };

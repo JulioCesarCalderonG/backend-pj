@@ -10,6 +10,10 @@ const mostrarPersonales = async (req = request, res = response) => {
         where: {
           estado,
         },
+        order:[
+          ['nombre','ASC'],
+          ['apellido','ASC']
+        ]
       });
       return res.json({
         ok: true,

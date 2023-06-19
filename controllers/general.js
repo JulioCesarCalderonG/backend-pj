@@ -15,6 +15,7 @@ const { Op } = require('sequelize');
 const { subirArchivo } = require('../helpers');
 const mostrarGeneral = async (req = request, res = response) => {
   const { tipofiltro, dato } = req.query;
+  let array = [];
   if (tipofiltro === '' && dato === '') {
     const resp = await General.findAll({
       include: [
@@ -26,10 +27,27 @@ const mostrarGeneral = async (req = request, res = response) => {
         },
       ],
     });
+    if (resp.length > 0) {
+      for (let i = 0; i < resp.length; i++) {
+        const data = {
+          id: i + 1,
+          codigo_documento: resp[i].codigo_documento,
+          dependencia: resp[i].dependencia,
+          id_personal: resp[i].id_personal,
+          id_cargo: resp[i].id_cargo,
+          inicio: resp[i].inicio,
+          fin: resp[i].fin,
+          documento: resp[i].documento,
+          Personal: resp[i].Personal,
+          Cargo: resp[i].Cargo,
+        };
+        array.push(data);
+      }
+    }
     return res.json({
       ok: true,
       msg: 'Se muestran los datos correctamente',
-      resp,
+      resp: array,
     });
   }
 
@@ -54,10 +72,27 @@ const mostrarGeneral = async (req = request, res = response) => {
           },
         ],
       });
+      if (resps.length > 0) {
+        for (let i = 0; i < resps.length; i++) {
+          const data = {
+            id: i + 1,
+            codigo_documento: resps[i].codigo_documento,
+            dependencia: resps[i].dependencia,
+            id_personal: resps[i].id_personal,
+            id_cargo: resps[i].id_cargo,
+            inicio: resps[i].inicio,
+            fin: resps[i].fin,
+            documento: resps[i].documento,
+            Personal: resps[i].Personal,
+            Cargo: resps[i].Cargo,
+          };
+          array.push(data);
+        }
+      }
       return res.json({
         ok: true,
         msg: 'Se muestran los datos correctamente',
-        resp: resps,
+        resp: array,
       });
     case '2':
       const reps = await General.findAll({
@@ -79,10 +114,27 @@ const mostrarGeneral = async (req = request, res = response) => {
           },
         ],
       });
+      if (reps.length > 0) {
+        for (let i = 0; i < reps.length; i++) {
+          const data = {
+            id: i + 1,
+            codigo_documento: reps[i].codigo_documento,
+            dependencia: reps[i].dependencia,
+            id_personal: reps[i].id_personal,
+            id_cargo: reps[i].id_cargo,
+            inicio: reps[i].inicio,
+            fin: reps[i].fin,
+            documento: reps[i].documento,
+            Personal: reps[i].Personal,
+            Cargo: reps[i].Cargo,
+          };
+          array.push(data);
+        }
+      }
       return res.json({
         ok: true,
         msg: 'Se muestran los datos correctamente',
-        resp: reps,
+        resp: array,
       });
     case '3':
       const resp = await General.findAll({
@@ -109,10 +161,28 @@ const mostrarGeneral = async (req = request, res = response) => {
           },
         ],
       });
+      
+      if (resp.length > 0) {
+        for (let i = 0; i < resp.length; i++) {
+          const data = {
+            id: i + 1,
+            codigo_documento: resp[i].codigo_documento,
+            dependencia: resp[i].dependencia,
+            id_personal: resp[i].id_personal,
+            id_cargo: resp[i].id_cargo,
+            inicio: resp[i].inicio,
+            fin: resp[i].fin,
+            documento: resp[i].documento,
+            Personal: resp[i].Personal,
+            Cargo: resp[i].Cargo,
+          };
+          array.push(data);
+        }
+      }
       return res.json({
         ok: true,
         msg: 'Se muestran los datos correctamente',
-        resp,
+        resp: array,
       });
     default:
       return res.json({
