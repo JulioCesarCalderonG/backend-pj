@@ -217,6 +217,7 @@ const postRecordLaboral = async (req = request, res = response) => {
         const prod = {
           id: `${i+1}`,
           documento: data[i].codigo_documento,
+          personal:`${data[i].Personal.nombre} ${data[i].Personal.apellido}`,
           dependencia: data[i].dependencia,
           cargo: `${data[i].Cargo.descripcion}`,
           desde: data[i].inicio,
