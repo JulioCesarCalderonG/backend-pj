@@ -244,15 +244,13 @@ const postRecordLaboral = async (req = request, res = response) => {
       },
       path: "./pdf/reportes/" + filename,
     };
-    //const archivo = await pdf.create(document, options);
-    //const nom = archivo.filename.split("\\");
-    //const nombre = nom[nom.length - 1];
+    const archivo = await pdf.create(document, options);
+    const nom = archivo.filename.split("\\");
+    const nombre = nom[nom.length - 1];
     return res.json({
       ok: true,
       msg: "Se creo documento",
-      data,
-      array
-      //nombre,
+      nombre
     });
   } catch (error) {
     res.status(400).json({
