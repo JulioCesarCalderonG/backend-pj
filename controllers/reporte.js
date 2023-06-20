@@ -70,21 +70,19 @@ const postRecordLaboral = async (req = request, res = response) => {
           });
           const resp = await General.findAll({
             where: {
-              [Op.and]: [
-                {
-                  dependencia: organo.nombre,
+             dependencia: area.nombre,
+             [Op.and]: [
+              {
+                inicio: {
+                  [Op.gte]: fechainicio,
                 },
-                {
-                  inicio: {
-                    [Op.gte]: fechainicio,
-                  },
+              },
+              {
+                fin: {
+                  [Op.lte]: fechafinal,
                 },
-                {
-                  fin: {
-                    [Op.lte]: fechafinal,
-                  },
-                },
-              ],
+              },
+            ],
             },
             include: [
               {
@@ -117,10 +115,8 @@ const postRecordLaboral = async (req = request, res = response) => {
           });
           const resp2 = await General.findAll({
             where: {
+              dependencia: area.nombre,
               [Op.and]: [
-                {
-                  dependencia: unidad.nombre,
-                },
                 {
                   inicio: {
                     [Op.gte]: fechainicio,
@@ -169,10 +165,8 @@ const postRecordLaboral = async (req = request, res = response) => {
           });
           const resp3 = await General.findAll({
             where: {
+              dependencia: area.nombre,
               [Op.and]: [
-                {
-                  dependencia: area.nombre,
-                },
                 {
                   inicio: {
                     [Op.gte]: fechainicio,
@@ -201,79 +195,7 @@ const postRecordLaboral = async (req = request, res = response) => {
         default:
           break;
       }
-    } else {
-      const html = fs.readFileSync(
-        path.join(__dirname, "../pdf/html/recordlaboral.html"),
-        "utf-8"
-      );
-      const filename = Math.random() + "_doc" + ".pdf";
-      const person = await Personal.findOne({
-        where: {
-          id: personal,
-        },
-      });
-      const resp = await General.findAll({
-        where: {
-          id_personal: personal,
-        },
-        include: [
-          {
-            model: Personal,
-          },
-          {
-            model: Cargo,
-          },
-        ],
-      });
-      if (resp.length === 0) {
-        const prod = {
-          id: "",
-          documento: "",
-          personal: "",
-          dependencia: "",
-          cargo: "",
-          desde: "",
-          hasta: "",
-        };
-        array.push(prod);
-      } else {
-        resp.forEach((d) => {
-          let i = 1;
-          const prod = {
-            id: `${i}`,
-            documento: d.codigo_documento,
-            personal: `${d.Personal.nombre} ${d.Personal.apellido}`,
-            dependencia: d.dependencia,
-            cargo: `${d.Cargo.descripcion}`,
-            desde: d.inicio,
-            hasta: d.fin === "2030-12-30" ? "ACTUALIDAD" : d.fin,
-          };
-          i++;
-          array.push(prod);
-        });
-      }
-      const obj = {
-        prodlist: array,
-        personal: `${person.nombre} ${person.apellido}`,
-        escalafon: person.escalafon,
-        inicio: person.fecha_inicio,
-      };
-      const document = {
-        html: html,
-        data: {
-          products: obj,
-        },
-        path: "./pdf/reportes/" + filename,
-      };
-      const archivo = await pdf.create(document, options);
-      const nom = archivo.filename.split("\\");
-      const nombre = nom[nom.length - 1];
-      return res.json({
-        ok: true,
-        msg: "Se creo documento",
-        nombre,
-      });
-    }
+    } 
     const html = fs.readFileSync(
       path.join(__dirname, "../pdf/html/relacionpersonal.html"),
       "utf-8"
@@ -291,14 +213,14 @@ const postRecordLaboral = async (req = request, res = response) => {
       };
       array.push(prod);
     } else {
-      for (let i = 0; i < resp.length; i++) {
+      for (let i = 0; i < data.length; i++) {
         const prod = {
           id: `${i+1}`,
-          documento: resp[i].codigo_documento,
-          dependencia: resp[i].dependencia,
-          cargo: `${resp[i].Cargo.descripcion}`,
-          desde: resp[i].inicio,
-          hasta: resp[i].fin === "2030-12-30" ? "ACTUALIDAD" : resp[i].fin,
+          documento: data[i].codigo_documento,
+          dependencia: data[i].dependencia,
+          cargo: `${data[i].Cargo.descripcion}`,
+          desde: data[i].inicio,
+          hasta: data[i].fin === "2030-12-30" ? "ACTUALIDAD" : data[i].fin,
         };
         array.push(prod);
         
@@ -322,13 +244,15 @@ const postRecordLaboral = async (req = request, res = response) => {
       },
       path: "./pdf/reportes/" + filename,
     };
-    const archivo = await pdf.create(document, options);
-    const nom = archivo.filename.split("\\");
-    const nombre = nom[nom.length - 1];
+    //const archivo = await pdf.create(document, options);
+    //const nom = archivo.filename.split("\\");
+    //const nombre = nom[nom.length - 1];
     return res.json({
       ok: true,
       msg: "Se creo documento",
-      nombre,
+      data,
+      array
+      //nombre,
     });
   } catch (error) {
     res.status(400).json({
