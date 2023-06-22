@@ -50,10 +50,10 @@
             {{#each products.prodlist}}
             <tr>
               <th scope="row" style="font-size: 10px;text-align: center;">
-                <p>{{this.id}}</p>
+                {{this.id}}
               </th>
-              <th scope="row" style="font-size: 10px;width:280px;">
-                <p  style="text-align: center;" >{{this.documento}}</p>
+              <th scope="row" style="font-size: 10px;width:280px; text-align: center;">
+                {{this.documento}}
               </th>
               <th scope="row"  style="font-size: 10px;text-align: center;" >{{this.periodo}}</th>
               <th scope="row"  style="font-size: 10px;text-align: center;" >{{this.inicio}}</th>
