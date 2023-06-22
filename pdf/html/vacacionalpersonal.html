@@ -74,13 +74,13 @@
           </thead>
           <tbody>
             {{#each products.prodlist2}}
-            <tr>
-              <th scope="row" style="font-size: 10px;width:280px;">
-                <p  style="text-align: center;" >{{this.periodo}}</p>
+            <tr style="height: 8px; margin-bottom: -5px;" >
+              <th scope="row" style="font-size: 10px;width:280px; height: 10px!important; text-align: center; margin-bottom: -5px!important;">
+                {{this.periodo}}
               </th>
-              <th scope="row"  style="font-size: 10px;text-align: center;" >{{this.generados}}</th>
-              <th scope="row"  style="font-size: 10px;text-align: center;" >{{this.dias}}</th>
-              <th scope="row"  style="font-size: 10px;text-align: center;" >{{this.saldo}}</th>
+              <th scope="row"  style="font-size: 10px;text-align: center; height: 10px!important; margin-bottom: -5px!important;" >{{this.generados}}</th>
+              <th scope="row"  style="font-size: 10px;text-align: center; height: 10px!important; margin-bottom: -5px!important;" >{{this.dias}}</th>
+              <th scope="row"  style="font-size: 10px;text-align: center; height: 10px!important; margin-bottom: -5px!important;" >{{this.saldo}}</th>
             </tr>
             {{/each}}
           </tbody>
