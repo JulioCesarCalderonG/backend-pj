@@ -70,19 +70,37 @@ const postRecordLaboral = async (req = request, res = response) => {
           });
           const resp = await General.findAll({
             where: {
-             dependencia: area.nombre,
-             [Op.and]: [
-              {
-                inicio: {
-                  [Op.gte]: fechainicio,
+              dependencia: organo.nombre,
+              [Op.or]: [
+                {
+                  [Op.and]: [
+                    {
+                      inicio: {
+                        [Op.gte]: fechainicio,
+                      },
+                    },
+                    {
+                      inicio: {
+                        [Op.lte]: fechafinal,
+                      },
+                    },
+                  ],
                 },
-              },
-              {
-                fin: {
-                  [Op.lte]: fechafinal,
-                },
-              },
-            ],
+                {
+                  [Op.and]: [
+                    {
+                      fin: {
+                        [Op.gte]: fechainicio,
+                      },
+                    },
+                    {
+                      fin: {
+                        [Op.lte]: fechafinal,
+                      },
+                    },
+                  ],
+                }
+              ],
             },
             include: [
               {
@@ -115,18 +133,36 @@ const postRecordLaboral = async (req = request, res = response) => {
           });
           const resp2 = await General.findAll({
             where: {
-              dependencia: area.nombre,
-              [Op.and]: [
+              dependencia: unidad.nombre,
+              [Op.or]: [
                 {
-                  inicio: {
-                    [Op.gte]: fechainicio,
-                  },
+                  [Op.and]: [
+                    {
+                      inicio: {
+                        [Op.gte]: fechainicio,
+                      },
+                    },
+                    {
+                      inicio: {
+                        [Op.lte]: fechafinal,
+                      },
+                    },
+                  ],
                 },
                 {
-                  fin: {
-                    [Op.lte]: fechafinal,
-                  },
-                },
+                  [Op.and]: [
+                    {
+                      fin: {
+                        [Op.gte]: fechainicio,
+                      },
+                    },
+                    {
+                      fin: {
+                        [Op.lte]: fechafinal,
+                      },
+                    },
+                  ],
+                }
               ],
             },
             include: [
@@ -166,17 +202,35 @@ const postRecordLaboral = async (req = request, res = response) => {
           const resp3 = await General.findAll({
             where: {
               dependencia: area.nombre,
-              [Op.and]: [
+              [Op.or]: [
                 {
-                  inicio: {
-                    [Op.gte]: fechainicio,
-                  },
+                  [Op.and]: [
+                    {
+                      inicio: {
+                        [Op.gte]: fechainicio,
+                      },
+                    },
+                    {
+                      inicio: {
+                        [Op.lte]: fechafinal,
+                      },
+                    },
+                  ],
                 },
                 {
-                  fin: {
-                    [Op.lte]: fechafinal,
-                  },
-                },
+                  [Op.and]: [
+                    {
+                      fin: {
+                        [Op.gte]: fechainicio,
+                      },
+                    },
+                    {
+                      fin: {
+                        [Op.lte]: fechafinal,
+                      },
+                    },
+                  ],
+                }
               ],
             },
             include: [
@@ -195,8 +249,8 @@ const postRecordLaboral = async (req = request, res = response) => {
         default:
           break;
       }
-    } 
-    /* const html = fs.readFileSync(
+    }
+    const html = fs.readFileSync(
       path.join(__dirname, "../pdf/html/relacionpersonal.html"),
       "utf-8"
     );
@@ -244,15 +298,14 @@ const postRecordLaboral = async (req = request, res = response) => {
         products: obj,
       },
       path: "./pdf/reportes/" + filename,
-    }; */
-    //const archivo = await pdf.create(document, options);
-    //const nom = archivo.filename.split("\\");
-    //const nombre = nom[nom.length - 1];
+    };
+    const archivo = await pdf.create(document, options);
+    const nom = archivo.filename.split("\\");
+    const nombre = nom[nom.length - 1];
     return res.json({
       ok: true,
       msg: "Se creo documento",
-      data,
-    
+      nombre
     });
   } catch (error) {
     res.status(400).json({
@@ -265,7 +318,7 @@ const postRecordLaboralPersona = async (req = request, res = response) => {
   try {
     const { id } = req.params;
     let array = [];
-    let array2=[];
+    let array2 = [];
     const options = {
       format: "A3",
       orientation: "landscape",
@@ -277,10 +330,10 @@ const postRecordLaboralPersona = async (req = request, res = response) => {
       footer: {
         height: "24mm",
         contents: {
-           
-            default: '<span style="color: #444;">{{page}}</span>/<span>{{pages}}</span>', // fallback value
-        }
-    }
+          default:
+            '<span style="color: #444;">{{page}}</span>/<span>{{pages}}</span>', // fallback value
+        },
+      },
     };
 
     const html = fs.readFileSync(
@@ -294,25 +347,23 @@ const postRecordLaboralPersona = async (req = request, res = response) => {
       },
     });
     const depen = await General.findOne({
-      where:{
+      where: {
         id_personal: id,
-        fin:'2030-12-30'
+        fin: "2030-12-30",
       },
-      include:[
+      include: [
         {
-          model:Cargo
-        }
-      ]
-    })
-    let idcount=0;
+          model: Cargo,
+        },
+      ],
+    });
+    let idcount = 0;
     const resp = await General.findAll({
       where: {
         id_personal: id,
-        periodo:1
+        periodo: 1,
       },
-      order:[
-        ['inicio','ASC']
-      ],
+      order: [["inicio", "ASC"]],
       include: [
         {
           model: Personal,
@@ -325,11 +376,9 @@ const postRecordLaboralPersona = async (req = request, res = response) => {
     const resp2 = await General.findAll({
       where: {
         id_personal: id,
-        periodo:2
+        periodo: 2,
       },
-      order:[
-        ['inicio','ASC']
-      ],
+      order: [["inicio", "ASC"]],
       include: [
         {
           model: Personal,
@@ -350,23 +399,22 @@ const postRecordLaboralPersona = async (req = request, res = response) => {
         hasta: "",
       };
       array.push(prod);
-    }else {
+    } else {
       for (let i = 0; i < resp.length; i++) {
         const prod = {
-          id: `${i+1}`,
+          id: `${i + 1}`,
           documento: resp[i].codigo_documento,
           dependencia: resp[i].dependencia,
           cargo: `${resp[i].Cargo.descripcion}`,
           desde: resp[i].inicio,
           hasta: resp[i].fin === "2030-12-30" ? "ACTUALIDAD" : resp[i].fin,
         };
-        idcount=i+1;
+        idcount = i + 1;
         array.push(prod);
-        
       }
     }
 
-    if (resp2.length===0) {
+    if (resp2.length === 0) {
       const prod = {
         id: "",
         documento: "",
@@ -377,29 +425,28 @@ const postRecordLaboralPersona = async (req = request, res = response) => {
         hasta: "",
       };
       array2.push(prod);
-    }else{
+    } else {
       for (let i = 0; i < resp2.length; i++) {
         const prod = {
-          id: `${idcount+1}`,
+          id: `${idcount + 1}`,
           documento: resp2[i].codigo_documento,
           dependencia: resp2[i].dependencia,
           cargo: `${resp2[i].Cargo.descripcion}`,
           desde: resp2[i].inicio,
           hasta: resp2[i].fin === "2030-12-30" ? "ACTUALIDAD" : resp2[i].fin,
         };
-        idcount=idcount+1;
+        idcount = idcount + 1;
         array2.push(prod);
-        
       }
     }
     const obj = {
       prodlist: array,
-      prodlist2:array2,
+      prodlist2: array2,
       personal: `${person.nombre} ${person.apellido}`,
       escalafon: person.escalafon,
       inicio: person.fecha_inicio,
-      dependencia:(depen)?depen.dependencia:'',
-      cargo:(depen)?depen.Cargo.descripcion:''
+      dependencia: depen ? depen.dependencia : "",
+      cargo: depen ? depen.Cargo.descripcion : "",
     };
     const document = {
       html: html,
@@ -439,10 +486,10 @@ const postLicenciaPersona = async (req = request, res = response) => {
       footer: {
         height: "24mm",
         contents: {
-           
-            default: '<span style="color: #444;">{{page}}</span>/<span>{{pages}}</span>', // fallback value
-        }
-    }
+          default:
+            '<span style="color: #444;">{{page}}</span>/<span>{{pages}}</span>', // fallback value
+        },
+      },
     };
 
     const html = fs.readFileSync(
@@ -456,20 +503,20 @@ const postLicenciaPersona = async (req = request, res = response) => {
       },
     });
     const depen = await General.findOne({
-      where:{
+      where: {
         id_personal: id,
-        fin:'2030-12-30'
+        fin: "2030-12-30",
       },
-      include:[
+      include: [
         {
-          model:Cargo
-        }
-      ]
+          model: Cargo,
+        },
+      ],
     });
-    
+
     const resp = await Licencia.findAll({
       where: {
-        id_personal: id
+        id_personal: id,
       },
       include: [
         {
@@ -477,11 +524,11 @@ const postLicenciaPersona = async (req = request, res = response) => {
         },
         {
           model: DetalleLicencia,
-          include:[
+          include: [
             {
-              model:TipoLicencia
-            }
-          ]
+              model: TipoLicencia,
+            },
+          ],
         },
       ],
     });
@@ -499,26 +546,25 @@ const postLicenciaPersona = async (req = request, res = response) => {
     } else {
       for (let i = 0; i < resp.length; i++) {
         const prod = {
-          id: `${i+1}`,
+          id: `${i + 1}`,
           documento: resp[i].codigo_documento,
           tipolicencia: resp[i].DetalleLicencium.TipoLicencium.nombre,
           detallelicencia: `${resp[i].DetalleLicencium.nombre}`,
-          dias:resp[i].dias,
+          dias: resp[i].dias,
           desde: resp[i].inicio,
           hasta: resp[i].fin,
         };
         array.push(prod);
-        
       }
     }
-     const obj = {
+    const obj = {
       prodlist: array,
       personal: `${person.nombre} ${person.apellido}`,
       escalafon: person.escalafon,
       inicio: person.fecha_inicio,
-      dependencia:(depen)?depen.dependencia:'',
-      cargo:(depen)?depen.Cargo.descripcion:''
-    }; 
+      dependencia: depen ? depen.dependencia : "",
+      cargo: depen ? depen.Cargo.descripcion : "",
+    };
     const document = {
       html: html,
       data: {
@@ -533,7 +579,7 @@ const postLicenciaPersona = async (req = request, res = response) => {
     return res.json({
       ok: true,
       msg: "Se creo documento",
-      nombre
+      nombre,
     });
   } catch (error) {
     res.status(400).json({
@@ -557,12 +603,11 @@ const postVacacionalPersona = async (req = request, res = response) => {
       footer: {
         height: "10mm",
         contents: {
-           
-            default: '<span style="color: #444;">{{page}}</span>/<span>{{pages}}</span>', // fallback value
-        }
-    }
+          default:
+            '<span style="color: #444;">{{page}}</span>/<span>{{pages}}</span>', // fallback value
+        },
+      },
     };
-
     const html = fs.readFileSync(
       path.join(__dirname, "../pdf/html/vacacionalpersonal.html"),
       "utf-8"
@@ -574,35 +619,63 @@ const postVacacionalPersona = async (req = request, res = response) => {
       },
     });
     const depen = await General.findOne({
-      where:{
+      where: {
         id_personal: id,
-        fin:'2030-12-30'
+        fin: "2030-12-30",
       },
-      include:[
+      include: [
         {
-          model:Cargo
-        }
-      ]
+          model: Cargo,
+        },
+      ],
     });
 
     const count = await Vacacional.count({
-      where:{
-        id_personal:id
+      where: {
+        id_personal: id,
       },
-      distinct:true,
-      col:'periodo'
+      distinct: true,
+      col: "periodo",
     });
-    
+
     const resp = await Vacacional.findAll({
       where: {
-        id_personal: id
+        id_personal: id,
       },
-      order:[
-        ['periodo','ASC'],
-        ['inicio','ASC']
-      ]
+      order: [
+        ["periodo", "ASC"],
+        ["inicio", "ASC"],
+      ],
     });
-    let efectivo=0;
+ /* Obtener por periodos */
+    let array2=[];
+    if (resp.length>0) {
+      for (let i = 0; i < resp.length; i++) {
+        const respu = array2.find(array3=> array3.periodo===resp[i].periodo);
+        
+        if (respu) {
+          const respu2= array2.filter((reso)=>reso.periodo!==respu.periodo);
+          array2=respu2;
+          const obj={
+            periodo:resp[i].periodo,
+            dias:Number(respu.dias)+Number(resp[i].dias),
+            generados:30,
+            saldo:30-(Number(respu.dias)+Number(resp[i].dias))
+          }
+          array2.push(obj);
+        }else{
+          const obj={
+            periodo:resp[i].periodo,
+            dias:Number(resp[i].dias),
+            generados:30,
+            saldo:30-Number(resp[i].dias)
+          }
+          array2.push(obj);
+        }        
+      }
+    }
+/* Obtener por ordenamiento */
+    let efectivo = 0;
     if (resp.length === 0) {
       const prod = {
         id: "",
@@ -616,28 +689,29 @@ const postVacacionalPersona = async (req = request, res = response) => {
     } else {
       for (let i = 0; i < resp.length; i++) {
         const prod = {
-          id: `${i+1}`,
+          id: `${i + 1}`,
           documento: resp[i].codigo_documento,
           periodo: resp[i].periodo,
           inicio: resp[i].inicio,
           termino: resp[i].termino,
           ejercicio: resp[i].dias,
         };
-        efectivo=efectivo+Number(resp[i].dias);
+        efectivo = efectivo + Number(resp[i].dias);
         array.push(prod);
       }
     }
-     const obj = {
+    const obj = {
       prodlist: array,
+      prodlist2:array2,
       personal: `${person.nombre} ${person.apellido}`,
       escalafon: person.escalafon,
       inicio: person.fecha_inicio,
-      dependencia:(depen)?depen.dependencia:'',
-      cargo:(depen)?depen.Cargo.descripcion:'',
-      total:(count)?count*30:0,
+      dependencia: depen ? depen.dependencia : "",
+      cargo: depen ? depen.Cargo.descripcion : "",
+      total: count ? count * 30 : 0,
       efectivo,
-      resta:(count*30)-efectivo
-    }; 
+      resta: count * 30 - efectivo,
+    };
     const document = {
       html: html,
       data: {
@@ -645,6 +719,7 @@ const postVacacionalPersona = async (req = request, res = response) => {
       },
       path: "./pdf/reportes/" + filename,
     };
+
     const archivo = await pdf.create(document, options);
     const nom = archivo.filename.split("\\");
     const nombre = nom[nom.length - 1];
@@ -652,7 +727,9 @@ const postVacacionalPersona = async (req = request, res = response) => {
     return res.json({
       ok: true,
       msg: "Se creo documento",
-      nombre
+      array2,
+      array,
+      nombre,
     });
   } catch (error) {
     res.status(400).json({
@@ -676,10 +753,10 @@ const postMeritoPersona = async (req = request, res = response) => {
       footer: {
         height: "5mm",
         contents: {
-           
-            default: '<span style="color: #444;">{{page}}</span>/<span>{{pages}}</span>', // fallback value
-        }
-    }
+          default:
+            '<span style="color: #444;">{{page}}</span>/<span>{{pages}}</span>', // fallback value
+        },
+      },
     };
 
     const html = fs.readFileSync(
@@ -693,57 +770,56 @@ const postMeritoPersona = async (req = request, res = response) => {
       },
     });
     const depen = await General.findOne({
-      where:{
+      where: {
         id_personal: id,
-        fin:'2030-12-30'
+        fin: "2030-12-30",
       },
-      include:[
+      include: [
         {
-          model:Cargo
-        }
-      ]
+          model: Cargo,
+        },
+      ],
     });
     const countAmonestacion = await Merito.count({
-      where:{
-        id_personal:id,
-        id_sancion:1
-      }
+      where: {
+        id_personal: id,
+        id_sancion: 1,
+      },
     });
     const countSuspencion = await Merito.count({
-      where:{
-        id_personal:id,
-        id_sancion:2
-      }
+      where: {
+        id_personal: id,
+        id_sancion: 2,
+      },
     });
     const countMultas = await Merito.count({
-      where:{
-        id_personal:id,
-        id_sancion:3
-      }
+      where: {
+        id_personal: id,
+        id_sancion: 3,
+      },
     });
     const countDestitucion = await Merito.count({
-      where:{
-        id_personal:id,
-        id_sancion:4
-      }
+      where: {
+        id_personal: id,
+        id_sancion: 4,
+      },
     });
     const countTotal = await Merito.count({
-      where:{
-        id_personal:id
-      }
+      where: {
+        id_personal: id,
+      },
     });
     const resp = await Merito.findAll({
       where: {
-        id_personal: id
+        id_personal: id,
       },
       include: [
         {
           model: Sancion,
         },
         {
-          model:Estado
-        }
-        
+          model: Estado,
+        },
       ],
     });
     if (resp.length === 0) {
@@ -760,31 +836,30 @@ const postMeritoPersona = async (req = request, res = response) => {
     } else {
       for (let i = 0; i < resp.length; i++) {
         const prod = {
-          id: `${i+1}`,
+          id: `${i + 1}`,
           documento: resp[i].codigo_documento,
           instancia: resp[i].instancia,
-          sancion:resp[i].Sancion.titulo,
-          fecha:resp[i].fecha,
+          sancion: resp[i].Sancion.titulo,
+          fecha: resp[i].fecha,
           estado: resp[i].Estado.descripcion,
           observacion: resp[i].observacion,
         };
         array.push(prod);
-        
       }
     }
-     const obj = {
+    const obj = {
       prodlist: array,
       personal: `${person.nombre} ${person.apellido}`,
       escalafon: person.escalafon,
       inicio: person.fecha_inicio,
-      dependencia:(depen)?depen.dependencia:'',
-      cargo:(depen)?depen.Cargo.descripcion:'',
-      amonestacion:(countAmonestacion)?countAmonestacion:0,
-      suspencion:(countSuspencion)?countSuspencion:0,
-      multas:(countMultas)?countMultas:0,
-      destitucion:(countDestitucion)?countDestitucion:0,
-      total:(countTotal)?countTotal:0
-    }; 
+      dependencia: depen ? depen.dependencia : "",
+      cargo: depen ? depen.Cargo.descripcion : "",
+      amonestacion: countAmonestacion ? countAmonestacion : 0,
+      suspencion: countSuspencion ? countSuspencion : 0,
+      multas: countMultas ? countMultas : 0,
+      destitucion: countDestitucion ? countDestitucion : 0,
+      total: countTotal ? countTotal : 0,
+    };
     const document = {
       html: html,
       data: {
@@ -799,7 +874,7 @@ const postMeritoPersona = async (req = request, res = response) => {
     return res.json({
       ok: true,
       msg: "Se creo documento",
-      nombre
+      nombre,
     });
   } catch (error) {
     res.status(400).json({
@@ -808,7 +883,6 @@ const postMeritoPersona = async (req = request, res = response) => {
     });
   }
 };
-
 const mostrarReporteRecordLaboral = async (req = request, res = response) => {
   try {
     const { nombre } = req.params;
@@ -867,5 +941,5 @@ module.exports = {
   mostrarLicenciaLaboral,
   postMeritoPersona,
   mostrarMerito,
-  mostrarVacacional
+  mostrarVacacional,
 };

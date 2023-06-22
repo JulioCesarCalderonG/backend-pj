@@ -63,6 +63,28 @@
             {{/each}}
           </tbody>
         </table>
+        <table class="table" style="width: 700px;" border="1" cellspacing="0">
+          <thead>
+            <tr>
+              <th scope="col"  style="font-size: 10px;text-align: center;background-color: #ccc!important;">PERIODO</th>
+              <th scope="col"  style="font-size: 10px;text-align: center;background-color: #ccc!important;">DIAS GENERADOS</th>
+              <th scope="col"  style="font-size: 10px;text-align: center;background-color: #ccc!important;">EJERCICIO EFECTIVO</th>
+              <th scope="col" style="font-size: 10px;text-align: center;background-color: #ccc!important;">SALDO PENDIENTE</th>
+            </tr>
+          </thead>
+          <tbody>
+            {{#each products.prodlist2}}
+            <tr>
+              <th scope="row" style="font-size: 10px;width:280px;">
+                <p  style="text-align: center;" >{{this.periodo}}</p>
+              </th>
+              <th scope="row"  style="font-size: 10px;text-align: center;" >{{this.generados}}</th>
+              <th scope="row"  style="font-size: 10px;text-align: center;" >{{this.dias}}</th>
+              <th scope="row"  style="font-size: 10px;text-align: center;" >{{this.saldo}}</th>
+            </tr>
+            {{/each}}
+          </tbody>
+        </table>
         <table border="1" cellspacing="0" cellpadding="0" style="margin-left: 90px;">
             <tr style="text-align: center;">
               <td style="font-size: 11px;font-weight: 600; width: 150px;">Dias generados</td>
