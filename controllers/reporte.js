@@ -883,6 +883,60 @@ const postMeritoPersona = async (req = request, res = response) => {
     });
   }
 };
+const postVacacionalGeneral = async(req = request, res = response)=>{
+  try {
+    const personal = await Personal.findAll({
+      where:{
+        estado:1
+      }
+    });
+    let totalcount=0;
+    let ano = new Date().getFullYear();
+    if (personal) {
+      for (let i = 0; i < personal.length; i++) {
+        const vacacional = await Vacacional.findAll({
+          where:{
+            id_personal:personal[0].id
+          }
+        });
+        //array=vacacional;
+        const count1 = await Vacacional.count({
+          distinct:true,
+          col:'periodo',
+          where:{
+            id_personal:personal[1].id,
+            periodo:{
+              [Op.ne]:ano
+            }
+          }
+        });
+        const count2 = await Vacacional.count({
+          distinct:true,
+          col:'periodo',
+          where:{
+            id_personal:personal[1].id,
+            periodo:{
+              [Op.eq]:ano
+            }
+          }
+        });
+        totalcount = count2!==0?count1+count2:count1+1;
+      }
+    }
+    res.json({
+      ok:true,
+      //personal,
+      //array,
+      totalcount,
+      ano
+    })
+  } catch (error) {
+    res.status(400).json({
+      ok:false,
+      msg:`Error: ${error}`
+    })
+  }
+}
 const mostrarReporteRecordLaboral = async (req = request, res = response) => {
   try {
     const { nombre } = req.params;
@@ -942,4 +996,5 @@ module.exports = {
   postMeritoPersona,
   mostrarMerito,
   mostrarVacacional,
+  postVacacionalGeneral
 };
