@@ -35,8 +35,12 @@ class Server {
             estado:'/api/estado',
             sancion:'/api/sancion',
             merito:'/api/merito',
+            regimen:'/api/regimen',
+            condicion:'/api/condicion',
+            regimenlaboral:'/api/regimenlaboral',
             uploadgeneral:'/api/uploadgeneral',
-            reporte:'/api/reporte'
+            reporte:'/api/reporte',
+            
     };
     //Connect to socket
     this.httpServer = new http.Server(this.app);
@@ -112,6 +116,9 @@ class Server {
     this.app.use(this.paths.estado, require('../routes/estados'));
     this.app.use(this.paths.sancion, require('../routes/sanciones'));
     this.app.use(this.paths.merito, require('../routes/meritos'));
+    this.app.use(this.paths.regimen, require('../routes/regimen'));
+    this.app.use(this.paths.condicion, require('../routes/condicion'));
+    this.app.use(this.paths.regimenlaboral, require('../routes/regimen-laboral'));
     this.app.use(this.paths.uploadgeneral, require('../routes/upload-general'));
     this.app.use(this.paths.reporte, require('../routes/reporte'));
   }

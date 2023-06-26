@@ -17,6 +17,9 @@ const Vacacional = require('./vacacional');
 const Sancion = require('./sancion');
 const Estado = require('./estado');
 const Merito = require('./merito');
+const Condicion = require('./condicion');
+const Regimen = require('./regimen');
+const RegimenLaboral = require('./regimen-laboral');
 module.exports = {
   Server,
   Personal,
@@ -35,5 +38,8 @@ module.exports = {
   Vacacional,
   Sancion,
   Estado,
-  Merito
+  Merito,
+  Condicion,
+  Regimen,
+  RegimenLaboral
 };
