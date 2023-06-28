@@ -1,18 +1,23 @@
 const { request, response } = require("express");
 const { subirArchivo } = require("../helpers");
-const { Vacacional } = require("../models");
+const { Vacacional, RegimenLaboral } = require("../models");
 
 const mostrarVacacionalPersonal = async (req = request, res = response) => {
   try {
     const { id } = req.params;
     const resp = await Vacacional.findAll({
-      where: {
-        id_personal: id,
-      },
+      include:[
+        {
+          model:RegimenLaboral,
+          where:{
+            id_personal:id
+          }
+        }
+      ],
       order: [
         ["periodo", "ASC"],
         ["inicio", "ASC"],
-      ],
+      ]
     });
     let array = [];
     if (resp.length > 0) {

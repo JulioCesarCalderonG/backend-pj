@@ -1,5 +1,6 @@
 const { Model, DataTypes } = require("sequelize");
 const sequelize = require('../database/database');
+const Vacacional = require("./vacacional");
 
 
 class RegimenLaboral extends Model{};
@@ -30,6 +31,18 @@ RegimenLaboral.init({
     tableName:'regimen_laboral',
     timestamps:false
 });
+
+RegimenLaboral.hasMany(Vacacional,{
+    as:'FK_VacacionalRLaboral',
+    foreignKey:'id_regimen_laboral',
+    
+});
+
+Vacacional.belongsTo(RegimenLaboral,{
+    sourceKey:'id',
+    foreignKey:'id_regimen_laboral'
+})
+
 
 
 module.exports = RegimenLaboral

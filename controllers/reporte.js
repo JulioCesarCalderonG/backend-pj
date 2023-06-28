@@ -14,6 +14,9 @@ const {
   Sancion,
   Estado,
   Vacacional,
+  RegimenLaboral,
+  Condicion,
+  Regimen,
 } = require("../models");
 const { Op } = require("sequelize");
 const Licencia = require("../models/licencia");
@@ -591,6 +594,7 @@ const postLicenciaPersona = async (req = request, res = response) => {
 const postVacacionalPersona = async (req = request, res = response) => {
   try {
     const { id } = req.params;
+    const {id_regimen_laboral} = req.body;
     let array = [];
     const options = {
       format: "A4",
@@ -629,10 +633,24 @@ const postVacacionalPersona = async (req = request, res = response) => {
         },
       ],
     });
-
+    const regimen =  await RegimenLaboral.findOne({
+      where:{
+        id:id_regimen_laboral
+      },
+      include:[
+        {
+          model:Condicion,
+          include:[
+            {
+              model:Regimen
+            }
+          ]
+        }
+      ]
+    })
     const count = await Vacacional.count({
       where: {
-        id_personal: id,
+        id_regimen_laboral
       },
       distinct: true,
       col: "periodo",
@@ -640,7 +658,7 @@ const postVacacionalPersona = async (req = request, res = response) => {
 
     const resp = await Vacacional.findAll({
       where: {
-        id_personal: id,
+        id_regimen_laboral,
       },
       order: [
         ["periodo", "ASC"],
@@ -705,12 +723,15 @@ const postVacacionalPersona = async (req = request, res = response) => {
       prodlist2:array2,
       personal: `${person.nombre} ${person.apellido}`,
       escalafon: person.escalafon,
-      inicio: person.fecha_inicio,
+      inicio: regimen.inicio,
+      fin:(regimen.fin==='2030-12-30')?'':regimen.fin,
       dependencia: depen ? depen.dependencia : "",
       cargo: depen ? depen.Cargo.descripcion : "",
       total: count ? count * 30 : 0,
       efectivo,
       resta: count * 30 - efectivo,
+      regimen:regimen.Condicion.Regimen.nombre,
+      condicion:regimen.Condicion.nombre,
     };
     const document = {
       html: html,
@@ -727,9 +748,8 @@ const postVacacionalPersona = async (req = request, res = response) => {
     return res.json({
       ok: true,
       msg: "Se creo documento",
-      array2,
-      array,
       nombre,
+      regimen
     });
   } catch (error) {
     res.status(400).json({

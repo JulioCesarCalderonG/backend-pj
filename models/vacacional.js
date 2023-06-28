@@ -20,7 +20,7 @@ Vacacional.init({
     dias:{
         type:DataTypes.CHAR
     },
-    id_personal:{
+    id_regimen_laboral:{
         type:DataTypes.INTEGER
     },
     documento:{

@@ -104,6 +104,39 @@ const mostrarRegimenLaboralId =async(req=request,res=response)=>{
         })
     }
 }
+const mostrarRegimenLaboralPersonalId =async(req=request,res=response)=>{
+  try {
+    const {id} = req.params;
+    const resp = await RegimenLaboral.findAll({
+      where:{
+        id_personal:id
+      },
+      include:[
+        {
+          model:Condicion,
+          include:[
+            {
+              model:Regimen
+            }
+          ]
+        },
+        {
+          model:TipoPersonal
+        }
+      ]
+    });
+    res.json({
+      ok:true,
+      msg:'Se muestra el dato con exito',
+      resp
+    })  
+  } catch (error) {
+      res.status(400).json({
+          ok:false,
+          msg:`Error: ${error}`
+      })
+  }
+}
 const guardarRegimenLaboral =async(req=request,res=response)=>{
     try {
       
@@ -193,6 +226,7 @@ const eliminarRegimenLaboral =(req=request,res=response)=>{
 module.exports = {
     mostrarRegimenLaborales,
     mostrarRegimenLaboralId,
+    mostrarRegimenLaboralPersonalId,
     guardarRegimenLaboral,
     modificarRegimenLaboral,
     eliminarRegimenLaboral
