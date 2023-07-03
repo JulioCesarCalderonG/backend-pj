@@ -391,6 +391,7 @@ const postRecordLaboralPersona = async (req = request, res = response) => {
         },
       ],
     });
+    let diasCountUno=0;
     if (resp.length === 0) {
       const prod = {
         id: "",
@@ -412,9 +413,19 @@ const postRecordLaboralPersona = async (req = request, res = response) => {
           desde: resp[i].inicio,
           hasta: resp[i].fin === "2030-12-30" ? "ACTUALIDAD" : resp[i].fin,
         };
+        const inicioarr = resp[i].inicio.split("-");
+        const finarr = resp[i].fin.split("-");
+        const fechaInicio = new Date(
+          `${inicioarr[1]}/${inicioarr[2]}/${inicioarr[0]}`
+        );
+        const fechaFin = new Date(`${finarr[1]}/${finarr[2]}/${finarr[0]}`);
+        const dias =
+          (fechaFin.getTime() - fechaInicio.getTime()) / 1000 / 60 / 60 / 24 + 1;
+        diasCountUno=diasCountUno+dias;
         idcount = i + 1;
         array.push(prod);
       }
+      
     }
 
     if (resp2.length === 0) {
@@ -438,10 +449,33 @@ const postRecordLaboralPersona = async (req = request, res = response) => {
           desde: resp2[i].inicio,
           hasta: resp2[i].fin === "2030-12-30" ? "ACTUALIDAD" : resp2[i].fin,
         };
+        
         idcount = idcount + 1;
         array2.push(prod);
       }
     }
+    const ano=365;
+    const meses=30;
+    const dias=1;
+    let anoCount=0;
+    let mesesCount=0;
+    let diasCount=0;
+    console.log(diasCountUno);
+    do {
+      if (diasCountUno>=ano) {
+        anoCount++;
+        diasCountUno=diasCountUno-ano;
+      }else if (diasCountUno>=meses) {
+        mesesCount++;
+        diasCountUno=diasCountUno-meses;
+      }else if (diasCountUno>=dias) {
+        diasCount++;
+        diasCountUno=diasCountUno-dias;
+      }
+      console.log(diasCountUno);
+    } while (diasCountUno>0);
+
+
     const obj = {
       prodlist: array,
       prodlist2: array2,
@@ -450,6 +484,9 @@ const postRecordLaboralPersona = async (req = request, res = response) => {
       inicio: person.fecha_inicio,
       dependencia: depen ? depen.dependencia : "",
       cargo: depen ? depen.Cargo.descripcion : "",
+      ano:anoCount,
+      meses:mesesCount,
+      dias:diasCount
     };
     const document = {
       html: html,
@@ -466,6 +503,8 @@ const postRecordLaboralPersona = async (req = request, res = response) => {
       ok: true,
       msg: "Se creo documento",
       nombre,
+      resp,
+      resp2
     });
   } catch (error) {
     res.status(400).json({

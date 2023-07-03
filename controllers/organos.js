@@ -13,12 +13,29 @@ const mostrarOrganos = async (req = request, res = response) => {
           model: Sede,
         },
       ],
+      order:[
+        ['nombre','ASC']
+      ]
     });
-
+    let array=[];
+    if (resp) {
+      for (let i = 0; i < resp.length; i++) {
+        const obj={
+          ids:i+1,
+          id:resp[i].id,
+          nombre:resp[i].nombre,
+          sigla:resp[i].sigla,
+          id_sede:resp[i].id_sede,
+          estado:resp[i].estado,
+          Sede:resp[i].Sede
+        }
+        array.push(obj);
+      }
+    }
     res.json({
       ok: true,
       msg: "Se muestran los organos con exito",
-      resp,
+      resp:array,
     });
   } catch (error) {
     res.status(400).json({

@@ -9,10 +9,22 @@ const mostrarSedes = async(req = request, res = response) => {
         estado,
       }
     });
+    let array=[];
+    if (resp) {
+      for (let i = 0; i < resp.length; i++) {
+        const obj={
+          ids:i+1,
+          id:resp[i].id,
+          nombre:resp[i].nombre,
+          estado:resp[i].estado
+        }
+        array.push(obj)
+      }
+    }
     res.json({
       ok: true,
       msg:'Se muestran los datos con exitos',
-      resp
+      resp:array
     });
   } catch (error) {
     res.status(400).json({

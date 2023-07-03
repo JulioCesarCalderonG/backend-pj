@@ -250,8 +250,13 @@ const agregarGeneral = async (req = request, res = response) => {
     } = req.body;
 
     let codigo = '';
+    let documento='';
     const file = req.files;
-    const documento = await subirArchivo(file, ['pdf'], 'record-laboral');
+    if (file) {
+      documento = await subirArchivo(file, ['pdf'], 'record-laboral');
+    }else{
+      documento='';
+    }
     const tipodoc = await Tipodocumento.findOne({
       where: {
         id: tipo_documento,
