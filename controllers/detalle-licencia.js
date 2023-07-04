@@ -12,13 +12,30 @@ const mostrarDetalleLicencia = async (req=request, res=response)=>{
             include:[
                 {
                     model:TipoLicencia
-                }
+                },
+            ],
+            order:[
+                ['nombre','ASC']
             ]
         });
+        let array=[];
+        if (resp) {
+            for (let i = 0; i < resp.length; i++) {
+                const obj={
+                    ids:i+1,
+                    id:resp[i].ids,
+                    nombre:resp[i].nombre,
+                    estado:resp[i].estado,
+                    id_tipo_licencia:resp[i],
+                    TipoLicencium:resp[i].TipoLicencium
+                }
+                array.push(obj);
+            }
+        }
         res.json({
             ok:true,
             msg:"Se muestran los datos correctamente",
-            resp,
+            resp:array,
         });
     } catch (error) {
         res.status(400).json({

@@ -11,13 +11,31 @@ const mostrarCargos = async (req = request, res = response) => {
       include:[
         {
           model:TipoPersonal
-        }
+        },
+      ],
+      order:[
+        ['descripcion','ASC']
       ]
     });
+    let array=[];
+    if (resp) {
+      for (let i = 0; i < resp.length; i++) {
+        const obj={
+          ids:i+1,
+          id:resp[i].id,
+          descripcion:resp[i].descripcion,
+          id_tipo_personal:resp[i].id_tipo_personal,
+          estado:resp[i].response,
+          TipoPersonal:resp[i].TipoPersonal,
+
+        }
+        array.push(obj);
+      }
+    }
   res.json({
     ok: true,
     msg: "Se muestran los datos correctamente",
-    resp,
+    resp:array,
   });
   } catch (error) {
     res.status(400).json({

@@ -14,11 +14,29 @@ const mostrarAreas = async (req = request, res = response) => {
           model: UnidadOrganica,
         },
       ],
+      order:[
+        ['nombre','ASC']
+      ]
     });
+    let array=[];
+    if (resp) {
+      for (let i = 0; i < resp.length; i++) {
+        const obj={
+          ids:i+1,
+          id:resp[i].id,
+          nombre:resp[i].nombre,
+          sigla:resp[i].sigla,
+          id_unidad_organica:resp[i].id_unidad_organica,
+          estado:resp[i].estado,
+          UnidadOrganica:resp[i].UnidadOrganica,
+        }
+        array.push(obj);
+      }
+    }
     res.json({
       ok: true,
       msg: "Se muestran las areas con exito",
-      resp,
+      resp:array,
     })
   } catch (error) {
     res.status(400).json({
