@@ -22,6 +22,7 @@ const { Op } = require("sequelize");
 const Licencia = require("../models/licencia");
 const DetalleLicencia = require("../models/detalle-licencia");
 const TipoLicencia = require("../models/tipo-licencia");
+const { funDate } = require("../helpers");
 const postRecordLaboral = async (req = request, res = response) => {
   try {
     const {
@@ -413,8 +414,9 @@ const postRecordLaboralPersona = async (req = request, res = response) => {
           desde: resp[i].inicio,
           hasta: resp[i].fin === "2030-12-30" ? "ACTUALIDAD" : resp[i].fin,
         };
+        const {fecha}= funDate();
         const inicioarr = resp[i].inicio.split("-");
-        const finarr = resp[i].fin.split("-");
+        const finarr = resp[i].fin==='2030-12-30'?fecha.split("-"):resp[i].fin.split("-");
         const fechaInicio = new Date(
           `${inicioarr[1]}/${inicioarr[2]}/${inicioarr[0]}`
         );

@@ -63,6 +63,9 @@
             {{/each}}
           </tbody>
         </table>
+        <div style="margin-left: 280px;" >
+          <h6 style="font-weight: bold;">CUADRO RESUMEN</h6>
+        </div>
         <table class="table" style="width: 525px; margin-left: 90px;" border="1" cellspacing="0" >
           <thead>
             <tr>
@@ -83,9 +86,18 @@
               <th scope="row"  style="font-size: 10px;text-align: center; height: 10px!important; margin-bottom: -5px!important;" >{{this.saldo}}</th>
             </tr>
             {{/each}}
+            <tr style="height: 8px; margin-bottom: -5px;" >
+              <th scope="row" style="font-size: 10px;height: 10px!important; text-align: center; margin-bottom: -5px!important;">
+                TOTAL
+              </th>
+              <th scope="row"  style="font-size: 10px;text-align: center; height: 10px!important; margin-bottom: -5px!important;" >{{products.total}}</th>
+              <th scope="row"  style="font-size: 10px;text-align: center; height: 10px!important; margin-bottom: -5px!important;" >{{products.efectivo}}</th>
+              <th scope="row"  style="font-size: 10px;text-align: center; height: 10px!important; margin-bottom: -5px!important;" >{{products.resta}}</th>
+            </tr>
+
           </tbody>
         </table>
-        <table border="1" cellspacing="0" cellpadding="0" style="margin-left: 90px;">
+        <!-- <table border="1" cellspacing="0" cellpadding="0" style="margin-left: 90px;">
             <tr style="text-align: center;">
               <td style="font-size: 11px;font-weight: 600; width: 150px;">Dias generados</td>
               <td style="font-size: 11px;font-weight: 600; width: 25px;">{{products.total}}</td>
@@ -94,6 +106,6 @@
               <td style="font-size: 11px;font-weight: 600; width: 150px;">Saldo pendiente</td>
               <td style="font-size: 11px;font-weight: 600; width: 25px;">{{products.resta}}</td>
             </tr>
-          </table>
+          </table> -->
 </body>
 </html>

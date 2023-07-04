@@ -184,6 +184,49 @@ const mostrarGeneral = async (req = request, res = response) => {
         msg: 'Se muestran los datos correctamente',
         resp: array,
       });
+      case '4':
+        const resp4 = await General.findAll({
+          include: [
+            {
+              model: Personal,
+            },
+            {
+              model: Cargo,
+              where: {
+                [Op.or]: [
+                  {
+                    descripcion: {
+                      [Op.startsWith]: `%${dato}%`,
+                    },
+                  }
+                ],
+              },
+            },
+          ],
+        });
+        
+        if (resp4.length > 0) {
+          for (let i = 0; i < resp4.length; i++) {
+            const data = {
+              id: i + 1,
+              codigo_documento: resp4[i].codigo_documento,
+              dependencia: resp4[i].dependencia,
+              id_personal: resp4[i].id_personal,
+              id_cargo: resp4[i].id_cargo,
+              inicio: resp4[i].inicio,
+              fin: resp4[i].fin,
+              documento: resp4[i].documento,
+              Personal: resp4[i].Personal,
+              Cargo: resp4[i].Cargo,
+            };
+            array.push(data);
+          }
+        }
+        return res.json({
+          ok: true,
+          msg: 'Se muestran los datos correctamente',
+          resp: array,
+        });
     default:
       return res.json({
         ok: true,
