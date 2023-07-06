@@ -25,7 +25,7 @@ const mostrarCargos = async (req = request, res = response) => {
           id:resp[i].id,
           descripcion:resp[i].descripcion,
           id_tipo_personal:resp[i].id_tipo_personal,
-          estado:resp[i].response,
+          estado:resp[i].estado,
           TipoPersonal:resp[i].TipoPersonal,
 
         }

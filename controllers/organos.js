@@ -14,7 +14,8 @@ const mostrarOrganos = async (req = request, res = response) => {
         },
       ],
       order:[
-        ['nombre','ASC']
+        ['nombre','ASC'],
+        ['id_sede','ASC']
       ]
     });
     let array=[];

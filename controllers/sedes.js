@@ -7,7 +7,10 @@ const mostrarSedes = async(req = request, res = response) => {
     const resp = await Sede.findAll({
       where:{
         estado,
-      }
+      },
+      order:[
+        ['nombre','ASC']
+      ]
     });
     let array=[];
     if (resp) {

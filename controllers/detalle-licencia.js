@@ -15,6 +15,7 @@ const mostrarDetalleLicencia = async (req=request, res=response)=>{
                 },
             ],
             order:[
+                ['id_tipo_licencia','ASC'],
                 ['nombre','ASC']
             ]
         });
@@ -23,7 +24,7 @@ const mostrarDetalleLicencia = async (req=request, res=response)=>{
             for (let i = 0; i < resp.length; i++) {
                 const obj={
                     ids:i+1,
-                    id:resp[i].ids,
+                    id:resp[i].id,
                     nombre:resp[i].nombre,
                     estado:resp[i].estado,
                     id_tipo_licencia:resp[i],
