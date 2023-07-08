@@ -17,6 +17,12 @@ Historial.init({
     },
     id_administrador:{
         type:DataTypes.INTEGER
+    },
+    id_tipo_record:{
+        type:DataTypes.INTEGER
+    },
+    id_record:{
+        type:DataTypes.INTEGER
     }
 },{
     sequelize,

@@ -1,14 +1,33 @@
 const { request, response } = require("express");
-const Historial = require("../models/historial");
+const { Administrador, Historial } = require("../models");
 
 
 const mostrarHistorial = async(req = request, res = response) =>{
     try {
-        const { id } = req.params;
+        const {id} =req.query;
+        if (id) {
+            const resp = await Historial.findAll({
+                where:{
+                    id_tipo_record:id
+                },
+                include:[
+                    {
+                        model:Administrador
+                    }
+                ]
+            });
+            return res.json({
+                ok:true,
+                msg: 'Se muestran los datos con exito',
+                resp,
+            });
+        }
         const resp = await Historial.findAll({
-            where:{
-                id_administrador: id,
-            }
+            include:[
+                {
+                    model:Administrador
+                }
+            ]
         });
         res.json({
             ok:true,

@@ -9,10 +9,11 @@ const {
   Organo,
   UnidadOrganica,
   TipoPersonal,
+  Historial,
 } = require('../models');
 const { obtenerDependencia } = require('../helpers/obtener-depedencia');
 const { Op } = require('sequelize');
-const { subirArchivo } = require('../helpers');
+const { subirArchivo, funDate } = require('../helpers');
 const mostrarGeneral = async (req = request, res = response) => {
   const { tipofiltro, dato } = req.query;
   let array = [];
@@ -289,12 +290,14 @@ const agregarGeneral = async (req = request, res = response) => {
       numero,
       desde,
       hasta,
+      personal,
       ...data
     } = req.body;
-
+    const admin = req.adminToken;
     let codigo = '';
     let documento='';
     const file = req.files;
+    const {fecha,hora} = funDate();
     if (file) {
       documento = await subirArchivo(file, ['pdf'], 'record-laboral');
     }else{
@@ -325,6 +328,17 @@ const agregarGeneral = async (req = request, res = response) => {
         id_dependencia: dependencia,
       };
       const general = await General.create(datos);
+      
+      
+      const dataHisto = {
+        fecha,
+        hora,
+        descripcion:`Se agrego un record laboral del personal: ${personal}`,
+        id_tipo_record:1,
+        id_record:general.id,
+        id_administrador:admin.id
+      }
+      const historial= await Historial.create(dataHisto);
       return res.json({
         ok: true,
         msg: 'Se creo el Record laboral con exito',
@@ -355,6 +369,15 @@ const agregarGeneral = async (req = request, res = response) => {
         id_dependencia: dependencia,
       };
       const general = await General.create(datos);
+      const dataHisto = {
+        fecha,
+        hora,
+        descripcion:`Se agrego un record laboral del personal: ${personal}`,
+        id_tipo_record:1,
+        id_record:general.id,
+        id_administrador:admin.id
+      }
+      const historial= await Historial.create(dataHisto);
       return res.json({
         ok: true,
         msg: 'Datos editados con exito',
@@ -424,6 +447,15 @@ const agregarGeneral = async (req = request, res = response) => {
             id_area: autoriza,
           };
           const general = await General.create(datos);
+          const dataHisto = {
+            fecha,
+            hora,
+            descripcion:`Se agrego un record laboral del personal: ${personal}`,
+            id_tipo_record:1,
+            id_record:general.id,
+            id_administrador:admin.id
+          }
+          const historial= await Historial.create(dataHisto);
           return res.json({
             ok: true,
             msg: 'Datos editados con exito',

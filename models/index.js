@@ -20,6 +20,7 @@ const Merito = require('./merito');
 const Condicion = require('./condicion');
 const Regimen = require('./regimen');
 const RegimenLaboral = require('./regimen-laboral');
+const Historial = require('./historial');
 module.exports = {
   Server,
   Personal,
@@ -41,5 +42,6 @@ module.exports = {
   Merito,
   Condicion,
   Regimen,
-  RegimenLaboral
+  RegimenLaboral,
+  Historial
 };

@@ -1,6 +1,7 @@
 const {response, request} = require('express');
 const jwt = require('jsonwebtoken');
 const Usuario = require('../models/usuario');
+const { Administrador } = require('../models');
 const validarJWT =async (req= request, res = response, next)=>{ 
     const token = req.header('x-token');
     if (!token) {
@@ -14,20 +15,23 @@ const validarJWT =async (req= request, res = response, next)=>{
 
         // leer el usuario
 
-        const usuario = await Usuario.findOne({_id: id});
-
-        if (!usuario) {
+        const admin = await Administrador.findOne({
+            where:{
+                id
+            }
+        });
+        if (!admin) {
             return res.status(401).json({
                 msg: 'Token no valido - usuario no existe en BD'
             })
         }
         // Verificar si el uid tiene estado en tru
-        if (!usuario.estado) {
+        if (!admin.activo) {
             return res.status(401).json({
                 msg: 'Token no valido - usuario con estado : false'
             })
         }
-        req.usuarioToken = usuario;
+        req.adminToken = admin;
         next();
     } catch (error) {
         console.log(error);

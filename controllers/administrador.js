@@ -24,7 +24,9 @@ const mostrarAdministradores = async (req = request, res = response) => {
 
 const agregarAdministradores = async (req = request, res = response) => {
   try {
-    const data = req.body;
+    const {nombre,apellido,...data} = req.body;
+    data.nombre=nombre.toUpperCase();
+    data.apellido = apellido.toUpperCase();
     const resp = await Administrador.create(data);
     res.json({
       ok: true,
@@ -41,8 +43,10 @@ const agregarAdministradores = async (req = request, res = response) => {
 
 const modificarAdministradores = async (req = request, res = response) => {
   try {
-    const data = req.body;
     const { id } = req.params;
+    const {nombre,apellido,...data} = req.body;
+    data.nombre=nombre.toUpperCase();
+    data.apellido = apellido.toUpperCase();
     const resp = await Administrador.update(data, {
       where: {
         id,

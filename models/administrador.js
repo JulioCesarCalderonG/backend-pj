@@ -12,6 +12,12 @@ Administrador.init({
     password:{
         type:DataTypes.STRING
     },
+    nombre:{
+        type:DataTypes.STRING
+    },
+    apellido:{
+        type:DataTypes.STRING
+    },
     activo:{
         type:DataTypes.TINYINT,
         defaultValue:1

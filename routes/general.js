@@ -1,6 +1,6 @@
 const {Router} = require('express');
 const { mostrarGeneral, agregarGeneral, modificarGeneral, eliminarGeneral, mostrarIdGeneral, mostrarGeneralPersonal } = require('../controllers/general');
-const { validarCampos, validarArchivoSubir, validarArchivoSubirDos } = require('../middlewares');
+const { validarCampos, validarArchivoSubir, validarArchivoSubirDos, validarJWT } = require('../middlewares');
 
 
 const router = Router();
@@ -12,6 +12,7 @@ router.get("/personal/:id",mostrarGeneralPersonal);
 router.get("/:id",mostrarIdGeneral);
 
 router.post("",[
+    validarJWT,
     validarArchivoSubirDos,
     validarCampos
 ],agregarGeneral);

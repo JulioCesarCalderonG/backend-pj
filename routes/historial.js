@@ -4,10 +4,7 @@ const { mostrarIdHistorial, mostrarHistorial } = require("../controllers/histori
 
 const router = Router();
 
-router.get('/administrador/:id', mostrarHistorial);
-router.get('/:id', mostrarIdHistorial);
-router.post('');
-router.put('');
-router.delete('');
+router.get('', mostrarHistorial);
+//router.get('/:id', mostrarIdHistorial);
 
 module.exports = router;

@@ -6,7 +6,11 @@ const { Administrador } = require('../models');
 const postLogin = async (req = request, res = response) => {
  
   const {usuario,password} = req.body;
-  const user = await Administrador.findOne({ usuario });
+  const user = await Administrador.findOne({
+    where:{
+      usuario
+    }
+  });
   if (!user) {
     return res.json({
       ok: false,
@@ -23,7 +27,7 @@ const postLogin = async (req = request, res = response) => {
       token: null,
     });
   }
-  
+  console.log(password);
   if (password!==user.password) {
     return res.json({
       ok: false,
@@ -32,7 +36,7 @@ const postLogin = async (req = request, res = response) => {
       token: null,
     });
   }
-  token = await generarToken.generarJWT(user._id);
+  token = await generarToken.generarJWT(user.id);
   res.json({
     ok: true,
     msg: 'Login correcto',

@@ -8,9 +8,6 @@ const mostrarTipodocumento = async (req = request, res = response) => {
       where: {
         estado,
       },
-      order:[
-        ['descripcion','ASC']
-      ]
     });
     let array=[];
     if (resp) {
