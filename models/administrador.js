@@ -1,5 +1,6 @@
 const { Model, DataTypes } = require("sequelize");
 const sequelize = require('../database/database');
+const Historial = require("./historial");
 
 
 class Administrador extends Model{}
@@ -21,6 +22,15 @@ Administrador.init({
     tableName:'administrador'
 });
 
+Administrador.hasMany(Historial,{
+    as:'FK_HistorialAdministrador',
+    foreignKey:'id_administrador'
+});
 
-module.exports = Administrador
+Historial.belongsTo(Administrador,{
+sourcekey:'id',
+foreignKey:'id_administrador'
+})
+
+module.exports = Administrador;
 

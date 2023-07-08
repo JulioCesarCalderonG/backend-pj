@@ -40,6 +40,7 @@ class Server {
             regimenlaboral:'/api/regimenlaboral',
             uploadgeneral:'/api/uploadgeneral',
             reporte:'/api/reporte',
+            historial:'/api/historial',
             
     };
     //Connect to socket
@@ -121,6 +122,7 @@ class Server {
     this.app.use(this.paths.regimenlaboral, require('../routes/regimen-laboral'));
     this.app.use(this.paths.uploadgeneral, require('../routes/upload-general'));
     this.app.use(this.paths.reporte, require('../routes/reporte'));
+    this.app.use(this.paths.historial, require('../routes/historial'));
   }
   listen() {
     this.httpServer.listen(this.port, () => {
