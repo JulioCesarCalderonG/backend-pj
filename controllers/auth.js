@@ -43,8 +43,39 @@ const postLogin = async (req = request, res = response) => {
     user,
     token,
   });
-};
+}
+
+const resetPassword=async (req = request, res = response) =>{
+  try {
+    const {passworduno,passworddos}= req.body;
+    const admin = req.adminToken;
+
+    if (passworduno!==admin.password) {
+      return res.json({
+        ok:false,
+        msg:'Password anterior incorrecto'
+      })
+    }
+    const resp = await Administrador.update({password:passworddos},{
+      where:{
+        id:admin.id
+      }
+    })
+
+    res.json({
+      ok:true,
+      msg:'Se actualizo el password con exito',
+      resp
+    })
+  } catch (error) {
+    res.status(400).json({
+      ok:false,
+      msg:`Error: ${error}`
+    })
+  }
+}
 
 module.exports = {
   postLogin,
+  resetPassword
 };

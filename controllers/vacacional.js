@@ -1,6 +1,6 @@
 const { request, response } = require("express");
-const { subirArchivo } = require("../helpers");
-const { Vacacional, RegimenLaboral } = require("../models");
+const { subirArchivo, funDate } = require("../helpers");
+const { Vacacional, RegimenLaboral, Historial } = require("../models");
 
 const mostrarVacacionalPersonal = async (req = request, res = response) => {
   try {
@@ -52,7 +52,9 @@ const mostrarVacacionalPersonal = async (req = request, res = response) => {
 const guardarVacacional = async (req = request, res = response) => {
   try {
     const file = req.files;
-    const { tipo_documento, area, numero, ano, inicio, fin, ...data } =
+    const admin = req.adminToken;
+    const {fecha,hora} = funDate();
+    const { tipo_documento, area, numero, ano, inicio, fin,personal, ...data } =
       req.body;
     let codigodoc = "";
     if (tipo_documento === "1") {
@@ -101,6 +103,15 @@ const guardarVacacional = async (req = request, res = response) => {
     data.documento = documento;
     data.dias = dias;
     const resp = await Vacacional.create(data);
+    const dataHisto = {
+      fecha,
+      hora,
+      descripcion:`SE AGREGO EL RECORD VACACIONAL DEL PERSONAL: ${personal}`,
+      id_tipo_record:2,
+      id_record:resp.id,
+      id_administrador:admin.id
+ }
+    const historial= await Historial.create(dataHisto);
     res.json({
       ok: true,
       msg: "Se creo record vacacional con exito",
@@ -117,7 +128,9 @@ const guardarVacacional = async (req = request, res = response) => {
 const editarVacacional = async (req = request, res = response) => {
   try {
     const { id } = req.params;
-    const { tipo_documento, area, numero, ano, inicio, fin, ...data } =
+    const admin = req.adminToken;
+    const {fecha,hora} = funDate();
+    const { tipo_documento, area, numero, ano, inicio, fin,personal, ...data } =
       req.body;
     let codigodoc = "";
     if (tipo_documento === "1") {
@@ -168,6 +181,15 @@ const editarVacacional = async (req = request, res = response) => {
         id,
       },
     });
+    const dataHisto = {
+      fecha,
+      hora,
+      descripcion:`SE EDITO EL RECORD VACACIONAL DEL PERSONAL: ${personal}`,
+      id_tipo_record:2,
+      id_record:id,
+      id_administrador:admin.id
+ }
+    const historial= await Historial.create(dataHisto);
     res.json({
       ok: true,
       msg: "Se edito record vacacional con exito",
@@ -209,11 +231,23 @@ const mostrarVacacional = async (req = request, res=response) => {};
 const eliminarVacacional = async (req = request, res = response) => {
   try {
     const { id } = req.params;
+    const admin = req.adminToken;
+    const {fecha,hora} = funDate();
+    const {personal}= req.query;
     const resp = await Vacacional.destroy({
       where: {
         id
       }
     });
+    const dataHisto = {
+      fecha,
+      hora,
+      descripcion:`SE MODIFICO EL DOCUMENTO QUE AUTORIZA EL RECORD LABORAL DEL PERSONAL: ${personal}`,
+      id_tipo_record:2,
+      id_record:id,
+      id_administrador:admin.id
+    }
+    const historial= await Historial.create(dataHisto);
     res.json({
       ok: true,
       msg: "Record Vacacional eliminado con exito",

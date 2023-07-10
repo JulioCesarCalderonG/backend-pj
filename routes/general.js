@@ -17,7 +17,10 @@ router.post("",[
     validarCampos
 ],agregarGeneral);
 
-router.put("/:id",modificarGeneral);
+router.put("/:id",[
+    validarJWT,
+    validarCampos
+],modificarGeneral);
 
 router.delete("/:id",eliminarGeneral);
 

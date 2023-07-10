@@ -494,9 +494,11 @@ const modificarGeneral = async (req = request, res = response) => {
       numero,
       desde,
       hasta,
+      personal,
       ...data
     } = req.body;
-
+    const admin = req.adminToken;
+    const {fecha,hora} = funDate();
     let codigo = '';
 
     const tipodoc = await Tipodocumento.findOne({
@@ -527,6 +529,15 @@ const modificarGeneral = async (req = request, res = response) => {
           id,
         },
       });
+      const dataHisto = {
+        fecha,
+        hora,
+        descripcion:`SE EDITO EL RECORD LABORAL DEL PERSONAL: ${personal}`,
+        id_tipo_record:1,
+        id_record:id,
+        id_administrador:admin.id
+      }
+      const historial= await Historial.create(dataHisto);
       return res.json({
         ok: true,
         msg: 'Datos ingresados con exitoso',
@@ -560,6 +571,15 @@ const modificarGeneral = async (req = request, res = response) => {
           id,
         },
       });
+      const dataHisto = {
+        fecha,
+        hora,
+        descripcion:`SE EDITO EL RECORD LABORAL DEL PERSONAL: ${personal}`,
+        id_tipo_record:1,
+        id_record:id,
+        id_administrador:admin.id
+      }
+      const historial= await Historial.create(dataHisto);
       return res.json({
         ok: true,
         msg: 'Datos ingresados con exitos',
@@ -632,6 +652,15 @@ const modificarGeneral = async (req = request, res = response) => {
               id,
             },
           });
+          const dataHisto = {
+            fecha,
+            hora,
+            descripcion:`SE EDITO EL RECORD LABORAL DEL PERSONAL: ${personal}`,
+            id_tipo_record:1,
+            id_record:id,
+            id_administrador:admin.id
+          }
+          const historial= await Historial.create(dataHisto);
           return res.json({
             ok: true,
             msg: 'Datos ingresados con exito',
@@ -660,7 +689,7 @@ const modificarGeneral = async (req = request, res = response) => {
 const mostrarIdGeneral = async (req = request, res = response) => {
   try {
     const { id } = req.params;
-
+   
     const resp = await General.findOne({
       where: {
         id,
@@ -692,12 +721,23 @@ const mostrarIdGeneral = async (req = request, res = response) => {
 const eliminarGeneral = async (req = request, res = response) => {
   try {
     const { id } = req.params;
+    const {personal} = req.query;
+    const admin = req.adminToken;
+    const {fecha,hora} = funDate();
     const resp = await General.destroy({
       where: {
         id,
       },
     });
-
+    const dataHisto = {
+      fecha,
+      hora,
+      descripcion:`SE ELIMINO EL RECORD LABORAL DEL PERSONAL: ${personal}`,
+      id_tipo_record:1,
+      id_record:id,
+      id_administrador:admin.id
+    }
+    const historial= await Historial.create(dataHisto);
     res.json({
       ok: true,
       msg: 'Record eliminado con exito',

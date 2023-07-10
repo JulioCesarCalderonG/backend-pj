@@ -1,9 +1,9 @@
 const { request, response } = require("express");
-const { General, Vacacional, Merito } = require("../models");
+const { General, Vacacional, Merito, Historial } = require("../models");
 const path = require("path");
 const fs = require("fs");
 const Licencia = require("../models/licencia");
-const { subirArchivo } = require("../helpers");
+const { subirArchivo, funDate } = require("../helpers");
 
 const mostrarPdfRecordLaboral = async (req = request, res = response) => {
   try {
@@ -36,10 +36,12 @@ const mostrarPdfRecordLaboral = async (req = request, res = response) => {
     });
   }
 };
-
 const putPdfLaboral = async (req = request, res = response) => {
   try {
     const { id } = req.params;
+    const admin = req.adminToken;
+    const {fecha,hora} = funDate();
+    const {personal}= req.body;
     const file = req.files;
     const resp = await General.findOne({
       where: {
@@ -68,6 +70,15 @@ const putPdfLaboral = async (req = request, res = response) => {
         },
       }
     );
+    const dataHisto = {
+      fecha,
+      hora,
+      descripcion:`SE MODIFICO EL DOCUMENTO QUE AUTORIZA EL RECORD LABORAL DEL PERSONAL: ${personal}`,
+      id_tipo_record:1,
+      id_record:id,
+      id_administrador:admin.id
+    }
+    const historial= await Historial.create(dataHisto);
     res.json({
       ok: true,
       msg: "Se actualizo el archivo con extio",
@@ -80,7 +91,6 @@ const putPdfLaboral = async (req = request, res = response) => {
     });
   }
 };
-
 const mostrarPdfLicencia = async (req = request, res = response) => {
   try {
     const { nombre } = req.params;
@@ -112,12 +122,13 @@ const mostrarPdfLicencia = async (req = request, res = response) => {
     });
   }
 };
-
-
 const putPdfLicencia = async(req=request, res=response) =>{
   try {
     const {id} = req.params;
     const file = req.files;
+    const admin = req.adminToken;
+    const {fecha,hora} = funDate();
+    const {personal}= req.body;
     const resp = await Licencia.findOne({
       where:{
         id,
@@ -136,7 +147,16 @@ const putPdfLicencia = async(req=request, res=response) =>{
       where:{
         id,
       },
-    })
+    });
+    const dataHisto = {
+      fecha,
+      hora,
+      descripcion:`SE MODIFICO EL DOCUMENTO QUE AUTORIZA EL RECORD DE LICENCIA DEL PERSONAL: ${personal}`,
+      id_tipo_record:3,
+      id_record:id,
+      id_administrador:admin.id
+    }
+    const historial= await Historial.create(dataHisto);
     res.json({
       ok:true,
       msg: "Se actualizo el archivo con extio",
@@ -149,8 +169,6 @@ const putPdfLicencia = async(req=request, res=response) =>{
     });
   }
   };
-
-
 const mostrarPdfVacacional = async (req = request, res = response) => {
   try {
     const { nombre } = req.params;
@@ -185,6 +203,9 @@ const mostrarPdfVacacional = async (req = request, res = response) => {
 const putPdfVacacional = async (req = request, res = response) => {
   try {
     const { id } = req.params;
+    const admin = req.adminToken;
+    const {fecha,hora} = funDate();
+    const {personal}= req.body;
     const file = req.files;
     const resp = await Vacacional.findOne({
       where: {
@@ -213,6 +234,15 @@ const putPdfVacacional = async (req = request, res = response) => {
         },
       }
     );
+    const dataHisto = {
+      fecha,
+      hora,
+      descripcion:`SE AGREGO EL DOCUMENTO QUE AUTORIZA EL RECORD VACACIONAL DEL PERSONAL: ${personal}`,
+      id_tipo_record:2,
+      id_record:id,
+      id_administrador:admin.id
+ }
+    const historial= await Historial.create(dataHisto);
     res.json({
       ok: true,
       msg: "Se actulizo el archivo con exito",
@@ -260,6 +290,9 @@ const mostrarPdfMerito = async (req = request, res = response) => {
 const putPdfMerito = async (req = request, res = response) => {
   try {
     const { id } = req.params;
+    const admin = req.adminToken;
+    const {fecha,hora} = funDate();
+    const {personal}= req.body;
     const file = req.files;
     const resp = await Merito.findOne({
       where: {
@@ -288,6 +321,15 @@ const putPdfMerito = async (req = request, res = response) => {
         },
       }
     );
+    const dataHisto = {
+      fecha,
+      hora,
+      descripcion:`SE AGREGO EL DOCUMENTO QUE AUTORIZA EL RECORD DEMERITO DEL PERSONAL: ${personal}`,
+      id_tipo_record:4,
+      id_record:id,
+      id_administrador:admin.id
+ }
+ const historial= await Historial.create(dataHisto);
     res.json({
       ok: true,
       msg: "Se actulizo el archivo con exito",

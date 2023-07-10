@@ -1,7 +1,7 @@
 const { request, response } = require("express");
 const { obtenerDependencia } = require("../helpers/obtener-depedencia");
-const { subirArchivo } = require("../helpers");
-const { Merito, Sancion, Estado, Personal } = require("../models");
+const { subirArchivo, funDate } = require("../helpers");
+const { Merito, Sancion, Estado, Personal, Historial } = require("../models");
 
 
 
@@ -93,8 +93,10 @@ const mostrarMeritoId =async(req=request,res=response)=>{
 
 const guardarMerito =async(req=request,res=response)=>{
     try {
-        const {tipo_documento, cod_documento, tipo_instancia,id_instancia,...data} = req.body;
+        const {tipo_documento, cod_documento, tipo_instancia,id_instancia,personal,...data} = req.body;
         const files = req.files;
+        const admin = req.adminToken;
+        const {fecha,hora} = funDate();
         const instancia = await obtenerDependencia(tipo_instancia,id_instancia);
         let codigo_documento='';
         switch (tipo_documento) {
@@ -121,8 +123,15 @@ const guardarMerito =async(req=request,res=response)=>{
         data.documento = documento;
 
         const resp = await Merito.create(data);
-
-
+        const dataHisto = {
+            fecha,
+            hora,
+            descripcion:`SE AGREGO EL RECORD DEMERITO DEL PERSONAL: ${personal}`,
+            id_tipo_record:4,
+            id_record:resp.id,
+            id_administrador:admin.id
+       }
+          const historial= await Historial.create(dataHisto);
         res.json({
             ok:true,
             msg:'Se creo el documento con exito',
@@ -138,7 +147,9 @@ const guardarMerito =async(req=request,res=response)=>{
 const actualizarMerito =async(req=request,res=response)=>{
     try {
         const {id}= req.params;
-        const {tipo_documento, cod_documento, tipo_instancia,id_instancia,...data} = req.body;
+        const admin = req.adminToken;
+        const {fecha,hora} = funDate();
+        const {tipo_documento, cod_documento, tipo_instancia,id_instancia,personal,...data} = req.body;
         const instancia = await obtenerDependencia(tipo_instancia,id_instancia);
         let codigo_documento='';
         switch (tipo_documento) {
@@ -164,6 +175,15 @@ const actualizarMerito =async(req=request,res=response)=>{
                 id
             }
         });
+        const dataHisto = {
+            fecha,
+            hora,
+            descripcion:`SE MODIFICO EL RECORD DEMERITO DEL PERSONAL: ${personal}`,
+            id_tipo_record:4,
+            id_record:id,
+            id_administrador:admin.id
+       }
+          const historial= await Historial.create(dataHisto);
         res.json({
             ok:true,
             msg:'Se creo el documento con exito',
@@ -180,11 +200,23 @@ const actualizarMerito =async(req=request,res=response)=>{
 const eliminarMerito =async(req=request,res=response)=>{
     try {
         const {id}= req.params;
+        const admin = req.adminToken;
+        const {fecha,hora} = funDate();
+        const {personal}= req.query;
         const resp = await Merito.destroy({
             where:{
                 id
             }
         });
+        const dataHisto = {
+            fecha,
+            hora,
+            descripcion:`SE MODIFICO EL DOCUMENTO QUE AUTORIZA EL RECORD LABORAL DEL PERSONAL: ${personal}`,
+            id_tipo_record:4,
+            id_record:id,
+            id_administrador:admin.id
+          }
+          const historial= await Historial.create(dataHisto);
         res.json({
             ok:true,
             msg:'Se elimino el merito con exito',

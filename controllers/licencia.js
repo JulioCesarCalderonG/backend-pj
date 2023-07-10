@@ -1,12 +1,14 @@
 const { request, response } = require('express');
-const { subirArchivo } = require('../helpers');
+const { subirArchivo, funDate } = require('../helpers');
 const Licencia = require('../models/licencia');
 const DetalleLicencia = require('../models/detalle-licencia');
 const TipoLicencia = require('../models/tipo-licencia');
+const { Historial } = require('../models');
 
 const mostrarLicenciasPersonal = async (req = request, res = response) => {
   try {
     const { id } = req.params;
+    
     const resp = await Licencia.findAll({
       where: {
         id_personal: id,
@@ -59,8 +61,9 @@ const mostrarLicencias = async (req = request, res = response) => {};
 const guardarLicencias = async (req = request, res = response) => {
   try {
     const file = req.files;
-    const { tipo_documento, area, numero, ano, inicio, fin, ...data } =
-      req.body;
+    const { tipo_documento, area, numero, ano, inicio, fin,personal, ...data } = req.body;
+    const admin = req.adminToken;
+    const {fecha,hora} = funDate();
     let codigodoc = '';
     console.log(tipo_documento, area);
     if (tipo_documento === '1') {
@@ -112,6 +115,15 @@ const guardarLicencias = async (req = request, res = response) => {
     const documento = await subirArchivo(file, ['pdf'], 'licencias');
     data.documento = documento;
     const resp = await Licencia.create(data);
+    const dataHisto = {
+      fecha,
+      hora,
+      descripcion:`SE AGREGO EL RECORD DE LICENCIA DEL PERSONAL: ${personal}`,
+      id_tipo_record:3,
+      id_record:resp.id,
+      id_administrador:admin.id
+    }
+    const historial= await Historial.create(dataHisto);
     res.json({
       ok: true,
       msg: 'Se creo la licencia con exito',
@@ -128,8 +140,10 @@ const guardarLicencias = async (req = request, res = response) => {
 const modificarLicencias = async (req = request, res = response) => {
   try {
     const { id } = req.params;
-    const { tipo_documento, area, numero, ano, inicio, fin, ...data } =
+    const { tipo_documento, area, numero, ano, inicio, fin, personal, ...data } =
       req.body;
+    const admin = req.adminToken;
+    const {fecha,hora} = funDate(); 
     let codigodoc = '';
     console.log(tipo_documento, area);
     if (tipo_documento === '1') {
@@ -183,6 +197,15 @@ const modificarLicencias = async (req = request, res = response) => {
         id,
       },
     });
+    const dataHisto = {
+      fecha,
+      hora,
+      descripcion:`SE MODIFICO EL RECORD DE LICENCIA DEL PERSONAL: ${personal}`,
+      id_tipo_record:3,
+      id_record:id,
+      id_administrador:admin.id
+    }
+    const historial= await Historial.create(dataHisto);
     res.json({
       ok: true,
       msg: 'Se edito la licencia con exito',
@@ -232,12 +255,23 @@ const mostrarIdLicencias = async (req = request, res = response) => {
 const eliminarLicencias = async (req = request, res = response) => {
   try {
     const { id } = req.params;
+    const {personal}= req.query;
+    const admin = req.adminToken;
+    const {fecha,hora} = funDate();
     const resp = await Licencia.destroy({
       where: {
         id,
       },
     });
-
+    const dataHisto = {
+      fecha,
+      hora,
+      descripcion:`SE ELIMINO EL RECORD DE LICENCIA DEL PERSONAL: ${personal}`,
+      id_tipo_record:3,
+      id_record:id,
+      id_administrador:admin.id
+    }
+    const historial= await Historial.create(dataHisto);
     res.json({
       ok: true,
       msg: 'Licencia eliminado con exito',
