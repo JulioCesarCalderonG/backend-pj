@@ -1,6 +1,6 @@
 const { request, response } = require("express");
 const { subirArchivo, funDate } = require("../helpers");
-const { Vacacional, RegimenLaboral, Historial } = require("../models");
+const { Vacacional, RegimenLaboral, Historial, Personal } = require("../models");
 
 const mostrarVacacionalPersonal = async (req = request, res = response) => {
   try {
@@ -40,6 +40,64 @@ const mostrarVacacionalPersonal = async (req = request, res = response) => {
       ok: true,
       msg: "Se muestran los datos con exito",
       resp: array,
+    });
+  } catch (error) {
+    res.status(400).json({
+      ok: false,
+      msg: `Error: ${error}`,
+    });
+  }
+};
+const mostrarVacacionalPersonalEscalafon = async (req = request, res = response) => {
+  try {
+    const {escalafon}= req.params;
+        const personal = await Personal.findOne({
+            where:{
+                escalafon
+            }
+        });
+        if (!personal) {
+            return res.json({
+                ok:false,
+                msg:`no se encontro personal con el escalafon`
+            })
+        }
+    const resp = await Vacacional.findAll({
+      include:[
+        {
+          model:RegimenLaboral,
+          where:{
+            id_personal:personal.id
+          }
+        }
+      ],
+      order: [
+        ["periodo", "ASC"],
+        ["inicio", "ASC"],
+      ]
+    });
+    let array = [];
+    if (resp.length > 0) {
+      for (let i = 0; i < resp.length; i++) {
+        const data = {
+          ids: i + 1,
+          id: resp[i].id,
+          codigo_documento: resp[i].codigo_documento,
+          periodo: resp[i].periodo,
+          inicio: resp[i].inicio,
+          termino: resp[i].termino,
+          dias: resp[i].dias,
+          id_personal: resp[i].id_personal,
+          documento: resp[i].documento,
+        };
+        array.push(data);
+      }
+    }
+    res.json({
+      ok: true,
+      msg: "Se muestran los datos con exito",
+      resp: array,
+      personal
     });
   } catch (error) {
     res.status(400).json({
@@ -263,6 +321,7 @@ const eliminarVacacional = async (req = request, res = response) => {
 
 module.exports = {
   mostrarVacacionalPersonal,
+  mostrarVacacionalPersonalEscalafon,
   guardarVacacional,
   mostrarIdVacacional,
   editarVacacional,

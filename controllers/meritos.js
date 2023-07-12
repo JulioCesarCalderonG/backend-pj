@@ -57,6 +57,68 @@ const mostrarMeritoPersonal =async(req=request,res=response)=>{
         })
     }
 }
+const mostrarMeritoPersonalEscalafon =async(req=request,res=response)=>{
+    try {
+        const {escalafon}= req.params;
+        const personal = await Personal.findOne({
+            where:{
+                escalafon
+            }
+        });
+        if (!personal) {
+            return res.json({
+                ok:false,
+                msg:`no se encontro personal con el escalafon`
+            })
+        }
+        const resp = await Merito.findAll({
+            where:{
+                id_personal:personal.id
+            },
+            include:[
+                {
+                    model:Sancion
+                },
+                {
+                    model:Estado
+                },
+                {
+                    model:Personal
+                }
+            ],
+            order:[
+                ['fecha','ASC']
+            ]
+        })
+        let array = [];
+        if (resp.length > 0) {
+            for (let i = 0; i < resp.length; i++) {
+              const data = {
+                ids: i + 1,
+                id: resp[i].id,
+                codigo_documento: resp[i].codigo_documento,
+                instancia: resp[i].instancia,
+                sancion: resp[i].Sancion.titulo,
+                fecha: resp[i].fecha,
+                estado: resp[i].Estado.descripcion,
+                observacion: resp[i].observacion,
+                documento: resp[i].documento,
+              };
+              array.push(data);
+            }
+          }
+        res.json({
+            ok:true,
+            msg:'Se muestran los datos con exito',
+            resp:array
+        })
+    } catch (error) {
+        res.status(400).json({
+            ok:false,
+            msg:`Error: ${error}`
+        })
+    }
+}
 const mostrarMeritoId =async(req=request,res=response)=>{
     try {
         const {id}= req.params;
@@ -231,6 +293,7 @@ const eliminarMerito =async(req=request,res=response)=>{
 }
 module.exports = {
     mostrarMeritoPersonal,
+    mostrarMeritoPersonalEscalafon,
     guardarMerito,
     mostrarMeritoId,
     actualizarMerito,

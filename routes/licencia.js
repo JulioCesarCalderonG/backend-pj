@@ -1,5 +1,5 @@
 const { Router } = require("express");
-const { guardarLicencias, mostrarLicenciasPersonal, modificarLicencias, eliminarLicencias, mostrarLicencias, mostrarIdLicencias } = require("../controllers/licencia");
+const { guardarLicencias, mostrarLicenciasPersonal, modificarLicencias, eliminarLicencias, mostrarLicencias, mostrarIdLicencias, mostrarLicenciasPersonalEscalafon } = require("../controllers/licencia");
 const { validarCampos, validarArchivoSubir, validarJWT } = require("../middlewares");
 
 
@@ -7,6 +7,7 @@ const router = Router();
 router.get('',mostrarLicencias);
 router.get('/:id',mostrarIdLicencias);
 router.get('/personal/:id',mostrarLicenciasPersonal);
+router.get("/personal/escalafon/:escalafon",mostrarLicenciasPersonalEscalafon);
 router.post('',[
     validarJWT,
     validarArchivoSubir,

@@ -162,7 +162,7 @@ const mostrarGeneral = async (req = request, res = response) => {
           },
         ],
       });
-      
+
       if (resp.length > 0) {
         for (let i = 0; i < resp.length; i++) {
           const data = {
@@ -185,49 +185,49 @@ const mostrarGeneral = async (req = request, res = response) => {
         msg: 'Se muestran los datos correctamente',
         resp: array,
       });
-      case '4':
-        const resp4 = await General.findAll({
-          include: [
-            {
-              model: Personal,
+    case '4':
+      const resp4 = await General.findAll({
+        include: [
+          {
+            model: Personal,
+          },
+          {
+            model: Cargo,
+            where: {
+              [Op.or]: [
+                {
+                  descripcion: {
+                    [Op.startsWith]: `%${dato}%`,
+                  },
+                },
+              ],
             },
-            {
-              model: Cargo,
-              where: {
-                [Op.or]: [
-                  {
-                    descripcion: {
-                      [Op.startsWith]: `%${dato}%`,
-                    },
-                  }
-                ],
-              },
-            },
-          ],
-        });
-        
-        if (resp4.length > 0) {
-          for (let i = 0; i < resp4.length; i++) {
-            const data = {
-              id: i + 1,
-              codigo_documento: resp4[i].codigo_documento,
-              dependencia: resp4[i].dependencia,
-              id_personal: resp4[i].id_personal,
-              id_cargo: resp4[i].id_cargo,
-              inicio: resp4[i].inicio,
-              fin: resp4[i].fin,
-              documento: resp4[i].documento,
-              Personal: resp4[i].Personal,
-              Cargo: resp4[i].Cargo,
-            };
-            array.push(data);
-          }
+          },
+        ],
+      });
+
+      if (resp4.length > 0) {
+        for (let i = 0; i < resp4.length; i++) {
+          const data = {
+            id: i + 1,
+            codigo_documento: resp4[i].codigo_documento,
+            dependencia: resp4[i].dependencia,
+            id_personal: resp4[i].id_personal,
+            id_cargo: resp4[i].id_cargo,
+            inicio: resp4[i].inicio,
+            fin: resp4[i].fin,
+            documento: resp4[i].documento,
+            Personal: resp4[i].Personal,
+            Cargo: resp4[i].Cargo,
+          };
+          array.push(data);
         }
-        return res.json({
-          ok: true,
-          msg: 'Se muestran los datos correctamente',
-          resp: array,
-        });
+      }
+      return res.json({
+        ok: true,
+        msg: 'Se muestran los datos correctamente',
+        resp: array,
+      });
     default:
       return res.json({
         ok: true,
@@ -242,6 +242,61 @@ const mostrarGeneralPersonal = async (req = request, res = response) => {
   const resp = await General.findAll({
     where: {
       id_personal: id,
+    },
+    order: [['inicio', 'ASC']],
+    include: [
+      {
+        model: Personal,
+      },
+      {
+        model: Cargo,
+      },
+    ],
+  });
+  let array = [];
+  if (resp.length > 0) {
+    for (let i = 0; i < resp.length; i++) {
+      const data = {
+        ids: i + 1,
+        id: resp[i].id,
+        codigo_documento: resp[i].codigo_documento,
+        dependencia: resp[i].dependencia,
+        id_personal: resp[i].id_personal,
+        id_cargo: resp[i].id_cargo,
+        inicio: resp[i].inicio,
+        fin: resp[i].fin,
+        documento: resp[i].documento,
+        Personal: resp[i].Personal,
+        Cargo: resp[i].Cargo,
+      };
+      array.push(data);
+    }
+  }
+  return res.json({
+    ok: true,
+    msg: 'Se muestran los datos correctamente',
+    resp: array,
+  });
+};
+const mostrarGeneralPersonalEscalafon = async (
+  req = request,
+  res = response
+) => {
+  const { escalafon } = req.params;
+  const personal = await Personal.findOne({
+    where: {
+      escalafon,
+    },
+  });
+  if (!personal) {
+    return res.json({
+      ok: false,
+      msg: `no se encontro personal con el escalafon`,
+    });
+  }
+  const resp = await General.findAll({
+    where: {
+      id_personal: personal.id,
     },
     order: [['inicio', 'ASC']],
     include: [
@@ -295,13 +350,13 @@ const agregarGeneral = async (req = request, res = response) => {
     } = req.body;
     const admin = req.adminToken;
     let codigo = '';
-    let documento='';
+    let documento = '';
     const file = req.files;
-    const {fecha,hora} = funDate();
+    const { fecha, hora } = funDate();
     if (file) {
       documento = await subirArchivo(file, ['pdf'], 'record-laboral');
-    }else{
-      documento='';
+    } else {
+      documento = '';
     }
     const tipodoc = await Tipodocumento.findOne({
       where: {
@@ -328,17 +383,16 @@ const agregarGeneral = async (req = request, res = response) => {
         id_dependencia: dependencia,
       };
       const general = await General.create(datos);
-      
-      
+
       const dataHisto = {
         fecha,
         hora,
-        descripcion:`Se agrego un record laboral del personal: ${personal}`,
-        id_tipo_record:1,
-        id_record:general.id,
-        id_administrador:admin.id
-      }
-      const historial= await Historial.create(dataHisto);
+        descripcion: `Se agrego un record laboral del personal: ${personal}`,
+        id_tipo_record: 1,
+        id_record: general.id,
+        id_administrador: admin.id,
+      };
+      const historial = await Historial.create(dataHisto);
       return res.json({
         ok: true,
         msg: 'Se creo el Record laboral con exito',
@@ -372,12 +426,12 @@ const agregarGeneral = async (req = request, res = response) => {
       const dataHisto = {
         fecha,
         hora,
-        descripcion:`Se agrego un record laboral del personal: ${personal}`,
-        id_tipo_record:1,
-        id_record:general.id,
-        id_administrador:admin.id
-      }
-      const historial= await Historial.create(dataHisto);
+        descripcion: `Se agrego un record laboral del personal: ${personal}`,
+        id_tipo_record: 1,
+        id_record: general.id,
+        id_administrador: admin.id,
+      };
+      const historial = await Historial.create(dataHisto);
       return res.json({
         ok: true,
         msg: 'Datos editados con exito',
@@ -450,12 +504,12 @@ const agregarGeneral = async (req = request, res = response) => {
           const dataHisto = {
             fecha,
             hora,
-            descripcion:`Se agrego un record laboral del personal: ${personal}`,
-            id_tipo_record:1,
-            id_record:general.id,
-            id_administrador:admin.id
-          }
-          const historial= await Historial.create(dataHisto);
+            descripcion: `Se agrego un record laboral del personal: ${personal}`,
+            id_tipo_record: 1,
+            id_record: general.id,
+            id_administrador: admin.id,
+          };
+          const historial = await Historial.create(dataHisto);
           return res.json({
             ok: true,
             msg: 'Datos editados con exito',
@@ -498,7 +552,7 @@ const modificarGeneral = async (req = request, res = response) => {
       ...data
     } = req.body;
     const admin = req.adminToken;
-    const {fecha,hora} = funDate();
+    const { fecha, hora } = funDate();
     let codigo = '';
 
     const tipodoc = await Tipodocumento.findOne({
@@ -532,12 +586,12 @@ const modificarGeneral = async (req = request, res = response) => {
       const dataHisto = {
         fecha,
         hora,
-        descripcion:`SE EDITO EL RECORD LABORAL DEL PERSONAL: ${personal}`,
-        id_tipo_record:1,
-        id_record:id,
-        id_administrador:admin.id
-      }
-      const historial= await Historial.create(dataHisto);
+        descripcion: `SE EDITO EL RECORD LABORAL DEL PERSONAL: ${personal}`,
+        id_tipo_record: 1,
+        id_record: id,
+        id_administrador: admin.id,
+      };
+      const historial = await Historial.create(dataHisto);
       return res.json({
         ok: true,
         msg: 'Datos ingresados con exitoso',
@@ -574,12 +628,12 @@ const modificarGeneral = async (req = request, res = response) => {
       const dataHisto = {
         fecha,
         hora,
-        descripcion:`SE EDITO EL RECORD LABORAL DEL PERSONAL: ${personal}`,
-        id_tipo_record:1,
-        id_record:id,
-        id_administrador:admin.id
-      }
-      const historial= await Historial.create(dataHisto);
+        descripcion: `SE EDITO EL RECORD LABORAL DEL PERSONAL: ${personal}`,
+        id_tipo_record: 1,
+        id_record: id,
+        id_administrador: admin.id,
+      };
+      const historial = await Historial.create(dataHisto);
       return res.json({
         ok: true,
         msg: 'Datos ingresados con exitos',
@@ -655,12 +709,12 @@ const modificarGeneral = async (req = request, res = response) => {
           const dataHisto = {
             fecha,
             hora,
-            descripcion:`SE EDITO EL RECORD LABORAL DEL PERSONAL: ${personal}`,
-            id_tipo_record:1,
-            id_record:id,
-            id_administrador:admin.id
-          }
-          const historial= await Historial.create(dataHisto);
+            descripcion: `SE EDITO EL RECORD LABORAL DEL PERSONAL: ${personal}`,
+            id_tipo_record: 1,
+            id_record: id,
+            id_administrador: admin.id,
+          };
+          const historial = await Historial.create(dataHisto);
           return res.json({
             ok: true,
             msg: 'Datos ingresados con exito',
@@ -689,7 +743,7 @@ const modificarGeneral = async (req = request, res = response) => {
 const mostrarIdGeneral = async (req = request, res = response) => {
   try {
     const { id } = req.params;
-   
+
     const resp = await General.findOne({
       where: {
         id,
@@ -721,9 +775,9 @@ const mostrarIdGeneral = async (req = request, res = response) => {
 const eliminarGeneral = async (req = request, res = response) => {
   try {
     const { id } = req.params;
-    const {personal} = req.query;
+    const { personal } = req.query;
     const admin = req.adminToken;
-    const {fecha,hora} = funDate();
+    const { fecha, hora } = funDate();
     const resp = await General.destroy({
       where: {
         id,
@@ -732,12 +786,12 @@ const eliminarGeneral = async (req = request, res = response) => {
     const dataHisto = {
       fecha,
       hora,
-      descripcion:`SE ELIMINO EL RECORD LABORAL DEL PERSONAL: ${personal}`,
-      id_tipo_record:1,
-      id_record:id,
-      id_administrador:admin.id
-    }
-    const historial= await Historial.create(dataHisto);
+      descripcion: `SE ELIMINO EL RECORD LABORAL DEL PERSONAL: ${personal}`,
+      id_tipo_record: 1,
+      id_record: id,
+      id_administrador: admin.id,
+    };
+    const historial = await Historial.create(dataHisto);
     res.json({
       ok: true,
       msg: 'Record eliminado con exito',
@@ -754,6 +808,7 @@ const eliminarGeneral = async (req = request, res = response) => {
 module.exports = {
   mostrarGeneral,
   mostrarGeneralPersonal,
+  mostrarGeneralPersonalEscalafon,
   agregarGeneral,
   modificarGeneral,
   eliminarGeneral,

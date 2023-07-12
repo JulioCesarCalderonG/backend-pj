@@ -3,7 +3,7 @@ const { subirArchivo, funDate } = require('../helpers');
 const Licencia = require('../models/licencia');
 const DetalleLicencia = require('../models/detalle-licencia');
 const TipoLicencia = require('../models/tipo-licencia');
-const { Historial } = require('../models');
+const { Historial, Personal } = require('../models');
 
 const mostrarLicenciasPersonal = async (req = request, res = response) => {
   try {
@@ -55,7 +55,66 @@ const mostrarLicenciasPersonal = async (req = request, res = response) => {
     });
   }
 };
-
+const mostrarLicenciasPersonalEscalafon = async (req = request, res = response) => {
+  try {
+    const {escalafon}= req.params;
+        const personal = await Personal.findOne({
+            where:{
+                escalafon
+            }
+        });
+        if (!personal) {
+            return res.json({
+                ok:false,
+                msg:`no se encontro personal con el escalafon`
+            })
+        }
+    const resp = await Licencia.findAll({
+      where:{
+        id_personal:personal.id
+      },
+      order: [['inicio', 'ASC']],
+      include: [
+        {
+          model: DetalleLicencia,
+          include: [
+            {
+              model: TipoLicencia,
+            },
+          ],
+        },
+      ],
+    });
+    let array = [];
+    if (resp.length > 0) {
+      for (let i = 0; i < resp.length; i++) {
+        const data = {
+          ids: i + 1,
+          id: resp[i].id,
+          codigo_documento: resp[i].codigo_documento,
+          id_personal: resp[i].id_personal,
+          id_detalle_licencia: resp[i].id_detalle_licencia,
+          dias: resp[i].dias,
+          inicio: resp[i].inicio,
+          fin: resp[i].fin,
+          documento: resp[i].documento,
+          DetalleLicencium: resp[i].DetalleLicencium,
+        };
+        array.push(data);
+      }
+    }
+    res.json({
+      ok: true,
+      msg: 'Se muestran los datos con exito',
+      resp: array,
+    });
+  } catch (error) {
+    res.status(400).json({
+      ok: false,
+      msg: `Error: ${error}`,
+    });
+  }
+};
 const mostrarLicencias = async (req = request, res = response) => {};
 
 const guardarLicencias = async (req = request, res = response) => {
@@ -289,6 +348,7 @@ const eliminarLicencias = async (req = request, res = response) => {
 
 module.exports = {
   mostrarLicenciasPersonal,
+  mostrarLicenciasPersonalEscalafon,
   guardarLicencias,
   mostrarLicencias,
   modificarLicencias,
