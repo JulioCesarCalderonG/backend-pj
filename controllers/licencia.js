@@ -55,18 +55,18 @@ const mostrarLicenciasPersonal = async (req = request, res = response) => {
     });
   }
 };
-const mostrarLicenciasPersonalEscalafon = async (req = request, res = response) => {
+const mostrarLicenciasPersonalDni = async (req = request, res = response) => {
   try {
-    const {escalafon}= req.params;
+    const {dni}= req.params;
         const personal = await Personal.findOne({
             where:{
-                escalafon
+                dni
             }
         });
         if (!personal) {
             return res.json({
                 ok:false,
-                msg:`no se encontro personal con el escalafon`
+                msg:`no se encontro personal con el dni`
             })
         }
     const resp = await Licencia.findAll({
@@ -348,7 +348,7 @@ const eliminarLicencias = async (req = request, res = response) => {
 
 module.exports = {
   mostrarLicenciasPersonal,
-  mostrarLicenciasPersonalEscalafon,
+  mostrarLicenciasPersonalDni,
   guardarLicencias,
   mostrarLicencias,
   modificarLicencias,

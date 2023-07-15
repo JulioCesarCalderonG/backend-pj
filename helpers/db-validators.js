@@ -55,6 +55,17 @@ const validarDescripcionTipodocumento = async (descripcion = '') => {
   }
 };
 
+const validarDniPersonal = async (dni = '') => {
+  const existePersonal = await Personal.findOne({
+    where: {
+      dni: `${dni.toUpperCase()}`,
+    },
+  });
+  if (existePersonal) {
+    throw new Error(`El dni ${dni} ya está registrado en la BD`);
+  }
+};
+
 const validarNombrePersonal = async (nombre = '') => {
   const existePersonal = await Personal.findOne({
     where: {
@@ -169,6 +180,7 @@ module.exports = {
   validarSiglaArea,
   validarDescripcionCargo,
   validarDescripcionTipodocumento,
+  validarDniPersonal,
   validarNombrePersonal,
   validarApellidoPersonal,
   validarEscalafonPersonal,

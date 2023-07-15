@@ -57,18 +57,18 @@ const mostrarMeritoPersonal =async(req=request,res=response)=>{
         })
     }
 }
-const mostrarMeritoPersonalEscalafon =async(req=request,res=response)=>{
+const mostrarMeritoPersonalDni =async(req=request,res=response)=>{
     try {
-        const {escalafon}= req.params;
+        const {dni}= req.params;
         const personal = await Personal.findOne({
             where:{
-                escalafon
+                dni
             }
         });
         if (!personal) {
             return res.json({
                 ok:false,
-                msg:`no se encontro personal con el escalafon`
+                msg:`no se encontro personal con el dni`
             })
         }
         const resp = await Merito.findAll({
@@ -293,7 +293,7 @@ const eliminarMerito =async(req=request,res=response)=>{
 }
 module.exports = {
     mostrarMeritoPersonal,
-    mostrarMeritoPersonalEscalafon,
+    mostrarMeritoPersonalDni,
     guardarMerito,
     mostrarMeritoId,
     actualizarMerito,

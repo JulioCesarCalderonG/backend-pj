@@ -48,18 +48,18 @@ const mostrarVacacionalPersonal = async (req = request, res = response) => {
     });
   }
 };
-const mostrarVacacionalPersonalEscalafon = async (req = request, res = response) => {
+const mostrarVacacionalPersonalDni = async (req = request, res = response) => {
   try {
-    const {escalafon}= req.params;
+    const {dni}= req.params;
         const personal = await Personal.findOne({
             where:{
-                escalafon
+                dni
             }
         });
         if (!personal) {
             return res.json({
                 ok:false,
-                msg:`no se encontro personal con el escalafon`
+                msg:`no se encontro personal con el dni`
             })
         }
     const resp = await Vacacional.findAll({
@@ -321,7 +321,7 @@ const eliminarVacacional = async (req = request, res = response) => {
 
 module.exports = {
   mostrarVacacionalPersonal,
-  mostrarVacacionalPersonalEscalafon,
+  mostrarVacacionalPersonalDni,
   guardarVacacional,
   mostrarIdVacacional,
   editarVacacional,

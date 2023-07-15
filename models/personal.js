@@ -10,6 +10,9 @@ class Personal extends Model{}
 
 
 Personal.init({
+    dni:{
+        type:DataTypes.CHAR
+    },
     nombre:{
         type:DataTypes.STRING
     },

@@ -1,5 +1,5 @@
 const {Router} = require('express');
-const { mostrarGeneral, agregarGeneral, modificarGeneral, eliminarGeneral, mostrarIdGeneral, mostrarGeneralPersonal, mostrarGeneralPersonalEscalafon } = require('../controllers/general');
+const { mostrarGeneral, agregarGeneral, modificarGeneral, eliminarGeneral, mostrarIdGeneral, mostrarGeneralPersonal, mostrarGeneralPersonalEscalafon, mostrarGeneralPersonalDni } = require('../controllers/general');
 const { validarCampos, validarArchivoSubir, validarArchivoSubirDos, validarJWT } = require('../middlewares');
 
 
@@ -8,7 +8,7 @@ const router = Router();
 router.get("",mostrarGeneral);
 
 router.get("/personal/:id",mostrarGeneralPersonal);
-router.get("/personal/escalafon/:escalafon",mostrarGeneralPersonalEscalafon);
+router.get("/personal/dni/:dni",mostrarGeneralPersonalDni);
 
 router.get("/:id",mostrarIdGeneral);
 

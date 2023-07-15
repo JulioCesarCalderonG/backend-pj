@@ -21,6 +21,7 @@ const mostrarPersonales = async (req = request, res = response) => {
           const obj={
             ids:i+1,
             id:resp[i].id,
+            dni:resp[i].dni,
             nombre:resp[i].nombre,
             apellido:resp[i].apellido,
             escalafon:resp[i].escalafon,
@@ -40,6 +41,11 @@ const mostrarPersonales = async (req = request, res = response) => {
       where: {
         estado,
         [Op.or]:[
+          {
+            dni:{
+              [Op.startsWith]:`%${buscar}%`
+            }
+          },
           {
             nombre:{
               [Op.startsWith]:`%${buscar}%`
@@ -64,6 +70,7 @@ const mostrarPersonales = async (req = request, res = response) => {
           const obj={
             ids:i+1,
             id:resp[i].id,
+            dni:resp[i].dni,
             nombre:resp[i].nombre,
             apellido:resp[i].apellido,
             escalafon:resp[i].escalafon,
@@ -110,7 +117,8 @@ const mostrarIdPersonal = async (req = request, res = response) => {
 
 const agregarPersonal = async (req = request, res = response) => {
   try {
-    const { nombre, apellido, escalafon, fechainicio, ...data } = req.body;
+    const { dni,nombre, apellido, escalafon, fechainicio, ...data } = req.body;
+    data.dni = dni;
     data.nombre = nombre.toUpperCase();
     data.apellido = apellido.toUpperCase();
     data.escalafon = escalafon;
@@ -133,11 +141,12 @@ const agregarPersonal = async (req = request, res = response) => {
 
 const modificarPersonal = async (req = request, res = response) => {
   try {
-    const { nombre, apellido, escalafon, fechainicio, ...data } = req.body;
+    const { dni, nombre, apellido, escalafon, fechainicio, ...data } = req.body;
     const { id } = req.params;
+    data.dni = dni;
     data.nombre = nombre.toUpperCase();
     data.apellido = apellido.toUpperCase();
-    data.escalafon = escalafon.toUpperCase();
+    data.escalafon = escalafon;
     data.fecha_inicio = fechainicio.toUpperCase();
 
     const resp = await Personal.update(data, {

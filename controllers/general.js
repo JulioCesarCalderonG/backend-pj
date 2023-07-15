@@ -278,20 +278,22 @@ const mostrarGeneralPersonal = async (req = request, res = response) => {
     resp: array,
   });
 };
-const mostrarGeneralPersonalEscalafon = async (
+
+
+const mostrarGeneralPersonalDni = async (
   req = request,
   res = response
 ) => {
-  const { escalafon } = req.params;
+  const { dni } = req.params;
   const personal = await Personal.findOne({
     where: {
-      escalafon,
+      dni,
     },
   });
   if (!personal) {
     return res.json({
       ok: false,
-      msg: `no se encontro personal con el escalafon`,
+      msg: `no se encontro personal con el dni`,
     });
   }
   const resp = await General.findAll({
@@ -333,6 +335,8 @@ const mostrarGeneralPersonalEscalafon = async (
     resp: array,
   });
 };
+
+
 const agregarGeneral = async (req = request, res = response) => {
   try {
     const {
@@ -808,7 +812,7 @@ const eliminarGeneral = async (req = request, res = response) => {
 module.exports = {
   mostrarGeneral,
   mostrarGeneralPersonal,
-  mostrarGeneralPersonalEscalafon,
+  mostrarGeneralPersonalDni,
   agregarGeneral,
   modificarGeneral,
   eliminarGeneral,
