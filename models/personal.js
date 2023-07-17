@@ -4,6 +4,7 @@ const General = require("./general");
 const Licencia = require("./licencia");
 const Merito = require("./merito");
 const RegimenLaboral = require("./regimen-laboral");
+const Reporte = require("./reporte");
 
 
 class Personal extends Model{}
@@ -76,6 +77,18 @@ RegimenLaboral.belongsTo(Personal,{
     sourceKey:'id',
     foreignKey:'id_personal'
 })
+
+/* Foreign Personal -  Reporte */
+
+Personal.hasMany(Reporte,{
+    as:'FK_ReportePersonal',
+    foreignKey:'id_personal'
+});
+
+Reporte.belongsTo(Personal,{
+    sourcekey:'id',
+    foreignKey:'id_personal'
+});
 
 module.exports = Personal;
 

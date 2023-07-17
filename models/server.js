@@ -41,6 +41,8 @@ class Server {
             uploadgeneral:'/api/uploadgeneral',
             reporte:'/api/reporte',
             historial:'/api/historial',
+            solicitud:'/api/solicitud',
+            rol:'/api/rol'
             
     };
     //Connect to socket
@@ -123,6 +125,9 @@ class Server {
     this.app.use(this.paths.uploadgeneral, require('../routes/upload-general'));
     this.app.use(this.paths.reporte, require('../routes/reporte'));
     this.app.use(this.paths.historial, require('../routes/historial'));
+    this.app.use(this.paths.solicitud, require('../routes/reportes'));
+    this.app.use(this.paths.rol, require('../routes/rol'));
+
   }
   listen() {
     this.httpServer.listen(this.port, () => {

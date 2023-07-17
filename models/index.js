@@ -21,6 +21,8 @@ const Condicion = require('./condicion');
 const Regimen = require('./regimen');
 const RegimenLaboral = require('./regimen-laboral');
 const Historial = require('./historial');
+const Reporte = require('./reporte');
+const Rol = require('./rol');
 module.exports = {
   Server,
   Personal,
@@ -43,5 +45,7 @@ module.exports = {
   Condicion,
   Regimen,
   RegimenLaboral,
-  Historial
+  Historial,
+  Reporte,
+  Rol
 };

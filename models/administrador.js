@@ -21,6 +21,9 @@ Administrador.init({
     activo:{
         type:DataTypes.TINYINT,
         defaultValue:1
+    },
+    id_rol:{
+        type:DataTypes.INTEGER
     }
 },{
     sequelize,
@@ -34,9 +37,11 @@ Administrador.hasMany(Historial,{
 });
 
 Historial.belongsTo(Administrador,{
-sourcekey:'id',
-foreignKey:'id_administrador'
-})
+    sourcekey:'id',
+    foreignKey:'id_administrador'
+});
+
+
 
 module.exports = Administrador;
 
