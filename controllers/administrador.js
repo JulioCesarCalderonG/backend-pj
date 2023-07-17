@@ -8,6 +8,7 @@ const mostrarAdministradores = async (req = request, res = response) => {
       where: {
         activo,
       },
+      
     });
     res.json({
       ok: true,

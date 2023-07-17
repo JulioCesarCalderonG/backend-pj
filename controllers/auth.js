@@ -1,7 +1,7 @@
 const { request, response } = require('express');
 const bcryptjs = require('bcryptjs');
 const generarToken = require('../helpers/generar-jwt');
-const { Administrador } = require('../models');
+const { Administrador, Rol } = require('../models');
 
 const postLogin = async (req = request, res = response) => {
  
@@ -9,7 +9,12 @@ const postLogin = async (req = request, res = response) => {
   const user = await Administrador.findOne({
     where:{
       usuario
-    }
+    },
+    include:[
+      {
+        model:Rol
+      }
+    ]
   });
   if (!user) {
     return res.json({
@@ -36,7 +41,7 @@ const postLogin = async (req = request, res = response) => {
       token: null,
     });
   }
-  token = await generarToken.generarJWT(user.id);
+  token = await generarToken.generarJWT(user.id,user.Rol.sigla);
   res.json({
     ok: true,
     msg: 'Login correcto',

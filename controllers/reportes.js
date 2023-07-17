@@ -1,6 +1,6 @@
-const { request, response } = require("express");
+const { request, response, json } = require("express");
 const { RegimenLaboral, Personal, Reporte } = require("../models");
-const { generarNombreReporte, funDate, generarNombreReporteFirma } = require("../helpers");
+const { generarNombreReporte, funDate, generarNombreReporteFirma, enviarWelcome, enviarReporte } = require("../helpers");
 const fs = require("fs");
 const path = require("path");
 
@@ -23,6 +23,23 @@ const mostrarReportes = async(req=request,res=response)=>{
             ok:true,
             resp
         })
+    } catch (error) {
+        res.status(400).json({
+            ok:false,
+            msg:`Error: ${error}`
+        })
+    }
+}
+const mostrarReporteImagen = async(req=request,res=response)=>{
+    try {
+            const {nombre} = req.params;
+            const pathImagen = path.join(
+              __dirname,
+              "../uploads",
+              "reportes",
+              nombre
+            );
+            return res.sendFile(pathImagen);
     } catch (error) {
         res.status(400).json({
             ok:false,
@@ -201,7 +218,7 @@ const actualizarReporteFirma = async(req=request,res=response)=>{
         });
         res.json({
             ok:true,
-            msg:'Se envio su solicitud, le estara llegando un correo en los proximos dias',
+            msg:'Documento firmado con exito',
             resp:reporte
         })
     } catch (error) {
@@ -213,8 +230,41 @@ const actualizarReporteFirma = async(req=request,res=response)=>{
 }
 const actualizarReporte = async(req=request,res=response)=>{
     try {
+        const {id}= req.params;
+        const {nombre, correo} = req.body;
+        const {fecha, hora} = funDate();
+        const report = await Reporte.findOne({
+            where:{
+                id
+            }
+        });
+        if (!report) {
+            return res.status(400).json({
+                ok:false,
+                msg:'No existe el reporte'
+            });
+        }
+        if (report.firmado===0) {
+            return res.status(400).json({
+                ok:false,
+                msg:'El documento no ha sido firmado, requiere firma'
+            });
+        }
+
+        const reporte = await Reporte.update({
+            atendido:1,
+            fecha_emision:fecha,
+            hora_emision:hora
+        },{
+            where:{
+                id
+            }
+        })
+        const resp = await enviarReporte(nombre,correo);
         res.json({
-            ok:true
+            ok:true,
+            resp:reporte,
+            email:resp
         })
     } catch (error) {
         res.status(400).json({
@@ -238,6 +288,7 @@ const eliminarReporte = async(req=request,res=response)=>{
 
 module.exports = {
     mostrarReportes,
+    mostrarReporteImagen,
     mostrarReporteID,
     guardarReporte,
     actualizarReporte,
